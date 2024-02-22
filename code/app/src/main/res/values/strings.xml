@@ -17,4 +17,11 @@
     <string name="share_promotional_qr_code">Share Promotional QR Code</string>
     <string name="geo_location_tracking">Geo-location Tracking</string>
     <string name="generate_promotional_qr_code">Generate Promotional QR Code</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="event_description">Event Description</string>
+    <string name="event_name">Event Name</string>
+    <string name="your_name">Your Name</string>
+    <string name="confirm">confirm</string>
+    <string name="cancel">cancel</string>
 </resources>
