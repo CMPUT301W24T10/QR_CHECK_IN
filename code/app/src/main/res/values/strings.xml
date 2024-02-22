@@ -24,4 +24,5 @@
     <string name="your_name">Your Name</string>
     <string name="confirm">confirm</string>
     <string name="cancel">cancel</string>
+    <string name="app_header">QR_Check_In</string>
 </resources>
