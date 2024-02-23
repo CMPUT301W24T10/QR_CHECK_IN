@@ -1,75 +1,74 @@
 package com.example.qr_check_in;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Button;
+import android.widget.RadioGroup;
+import android.widget.Toast;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link input_info_fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class input_info_fragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private EditText editTextOrganizerName, editTextEventName, editTextEventDescription;
+    private RadioGroup radioGroupQRCode;
+    private FirebaseFirestore db;
 
     public input_info_fragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment input_info_fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static input_info_fragment newInstance(String param1, String param2) {
-        input_info_fragment fragment = new input_info_fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view=  inflater.inflate(R.layout.fragment_input_info_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_input_info_fragment, container, false);
 
-        view.findViewById(R.id.confirm_button).setOnClickListener(v->{
-            Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment);
-        });
+        editTextOrganizerName = view.findViewById(R.id.EnterOrganizerName);
+        editTextEventName = view.findViewById(R.id.EnterEventName);
+        editTextEventDescription = view.findViewById(R.id.EnterEventDescription);
+        radioGroupQRCode = view.findViewById(R.id.read_status);
 
-        view.findViewById(R.id.cancel_button).setOnClickListener(v->{
-            Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_checkin_createEvent_fragment2);
-        });
+        Button confirmButton = view.findViewById(R.id.confirm_button);
+        confirmButton.setOnClickListener(v -> saveEventToFirestore());
+
+        Button cancelButton = view.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_checkin_createEvent_fragment2));
 
         return view;
+    }
+
+    private void saveEventToFirestore() {
+        String organizerName = editTextOrganizerName.getText().toString().trim();
+        String eventName = editTextEventName.getText().toString().trim();
+        String eventDescription = editTextEventDescription.getText().toString().trim();
+        boolean isNewQRCode = radioGroupQRCode.getCheckedRadioButtonId() == R.id.readRadioButton;
+
+        if (!organizerName.isEmpty() && !eventName.isEmpty() && !eventDescription.isEmpty()) {
+            Map<String, Object> event = new HashMap<>();
+            event.put("organizerName", organizerName);
+            event.put("eventName", eventName);
+            event.put("eventDescription", eventDescription);
+            event.put("isNewQRCode", isNewQRCode);
+
+            db.collection("events").add(event)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(getContext(), "Event added successfully", Toast.LENGTH_SHORT).show();
+                        Navigation.findNavController(getView()).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment);
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Error adding event", Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+        }
     }
 }
