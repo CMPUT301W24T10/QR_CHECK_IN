@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_checkin_createEvent_fragment_to_input_info_fragment2"
             app:destination="@id/input_info_fragment" />
+        <action
+            android:id="@+id/action_checkin_createEvent_fragment_to_checkInFragment2"
+            app:destination="@id/checkInFragment" />
     </fragment>
     <fragment
         android:id="@+id/input_info_fragment"
@@ -31,4 +34,9 @@
         android:name="com.example.qr_check_in.DisplayQrCodeFragment"
         android:label="fragment_display_qr_code"
         tools:layout="@layout/fragment_display_qr_code" />
+    <fragment
+        android:id="@+id/checkInFragment"
+        android:name="com.example.qr_check_in.CheckInFragment"
+        android:label="fragment_check_in"
+        tools:layout="@layout/fragment_check_in" />
 </navigation>
