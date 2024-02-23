@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/checkin_createEvent_fragment"
-        android:name="com.example.qr_check_in.checkin_createEvent_fragment"
+        android:name="landingPage.checkin_createEvent_fragment"
         android:label="fragment_checkin_create_event_fragment"
         tools:layout="@layout/fragment_checkin_create_event_fragment" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/input_info_fragment"
-        android:name="com.example.qr_check_in.input_info_fragment"
+        android:name="landingPage.input_info_fragment"
         android:label="fragment_input_info_fragment"
         tools:layout="@layout/fragment_input_info_fragment" >
         <action
@@ -31,12 +31,12 @@
     </fragment>
     <fragment
         android:id="@+id/displayQrCodeFragment"
-        android:name="com.example.qr_check_in.DisplayQrCodeFragment"
+        android:name="landingPage.DisplayQrCodeFragment"
         android:label="fragment_display_qr_code"
         tools:layout="@layout/fragment_display_qr_code" />
     <fragment
         android:id="@+id/checkInFragment"
-        android:name="com.example.qr_check_in.CheckInFragment"
+        android:name="landingPage.CheckInFragment"
         android:label="fragment_check_in"
         tools:layout="@layout/fragment_check_in" />
 </navigation>

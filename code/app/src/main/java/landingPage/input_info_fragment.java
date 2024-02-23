@@ -1,4 +1,4 @@
-package com.example.qr_check_in;
+package landingPage;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.example.qr_check_in.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +45,9 @@ public class input_info_fragment extends Fragment {
         *  on pressing confirm button
         */
         Button confirmButton = view.findViewById(R.id.confirm_button);
-        confirmButton.setOnClickListener(v -> saveEventToFirestore());
+        confirmButton.setOnClickListener(v -> {
+            saveEventToFirestore(view);
+        });
 
         // back Navigation to home fragment on pressing organize event button
         Button cancelButton = view.findViewById(R.id.cancel_button);
@@ -52,7 +56,7 @@ public class input_info_fragment extends Fragment {
         return view;
     }
 
-    private void saveEventToFirestore() {
+    private void saveEventToFirestore(View view) {
         String organizerName = editTextOrganizerName.getText().toString().trim();
         String eventName = editTextEventName.getText().toString().trim();
         String eventDescription = editTextEventDescription.getText().toString().trim();
@@ -68,7 +72,7 @@ public class input_info_fragment extends Fragment {
             db.collection("events").add(event)
                     .addOnSuccessListener(documentReference -> {
                         Toast.makeText(getContext(), "Event added successfully", Toast.LENGTH_SHORT).show();
-                        Navigation.findNavController(getView()).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment);
+                        Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment);
                     })
                     .addOnFailureListener(e -> Toast.makeText(getContext(), "Error adding event", Toast.LENGTH_SHORT).show());
         } else {
