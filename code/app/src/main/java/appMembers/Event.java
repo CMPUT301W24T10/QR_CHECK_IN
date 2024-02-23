@@ -1,6 +1,11 @@
 package appMembers;
 
 import java.util.HashMap;
+/**
+ *  @author sarao
+ *  Event class is used to create an event object that contains the title, date, time, location,
+ *  description, organizer, attendees, and the number of attendees.
+ */
 
 public class Event {
     private String title;
