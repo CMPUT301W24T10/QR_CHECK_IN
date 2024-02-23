@@ -27,6 +27,8 @@ public class checkin_createEvent_fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_checkin_create_event_fragment, container, false);
+
+        // Navigation to create new event fragment on pressing organize event button
         view.findViewById(R.id.organizeEventButton).setOnClickListener(v->{
             Navigation.findNavController(view).navigate(R.id.action_checkin_createEvent_fragment_to_input_info_fragment2);
         });

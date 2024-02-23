@@ -39,9 +39,13 @@ public class input_info_fragment extends Fragment {
         editTextEventDescription = view.findViewById(R.id.EnterEventDescription);
         radioGroupQRCode = view.findViewById(R.id.read_status);
 
+        /* Navigation to QR code display fragment and creating event on the database(pushing event details on database)
+        *  on pressing confirm button
+        */
         Button confirmButton = view.findViewById(R.id.confirm_button);
         confirmButton.setOnClickListener(v -> saveEventToFirestore());
 
+        // back Navigation to home fragment on pressing organize event button
         Button cancelButton = view.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_checkin_createEvent_fragment2));
 
@@ -70,5 +74,6 @@ public class input_info_fragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
         }
+
     }
 }
