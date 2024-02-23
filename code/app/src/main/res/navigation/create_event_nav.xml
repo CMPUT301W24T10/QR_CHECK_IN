@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/create_event_nav"
+    app:startDestination="@id/checkin_createEvent_fragment">
+
+    <fragment
+        android:id="@+id/checkin_createEvent_fragment"
+        android:name="com.example.qr_check_in.checkin_createEvent_fragment"
+        android:label="fragment_checkin_create_event_fragment"
+        tools:layout="@layout/fragment_checkin_create_event_fragment" >
+        <action
+            android:id="@+id/action_checkin_createEvent_fragment_to_input_info_fragment2"
+            app:destination="@id/input_info_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/input_info_fragment"
+        android:name="com.example.qr_check_in.input_info_fragment"
+        android:label="fragment_input_info_fragment"
+        tools:layout="@layout/fragment_input_info_fragment" >
+        <action
+            android:id="@+id/action_input_info_fragment_to_displayQrCodeFragment"
+            app:destination="@id/displayQrCodeFragment" />
+        <action
+            android:id="@+id/action_input_info_fragment_to_checkin_createEvent_fragment2"
+            app:destination="@id/checkin_createEvent_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayQrCodeFragment"
+        android:name="com.example.qr_check_in.DisplayQrCodeFragment"
+        android:label="fragment_display_qr_code"
+        tools:layout="@layout/fragment_display_qr_code" />
+</navigation>
