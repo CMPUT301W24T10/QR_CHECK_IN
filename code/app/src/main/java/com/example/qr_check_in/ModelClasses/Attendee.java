@@ -1,4 +1,4 @@
-package appMembers;
+package com.example.qr_check_in.ModelClasses;
 /**
  * @author sarao
  * Attendee class is a subclass of User class. It is used to create Attendee objects.

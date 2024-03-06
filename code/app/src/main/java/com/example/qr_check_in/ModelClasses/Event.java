@@ -1,4 +1,4 @@
-package appMembers;
+package com.example.qr_check_in.ModelClasses;
 
 import java.util.HashMap;
 /**

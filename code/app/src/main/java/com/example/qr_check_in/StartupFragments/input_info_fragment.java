@@ -1,4 +1,4 @@
-package landingPage;
+package com.example.qr_check_in.StartupFragments;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -13,12 +13,14 @@ import android.widget.Toast;
 
 import com.example.qr_check_in.R;
 
-import data.AppDatabase;
+import com.example.qr_check_in.data.AppDatabase;
 
 public class input_info_fragment extends Fragment {
     private EditText editTextOrganizerName, editTextEventName, editTextEventDescription;
     private RadioGroup radioGroupQRCode;
     private AppDatabase appDatabase; // Use AppDatabase for database interactions
+    private String organizerId;
+    private String eventId;
 
     public input_info_fragment() {
         // Required empty public constructor
@@ -59,9 +61,23 @@ public class input_info_fragment extends Fragment {
         boolean isNewQRCode = radioGroupQRCode.getCheckedRadioButtonId() == R.id.readRadioButton;
 
         if (!organizerName.isEmpty() && !eventName.isEmpty() && !eventDescription.isEmpty()) {
-            appDatabase.saveEvent(organizerName, eventName, eventDescription, isNewQRCode, getContext(),
-                    () -> Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment), // onSuccess
-                    () -> {}); // onFailure
+            appDatabase.saveOrganizer(organizerName, getContext(), new AppDatabase.FirestoreCallback() {
+                @Override
+                public void onCallback(String documentId) {
+                    organizerId = documentId;
+                    appDatabase.saveEvent(organizerId, eventName, eventDescription, isNewQRCode, getContext(), new AppDatabase.FirestoreCallback() {
+                        @Override
+                        public void onCallback(String documentId) {
+                            eventId = documentId;
+                            if(eventId != null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("eventId", eventId);
+                                Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment, bundle);
+                            }
+                        }
+                    });
+                }
+            });
         } else {
             Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
         }

@@ -1,4 +1,4 @@
-package appMembers;
+package com.example.qr_check_in.ModelClasses;
 /**
  * @author sarao
  * User class is an abstract class that is used to create the Organizer and Attendee classes.
