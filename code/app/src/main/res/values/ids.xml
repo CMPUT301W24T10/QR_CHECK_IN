@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="eventList" type="id">events</item>
+    <item name="editprofileButton" type="id">edit profile</item>
+    <item name="notificationSwitch" type="id">enablenotifications</item>
+    <item name="locationCheckBox" type="id">geolocation</item>
+    <item name="settingsButton" type="id">settings</item>
+    <item name="profilePicture" type="id">user profile picture</item>
+    <item name="nameEditText" type="id">edit profile name</item>
+    <item name="contactEditText" type="id">edit contact info</item>
+    <item name="addressEditText" type="id">edit adress</item>
+    <item name="saveButton" type="id">save</item>
+</resources>
