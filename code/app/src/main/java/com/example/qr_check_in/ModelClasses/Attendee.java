@@ -6,8 +6,8 @@ package com.example.qr_check_in.ModelClasses;
  */
 
 public class Attendee extends User{
-    public Attendee(String username) {
-        super(username, "attendee");
+    public Attendee(String username, String UID) {
+        super(username, UID);
     }
     public boolean isOrganizer() {
         return false;

@@ -25,7 +25,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
  * create an instance of this fragment.
  */
 public class DisplayQrCodeFragment extends Fragment {
-    private String EventId;
+    private String eventId;
+    private String organizerId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,12 +39,13 @@ public class DisplayQrCodeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_display_qr_code, container, false);
-        EventId = requireArguments().getString("eventId");
+        eventId = requireArguments().getString("eventId");
+        organizerId = requireArguments().getString("organizerId");
         TextView qrId = view.findViewById(R.id.QRcodeString);
 
         // generating QR code from eventId and set image view to QR code
-        qrId.setText(EventId);
-        Bitmap qrCode = generateQRCode(EventId);
+        qrId.setText(eventId);
+        Bitmap qrCode = generateQRCode(eventId);
         ImageView qrCodeImage = view.findViewById(R.id.ShowQRCode);
         qrCodeImage.setImageBitmap(qrCode);
 
@@ -59,10 +61,8 @@ public class DisplayQrCodeFragment extends Fragment {
     public void navigateToEventActivity() {
         Intent intent = new Intent(getActivity(), EventActivity.class);
 
-        // Replace "argumentKey1" and "argumentKey2" with the actual keys you'll use to retrieve the data
-        // Replace "argumentValue1" and "argumentValue2" with the actual values you want to pass
-//        intent.putExtra("argumentKey1", argumentValue1);
-//        intent.putExtra("argumentKey2", argumentValue2);
+        intent.putExtra("eventId", eventId);
+        intent.putExtra("organizerId", organizerId);
 
         startActivity(intent);
     }

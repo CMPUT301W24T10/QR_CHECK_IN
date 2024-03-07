@@ -69,9 +69,11 @@ public class input_info_fragment extends Fragment {
                         @Override
                         public void onCallback(String documentId) {
                             eventId = documentId;
+
                             if(eventId != null) {
                                 Bundle bundle = new Bundle();
                                 bundle.putString("eventId", eventId);
+                                bundle.putString("organizerId", organizerId);
                                 Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment, bundle);
                             }
                         }
