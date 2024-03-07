@@ -50,5 +50,9 @@
         android:id="@+id/reuseQRcodeFragment"
         android:name="com.example.qr_check_in.ReuseQRcodeFragment"
         android:label="fragment_reuse_q_rcode"
-        tools:layout="@layout/fragment_reuse_q_rcode" />
+        tools:layout="@layout/fragment_reuse_q_rcode" >
+        <action
+            android:id="@+id/action_reuseQRcodeFragment_to_displayQrCodeFragment"
+            app:destination="@id/displayQrCodeFragment" />
+    </fragment>
 </navigation>

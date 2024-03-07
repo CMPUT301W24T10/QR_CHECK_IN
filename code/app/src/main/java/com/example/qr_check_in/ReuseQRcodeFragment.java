@@ -5,6 +5,7 @@ import static androidx.fragment.app.FragmentManager.TAG;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,6 +65,11 @@ public class ReuseQRcodeFragment extends Fragment {
             if (selectedEventId != null) {
                 // Perform the action with the selected eventId
                 updateEventDetails(selectedEventId);
+                // provide navigation to the next activity
+                Bundle bundle = new Bundle();
+                bundle.putString("eventId", selectedEventId);
+                bundle.putString("organizerId", (String)eventDetails.get("organizerId"));
+                Navigation.findNavController(view).navigate(R.id.action_reuseQRcodeFragment_to_displayQrCodeFragment, bundle);
             } else {
                 Toast.makeText(getContext(), "Please select an event first", Toast.LENGTH_SHORT).show();
             }
