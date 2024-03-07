@@ -1,5 +1,5 @@
 package com.example.qr_check_in.StartupFragments;
-import android.content.DialogInterface;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
