@@ -1,5 +1,7 @@
 package com.example.qr_check_in;
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -42,6 +44,14 @@ public class ReuseQRcodeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_reuse_q_rcode, container, false);
+
+        if (requireArguments().getString("organizerId") == null) {
+            Log.e("OrganizerIdError", "Organizer ID is null");
+        }
+        if (requireArguments().getString("eventName") == null) {
+            Log.e("EventNameError", "Event name is null");
+        }
+        Log.e("EventDescription", "onCreateView: " + requireArguments().getString("eventDescription"));
         eventDetails.put("organizerId",requireArguments().getString("organizerId"));
         eventDetails.put("eventName",requireArguments().getString("eventName"));
         eventDetails.put("eventDescription",requireArguments().getString("eventDescription"));

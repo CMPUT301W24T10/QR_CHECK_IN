@@ -145,19 +145,31 @@ public class AppDatabase {
 
     public void fetchOrganizedEventIds(String deviceId, FirestoreFetchArrayCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if(deviceId == null) {
+            Log.e("FirestoreError", "Device ID is null");
+            return;
+        }
         DocumentReference docRef = db.collection("users").document(deviceId);
 
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document != null && document.exists()) {
-                    List<String> organizedEventIds = (List<String>) document.get("organizedEventIds");
-                    if (organizedEventIds != null) {
-                        // If the array exists, pass it to the callback
-                        callback.onCallback(organizedEventIds);
+                    Object organizedEventIdsObject = document.get("organizedEventIds");
+                    if (organizedEventIdsObject instanceof List<?>) {
+                        // This is a safe cast because we checked the instance type beforehand
+                        @SuppressWarnings("unchecked")
+                        List<String> organizedEventIds = (List<String>) organizedEventIdsObject;
+                        // Now you can use organizedEventIds as a List<String>
+                        if (organizedEventIds != null) {
+                            // If the array exists, pass it to the callback
+                            callback.onCallback(organizedEventIds);
+                        } else {
+                            // If the array does not exist, pass an empty list or null as needed
+                            callback.onCallback(new ArrayList<>()); // or callback.onCallback(null);
+                        }
                     } else {
-                        // If the array does not exist, pass an empty list or null as needed
-                        callback.onCallback(new ArrayList<>()); // or callback.onCallback(null);
+                        // Handle the case where it's not a List or is null
                     }
                 } else {
                     // Document does not exist

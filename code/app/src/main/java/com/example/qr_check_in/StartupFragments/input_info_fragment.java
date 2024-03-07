@@ -111,6 +111,8 @@ public class input_info_fragment extends Fragment {
                     // Navigate to ReusableQRCodeFragment
                     Bundle bundle = new Bundle();
                     bundle.putString("organizerName", editTextOrganizerName.getText().toString().trim());
+                    if(organizerId == null)
+                        organizerId = deviceId;
                     bundle.putString("organizerId", organizerId); // organizerId is the deviceId
                     bundle.putString("eventName", editTextEventName.getText().toString().trim());
                     bundle.putString("eventDescription", editTextEventDescription.getText().toString().trim());
