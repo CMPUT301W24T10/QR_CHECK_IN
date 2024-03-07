@@ -1,4 +1,4 @@
-package appMembers;
+package com.example.qr_check_in.ModelClasses;
 /**
  * @author sarao
  * Attendee class is a subclass of User class. It is used to create Attendee objects.
@@ -6,8 +6,8 @@ package appMembers;
  */
 
 public class Attendee extends User{
-    public Attendee(String username) {
-        super(username, "attendee");
+    public Attendee(String username, String UID) {
+        super(username, UID);
     }
     public boolean isOrganizer() {
         return false;

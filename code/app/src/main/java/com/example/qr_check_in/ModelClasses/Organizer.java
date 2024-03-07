@@ -1,4 +1,4 @@
-package appMembers;
+package com.example.qr_check_in.ModelClasses;
 
 /**
  * @author sarao
@@ -7,8 +7,8 @@ package appMembers;
  * It has two methods that return boolean values to check if the user is an organizer or an attendee.
  */
 public class Organizer extends User{
-    public Organizer(String username) {
-        super(username, "organizer");
+    public Organizer(String username, String UID) {
+        super(username, UID);
     }
     public boolean isOrganizer() {
         return true;
