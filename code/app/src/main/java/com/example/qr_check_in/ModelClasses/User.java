@@ -1,4 +1,4 @@
-package appMembers;
+package com.example.qr_check_in.ModelClasses;
 /**
  * @author sarao
  * User class is an abstract class that is used to create the Organizer and Attendee classes.
@@ -8,19 +8,20 @@ package appMembers;
 
 public abstract class User {
     private String username;
-    private String role;
-    private int UID;
-    public User(String username, String role) {
+//    private String role;
+    private String UID;
+    public User(String username, String UID) {
         this.username = username;
-        this.role = role;
+//        this.role = role;
+        this.UID = UID;
     }
     public String getUsername() {
         return username;
     }
-    public String getRole() {
-        return role;
-    }
-    public int getUID() {
+//    public String getRole() {
+//        return role;
+//    }
+    public String getUID() {
         return UID;
     }
     public abstract boolean isOrganizer();

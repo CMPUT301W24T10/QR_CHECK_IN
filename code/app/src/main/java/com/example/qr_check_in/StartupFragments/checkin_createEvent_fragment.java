@@ -1,4 +1,4 @@
-package landingPage;
+package com.example.qr_check_in.StartupFragments;
 
 import android.os.Bundle;
 

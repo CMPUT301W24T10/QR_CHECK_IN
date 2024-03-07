@@ -1,4 +1,4 @@
-package appMembers;
+package com.example.qr_check_in.ModelClasses;
 
 import java.util.HashMap;
 /**
@@ -14,15 +14,18 @@ public class Event {
     private String location;
     private String description;
     private Organizer organizer;
-    private HashMap<Integer, Attendee> attendees;
+    private HashMap<String, Attendee> attendees;
     private int numAttendees;
     private int maxAttendees;
     private boolean isFull;
-    public Event(String title, Organizer organizer, String description){
+    private String eventID;
+    public Event(String title, Organizer organizer, String description, String eventID){
         this.title = title;
         this.organizer = organizer;
         this.description = description;
-        this.attendees = new HashMap<Integer, Attendee>();
+        this.attendees = new HashMap<String, Attendee>();
+        this.numAttendees = 0;
+        this.eventID = eventID;
     }
 
     public String getTitle() {
