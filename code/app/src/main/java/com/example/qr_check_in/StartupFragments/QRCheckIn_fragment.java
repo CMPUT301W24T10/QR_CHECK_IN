@@ -42,6 +42,7 @@ public class QRCheckIn_fragment extends Fragment {
 
     ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result -> {
         if (result.getContents() != null) {
+            String uniqueId = result.getContents();
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder.setTitle("Result");
             builder.setMessage(result.getContents());
