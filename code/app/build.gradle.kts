@@ -49,6 +49,9 @@ dependencies {
     implementation("com.google.zxing:javase:3.5.3")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation ("com.google.zxing:core:3.3.0")
+    implementation ("com.journeyapps:zxing-android-embedded:<version>")
 
     // testing dependencies
     testImplementation("junit:junit:4.13.2")
