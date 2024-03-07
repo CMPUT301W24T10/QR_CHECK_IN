@@ -2,23 +2,18 @@ package com.example.qr_check_in.StartupFragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.qr_check_in.EventActivity;
 import com.example.qr_check_in.R;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
+import com.example.qr_check_in.data.QRCodeGenerator; // Adjust this import to match your package structure
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +26,6 @@ public class DisplayQrCodeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -39,20 +33,26 @@ public class DisplayQrCodeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_display_qr_code, container, false);
+
         eventId = requireArguments().getString("eventId");
         organizerId = requireArguments().getString("organizerId");
+
         TextView qrId = view.findViewById(R.id.QRcodeString);
-
-        // generating QR code from eventId and set image view to QR code
         qrId.setText(eventId);
-        Bitmap qrCode = generateQRCode(eventId);
-        ImageView qrCodeImage = view.findViewById(R.id.ShowQRCode);
-        qrCodeImage.setImageBitmap(qrCode);
 
-        // navigation to the event activity when user presses Ok button
+        // Use QRCodeGenerator to generate QR code
+        Bitmap qrCode = QRCodeGenerator.generateQRCodeImage(eventId, 512, 512);
+        ImageView qrCodeImage = view.findViewById(R.id.ShowQRCode);
+        if (qrCode != null) {
+            qrCodeImage.setImageBitmap(qrCode);
+        } else {
+            Toast.makeText(getContext(), "Failed to generate QR code. Please try again.", Toast.LENGTH_LONG).show();
+        }
+
+        // Navigation to the event activity when user presses the Ok button
         view.findViewById(R.id.openEventActivityButton).setOnClickListener(v -> {
             navigateToEventActivity();
-            requireActivity().finish(); // remove the current activity from the back stack
+            requireActivity().finish(); // Remove the current activity from the back stack
         });
 
         return view;
@@ -60,31 +60,8 @@ public class DisplayQrCodeFragment extends Fragment {
 
     public void navigateToEventActivity() {
         Intent intent = new Intent(getActivity(), EventActivity.class);
-
         intent.putExtra("eventId", eventId);
         intent.putExtra("organizerId", organizerId);
-
         startActivity(intent);
     }
-
-    // This method generates a QR code from a given string
-    public Bitmap generateQRCode(String text) {
-        QRCodeWriter writer = new QRCodeWriter();
-        try {
-            BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, 512, 512);
-            int width = bitMatrix.getWidth();
-            int height = bitMatrix.getHeight();
-            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
-                }
-            }
-            return bmp;
-        } catch (WriterException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
 }
