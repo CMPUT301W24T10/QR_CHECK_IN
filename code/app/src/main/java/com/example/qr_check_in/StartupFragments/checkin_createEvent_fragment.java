@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,6 @@ import com.example.qr_check_in.R;
  * create an instance of this fragment.
  */
 public class checkin_createEvent_fragment extends Fragment {
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
