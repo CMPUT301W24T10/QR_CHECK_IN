@@ -1,4 +1,4 @@
-package landingPage;
+package com.example.qr_check_in.StartupFragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +18,8 @@ import com.example.qr_check_in.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.qr_check_in.EventDetailsFragment;
 
 public class HomepageFragment extends Fragment {
 
