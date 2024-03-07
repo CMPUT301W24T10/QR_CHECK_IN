@@ -90,3 +90,4 @@ public class input_info_fragment extends Fragment {
         }
     }
 }
+

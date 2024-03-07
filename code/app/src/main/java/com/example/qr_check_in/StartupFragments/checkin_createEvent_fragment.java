@@ -40,3 +40,4 @@ public class checkin_createEvent_fragment extends Fragment {
         return view;
     }
 }
+
