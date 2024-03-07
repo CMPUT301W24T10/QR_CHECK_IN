@@ -17,6 +17,11 @@
             android:exported="false"
             android:label="@string/title_activity_event"
             android:theme="@style/Theme.QR_check_in.NoActionBar" />
+        <activity android:name=".EventDetailsActivity"
+            android:exported="false"
+            android:label="EventDetailsActivity"
+            android:theme="@style/Theme.QR_check_in.NoActionBar">
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true" >

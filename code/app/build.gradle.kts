@@ -49,6 +49,7 @@ dependencies {
     implementation("com.google.zxing:javase:3.5.3")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.navigation:navigation-runtime:2.7.7")
 
     // testing dependencies
     testImplementation("junit:junit:4.13.2")
