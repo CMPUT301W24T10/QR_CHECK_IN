@@ -3,6 +3,8 @@ package com.example.qr_check_in.StartupFragments;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ public class input_info_fragment extends Fragment {
     private AppDatabase appDatabase; // Use AppDatabase for database interactions
     private String organizerId;
     private String eventId;
+    private String deviceId;
 
     public input_info_fragment() {
         // Required empty public constructor
@@ -30,6 +33,7 @@ public class input_info_fragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appDatabase = new AppDatabase(); // Initialize AppDatabase
+        deviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     @Override
@@ -61,14 +65,15 @@ public class input_info_fragment extends Fragment {
         boolean isNewQRCode = radioGroupQRCode.getCheckedRadioButtonId() == R.id.readRadioButton;
 
         if (!organizerName.isEmpty() && !eventName.isEmpty() && !eventDescription.isEmpty()) {
-            appDatabase.saveOrganizer(organizerName, getContext(), new AppDatabase.FirestoreCallback() {
+            appDatabase.saveOrganizer(organizerName, deviceId,getContext(), new AppDatabase.FirestoreCallback() {
                 @Override
                 public void onCallback(String documentId) {
-                    organizerId = documentId;
+                    organizerId = deviceId;
                     appDatabase.saveEvent(organizerId, eventName, eventDescription, isNewQRCode, getContext(), new AppDatabase.FirestoreCallback() {
                         @Override
                         public void onCallback(String documentId) {
                             eventId = documentId;
+
 
                             if(eventId != null) {
                                 Bundle bundle = new Bundle();

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,6 @@ import com.example.qr_check_in.R;
  * create an instance of this fragment.
  */
 public class checkin_createEvent_fragment extends Fragment {
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +32,10 @@ public class checkin_createEvent_fragment extends Fragment {
         // Navigation to create new event fragment on pressing organize event button
         view.findViewById(R.id.organizeEventButton).setOnClickListener(v->{
             Navigation.findNavController(view).navigate(R.id.action_checkin_createEvent_fragment_to_input_info_fragment2);
+        });
+
+        view.findViewById(R.id.checkInButton).setOnClickListener(v->{
+            Navigation.findNavController(view).navigate(R.id.QRCheckIn_fragment);
         });
         return view;
     }
