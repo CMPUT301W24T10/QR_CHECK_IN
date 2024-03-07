@@ -64,6 +64,13 @@ public class checkin_createEvent_fragment extends Fragment {
         view.findViewById(R.id.organizeEventButton).setOnClickListener(v->{
             Navigation.findNavController(view).navigate(R.id.action_checkin_createEvent_fragment_to_input_info_fragment2);
         });
+
+
+
+        view.findViewById(R.id.checkInButton).setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.QRCheckIn_fragment);
+        });
+
         return view;
     }
 }
