@@ -6,11 +6,14 @@ import android.widget.Toast;
 
 import com.example.qr_check_in.ModelClasses.Event;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AppDatabase {
@@ -104,5 +107,52 @@ public class AppDatabase {
                 .addOnFailureListener(e -> {
                     Log.e("FirestoreError", "Error fetching event details", e);
                 });
+    }
+
+    public void saveAttendee(String deviceId, Context context, String uniqueID, FirestoreCallback firestoreCallback) {
+        Map<String, Object> attendeeData = new HashMap<>();
+        attendeeData.put("Name", "guest");
+
+        DocumentReference documentReference = db.collection("events").document(uniqueID);
+
+
+        documentReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if (documentSnapshot.exists()){
+                    if(documentSnapshot.contains("attendees")){
+                        List<Map<String, Object>> existingAttendees = (List<Map<String, Object>>) documentSnapshot.get("attendees");
+                        existingAttendees.add(attendeeData);
+                        documentReference.update("attendees", existingAttendees)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show();
+                                    firestoreCallback.onCallback(deviceId);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
+                                    Log.e("FirestoreError", "Error adding attendee", e);
+                                });
+                    } else{
+                        List<Map<String, Object>> newAttendees = new ArrayList<>();
+                        newAttendees.add(attendeeData);
+
+                        documentReference.update("attendees", newAttendees)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show();
+                                    firestoreCallback.onCallback(deviceId);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
+                                    Log.e("FirestoreError", "Error adding attendee", e);
+                                });
+                    }
+                } else{
+                    Log.e("FirestoreError", "Document does not exist");
+                }
+            } else {
+                Log.e("FirestoreError","Error getting document", task.getException());
+            }
+        });
+
     }
 }

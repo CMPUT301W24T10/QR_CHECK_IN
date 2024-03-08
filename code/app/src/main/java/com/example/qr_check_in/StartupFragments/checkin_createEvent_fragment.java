@@ -31,7 +31,7 @@ public class checkin_createEvent_fragment extends Fragment {
 
         // Navigation to create new event fragment on pressing organize event button
         view.findViewById(R.id.organizeEventButton).setOnClickListener(v->{
-            Navigation.findNavController(view).navigate(R.id.action_checkin_createEvent_fragment_to_input_info_fragment2);
+            Navigation.findNavController(view).navigate(R.id.input_info_fragment);
         });
 
         view.findViewById(R.id.checkInButton).setOnClickListener(v -> {
