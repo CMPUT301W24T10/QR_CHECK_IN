@@ -8,12 +8,10 @@
 
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/app_header"
-        style="@style/headerViewStyle"
+    <include
+        layout="@layout/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/app_header" />
+        android:layout_height="wrap_content" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView2"

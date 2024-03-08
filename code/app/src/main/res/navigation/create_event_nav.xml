@@ -61,6 +61,15 @@
     <fragment
         android:id="@+id/attendeeSelection_fragment"
         android:name="com.example.qr_check_in.StartupFragments.AttendeeSelection_fragment"
-        android:label="AttendeeSelection_fragment" />
+        android:label="AttendeeSelection_fragment" >
+        <action
+            android:id="@+id/action_attendeeSelection_fragment_to_profilePageFragment"
+            app:destination="@id/profilePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profilePageFragment"
+        android:name="com.example.qr_check_in.StartupFragments.HomepageFragment$ProfilePageFragment"
+        android:label="fragment_profile_page"
+        tools:layout="@layout/fragment_profile_page" />
 
 </navigation>
