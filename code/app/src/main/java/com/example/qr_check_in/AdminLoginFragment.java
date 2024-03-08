@@ -42,7 +42,7 @@ public class AdminLoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String password = passwordEditText.getText().toString();
-                if ("cmput301w24t10".equals(password)) {
+                if ("admin".equals(password)) {
                     // Password is correct, replace the fragment with the next fragment
                     Navigation.findNavController(view).navigate(R.id.action_adminLoginFragment_to_adminDashboardFragment);
                 } else {
