@@ -147,6 +147,70 @@ public class AppDatabase {
                     Log.e("FirestoreError", "Error fetching event details", e);
                 });
     }
+
+
+    public void saveAttendee(String deviceId, Context context, String uniqueID, FirestoreCallback firestoreCallback) {
+        Map<String, Object> attendeeData = new HashMap<>();
+        attendeeData.put(deviceId, "guest"); // Using device ID as the key and "guest" as the name
+
+        DocumentReference documentReference = db.collection("events").document(uniqueID);
+
+        documentReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if (documentSnapshot != null && documentSnapshot.exists()){
+                    if (documentSnapshot.contains("attendees")) {
+                        List<Map<String, Object>> existingAttendees = (List<Map<String, Object>>) documentSnapshot.get("attendees");
+
+                        // Check if the device ID already exists in the list of attendees
+                        boolean deviceIdExists = false;
+                        for (Map<String, Object> existingAttendee : existingAttendees) {
+                            if (existingAttendee.containsKey(deviceId)) {
+                                deviceIdExists = true;
+                                break;
+                            }
+                        }
+
+                        if (!deviceIdExists) {
+                            // If the device ID doesn't exist, add the new attendee
+                            existingAttendees.add(attendeeData);
+                            documentReference.update("attendees", existingAttendees)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show();
+                                        firestoreCallback.onCallback(deviceId);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
+                                        Log.e("FirestoreError", "Error adding attendee", e);
+                                    });
+                        } else {
+                            // If the device ID already exists, notify the callback without adding a new attendee
+                            firestoreCallback.onCallback(deviceId);
+                        }
+                    } else {
+                        // If the 'attendees' field does not exist, create a new list and add the new attendee
+                        List<Map<String, Object>> newAttendees = new ArrayList<>();
+                        newAttendees.add(attendeeData);
+
+                        documentReference.update("attendees", newAttendees)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show();
+                                    firestoreCallback.onCallback(deviceId);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
+                                    Log.e("FirestoreError", "Error adding attendee", e);
+                                });
+                    }
+                } else {
+                    Log.e("FirestoreError", "Document does not exist");
+                }
+            } else {
+                Log.e("FirestoreError", "Error getting document", task.getException());
+            }
+        });
+    }
+
     public interface FirestoreEventArrayLengthCallback {
         void onCallback(int arrayLength);
         void onError(String message);
@@ -221,5 +285,6 @@ public class AppDatabase {
             }
         });
     }
+
 
 }
