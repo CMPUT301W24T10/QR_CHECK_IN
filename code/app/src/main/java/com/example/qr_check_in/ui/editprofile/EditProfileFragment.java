@@ -13,8 +13,10 @@ import com.example.qr_check_in.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditProfileFragment extends Fragment {
 
@@ -22,8 +24,9 @@ public class EditProfileFragment extends Fragment {
     private EditText editTextPhone;
     private EditText editTextEmail;
     private Button buttonSave;
-
-    private FirebaseFirestore db;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private DocumentReference userRef; // Reference to the current user's document in Firestore
+    private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -35,18 +38,8 @@ public class EditProfileFragment extends Fragment {
         editTextEmail = root.findViewById(R.id.editTextEmail);
         buttonSave = root.findViewById(R.id.buttonSave);
 
-        // Initialize Firebase Firestore and Firebase Authentication
-        db = FirebaseFirestore.getInstance();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-
-        if (currentUser == null) {
-            // Handle the case where the user is not authenticated
-            // Redirect the user to the login page or handle it as necessary
-            // For simplicity, let's display a toast message
-            Toast.makeText(getContext(), "User not authenticated", Toast.LENGTH_SHORT).show();
-            return root;
-        }
 
         // Handle save button click
         buttonSave.setOnClickListener(v -> saveProfile());
@@ -58,57 +51,60 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void loadUserProfile() {
-        // Check if currentUser is null before accessing its properties
-        if (currentUser == null) {
-            Toast.makeText(getContext(), "User not authenticated", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            userRef = db.collection("users").document(userId);
 
-        // Retrieve user document from Firestore
-        DocumentReference docRef = db.collection("users").document(currentUser.getUid());
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document != null && document.exists()) {
-                    // Retrieve user data from document
-                    String name = document.getString("name");
-                    String phone = document.getString("phone");
-                    String email = document.getString("email");
+            userRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String name = documentSnapshot.getString("name");
+                    String phone = documentSnapshot.getString("phone");
+                    String email = documentSnapshot.getString("email");
 
-                    // Set retrieved user data to EditText fields
+                    // Set user's name in the EditText field
                     editTextName.setText(name);
-                    editTextPhone.setText(phone);
-                    editTextEmail.setText(email);
-                } else {
-                    Toast.makeText(getContext(), "User document does not exist", Toast.LENGTH_SHORT).show();
+
+                    // Populate phone and email fields if available
+                    editTextPhone.setText(phone != null ? phone : "");
+                    editTextEmail.setText(email != null ? email : "");
                 }
-            } else {
-                Toast.makeText(getContext(), "Failed to retrieve user document", Toast.LENGTH_SHORT).show();
-            }
-        });
+            }).addOnFailureListener(e -> {
+                // Handle failure
+                Toast.makeText(getContext(), "Failed to load profile data", Toast.LENGTH_SHORT).show();
+            });
+        }
     }
 
     private void saveProfile() {
-        // Get the edited profile information
         String name = editTextName.getText().toString().trim();
         String phone = editTextPhone.getText().toString().trim();
         String email = editTextEmail.getText().toString().trim();
 
-        // Update user document in Firestore with the new information
-        if (currentUser == null) {
-            Toast.makeText(getContext(), "User not authenticated", Toast.LENGTH_SHORT).show();
-            return;
+        // Update the user document in Firestore
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("name", name);
+
+        if (!phone.isEmpty()) {
+            userData.put("phone", phone);
         }
 
-        DocumentReference docRef = db.collection("users").document(currentUser.getUid());
-        docRef.update("name", name, "phone", phone, "email", email)
-                .addOnSuccessListener(aVoid -> {
-                    // Display success message
-                    Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    // Display failure message
-                    Toast.makeText(getContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
-                });
+        if (!email.isEmpty()) {
+            userData.put("email", email);
+        }
+
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            userRef = db.collection("users").document(userId);
+
+            userRef.update(userData)
+                    .addOnSuccessListener(aVoid -> {
+                        // Display success message
+                        Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        // Display failure message
+                        Toast.makeText(getContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
 }
