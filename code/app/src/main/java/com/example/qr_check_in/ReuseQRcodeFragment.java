@@ -3,62 +3,112 @@ package com.example.qr_check_in;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.example.qr_check_in.data.AppDatabase;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ReuseQRcodeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class ReuseQRcodeFragment extends Fragment {
+    private Map<String, Object> eventDetails;
+    private List<String> eventIds;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ReuseQRcodeFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ReuseQRcodeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ReuseQRcodeFragment newInstance(String param1, String param2) {
-        ReuseQRcodeFragment fragment = new ReuseQRcodeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    private AppDatabase db;
+    private String selectedEventId; // QR code is the eventId
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        db = new AppDatabase();
+        eventDetails = new HashMap<>();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reuse_q_rcode, container, false);
+        View view = inflater.inflate(R.layout.fragment_reuse_q_rcode, container, false);
+
+        if (requireArguments().getString("organizerId") == null) {
+            Log.e("OrganizerIdError", "Organizer ID is null");
+        }
+        if (requireArguments().getString("eventName") == null) {
+            Log.e("EventNameError", "Event name is null");
+        }
+        Log.e("EventDescription", "onCreateView: " + requireArguments().getString("eventDescription"));
+        eventDetails.put("organizerId",requireArguments().getString("organizerId"));
+        eventDetails.put("eventName",requireArguments().getString("eventName"));
+        eventDetails.put("eventDescription",requireArguments().getString("eventDescription"));
+
+        // Call getEvents to fetch eventIds and setup ListView
+        getEvents(view);   // this is making the app crash
+
+        Button confirmButton = view.findViewById(R.id.buttonConfirmSelectedQRcode); // Assuming the button's ID is confirmButton
+        confirmButton.setOnClickListener(v -> {
+            if (selectedEventId != null) {
+                // Perform the action with the selected eventId
+                updateEventDetails(selectedEventId);
+                // provide navigation to the next activity
+                Bundle bundle = new Bundle();
+                bundle.putString("eventId", selectedEventId);
+                bundle.putString("organizerId", (String)eventDetails.get("organizerId"));
+                Navigation.findNavController(view).navigate(R.id.action_reuseQRcodeFragment_to_displayQrCodeFragment, bundle);
+            } else {
+                Toast.makeText(getContext(), "Please select an event first", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+        return view;
+    }
+
+    public void getEvents(View view) {
+        ListView listView = view.findViewById(R.id.ListOfQRCodes); // Find ListView by ID
+
+        db.fetchOrganizedEventIds((String) eventDetails.get("organizerId"), new AppDatabase.FirestoreFetchArrayCallback() {
+            @Override
+            public void onCallback(List<String> eventIdss) {
+                // Update the UI (ListView) with the fetched eventIds
+                // Must be run on UI thread
+                eventIds = eventIdss;
+                getActivity().runOnUiThread(() -> {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventIds);
+                    listView.setAdapter(adapter);
+
+                    listView.setOnItemClickListener((parent, view, position, id) -> {
+                        String eventId = eventIds.get(position);
+                        // Navigate to the DisplayQrCodeFragment
+                        selectedEventId = eventIds.get(position); // Save the selected eventId
+                        // Optionally, you can give visual feedback here or log the selected item
+                        Log.d("SelectedEventId", "Selected event ID: " + selectedEventId);
+                    });
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("FirestoreError", message);
+            }
+        });
+    }
+
+    public void updateEventDetails(String eventId) {
+        db.updateEvent(eventId, (String)eventDetails.get("eventName"), (String)eventDetails.get("eventDescription"), getContext());
     }
 }
