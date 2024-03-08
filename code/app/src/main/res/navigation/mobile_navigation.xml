@@ -22,4 +22,10 @@
         android:name="com.example.qr_check_in.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/nav_edit_profile"
+        android:name="com.example.qr_check_in.ui.editprofile.EditProfileFragment"
+        android:label="@string/menu_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
 </navigation>
+

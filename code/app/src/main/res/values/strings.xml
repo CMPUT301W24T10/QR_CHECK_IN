@@ -46,5 +46,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_edit_profile">Edit profile</string>
+    <string name="this_is_edit_profile_fragment">This is edit profile fragment</string>
 
 </resources>
