@@ -1,5 +1,10 @@
 package com.example.qr_check_in.data;
 
+import android.net.Uri;
+
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
@@ -7,36 +12,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FirebaseImageLoader {
-    // Callback interface for when the image URLs are fetched
+    private final FirebaseFirestore db; // FirebaseFirestore instance for database operations
+    private final FirebaseStorage storage; // FirebaseStorage instance
+
+    public FirebaseImageLoader() {
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+    }
+
+    public void loadImagesFromMultipleFolders(List<String> paths, final ImageUrlsFetchedListener listener) {
+        final List<String> allImageUrls = new ArrayList<>();
+        final int[] pathsProcessed = {0};
+
+        for (String path : paths) {
+            StorageReference folderRef = storage.getReference().child(path);
+
+            folderRef.listAll()
+                    .addOnSuccessListener(listResult -> {
+                        List<Task<Uri>> downloadUrlTasks = new ArrayList<>();
+                        for (StorageReference itemRef : listResult.getItems()) {
+                            // Get the download URL for each item
+                            Task<Uri> downloadUrlTask = itemRef.getDownloadUrl();
+                            downloadUrlTasks.add(downloadUrlTask);
+                        }
+
+                        // When all download URLs are fetched
+                        Task<List<Uri>> allTasks = Tasks.whenAllSuccess(downloadUrlTasks);
+                        allTasks.addOnSuccessListener(uris -> {
+                            for (Uri uri : uris) {
+                                allImageUrls.add(uri.toString());
+                            }
+                            pathsProcessed[0]++;
+                            // If all paths are processed, invoke the callback
+                            if (pathsProcessed[0] == paths.size()) {
+                                listener.onImageUrlsFetched(allImageUrls);
+                            }
+                        });
+                    })
+                    .addOnFailureListener(e -> listener.onError("Error listing images from path: " + path));
+        }
+    }
+
     public interface ImageUrlsFetchedListener {
         void onImageUrlsFetched(List<String> imageUrls);
         void onError(String error);
-    }
-
-    // Firebase storage reference
-    private final StorageReference storageRef;
-
-    public FirebaseImageLoader() {
-        // Reference to your Firebase Storage root
-        storageRef = FirebaseStorage.getInstance().getReference();
-    }
-    public void loadImageUrls(String path,ImageUrlsFetchedListener listener) {
-        // Assuming that all images are stored in a folder named 'images'
-        StorageReference imagesRef = storageRef.child("/event_posters");
-
-        imagesRef.listAll()
-                .addOnSuccessListener(listResult -> {
-                    List<String> imageUrls = new ArrayList<>();
-                    for (StorageReference itemRef : listResult.getItems()) {
-                        // Get the download URL for each item
-                        itemRef.getDownloadUrl().addOnSuccessListener(downloadUrl -> {
-                            imageUrls.add(downloadUrl.toString());
-                            if (imageUrls.size() == listResult.getItems().size()) {
-                                listener.onImageUrlsFetched(imageUrls);
-                            }
-                        }).addOnFailureListener(e -> listener.onError("Error fetching download URL"));
-                    }
-                })
-                .addOnFailureListener(e -> listener.onError("Error listing images"));
     }
 }
