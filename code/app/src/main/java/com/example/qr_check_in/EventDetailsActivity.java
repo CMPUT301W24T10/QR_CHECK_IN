@@ -1,35 +1,59 @@
 package com.example.qr_check_in;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import com.example.qr_check_in.data.AppDatabase;
 
-public class EventDetailsActivity extends Activity {
+import java.util.Map;
+
+public class EventDetailsActivity extends AppCompatActivity {
     private TextView eventNameTextView;
-    private TextView eventDateTimeTextView;
+    private TextView eventStartTimeTextView;
+    private TextView eventEndTimeTextView;
+    private TextView eventCostTextView;
     private TextView eventLocationTextView;
     private TextView eventDescriptionTextView;
+    private AppDatabase AppDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_user_events_detail);
 
-        eventNameTextView = findViewById(R.id.eventNameTextView);
-        eventDateTimeTextView = findViewById(R.id.eventDateTimeTextView);
-        eventLocationTextView = findViewById(R.id.eventLocationTextView);
-        eventDescriptionTextView = findViewById(R.id.eventDescriptionTextView);
+        eventNameTextView = findViewById(R.id.tvEventName);
+        eventStartTimeTextView = findViewById(R.id.tvStartTime);
+        eventEndTimeTextView = findViewById(R.id.tvEndTime);
+        eventCostTextView = findViewById(R.id.tvCost);
+        eventLocationTextView = findViewById(R.id.btnLocation); // Assuming this is a TextView in your actual layout
+        eventDescriptionTextView = findViewById(R.id.tvDescription);
 
-        // Retrieve event details from Firebase or any other data source
-        String eventName = "Tech Conference";
-        String eventDateTime = "March 10, 2024 - 9:00 AM";
-        String eventLocation = "Conference Center";
-        String eventDescription = "Join us for a day of tech talks and networking.";
+        AppDatabase = new AppDatabase();
 
-        // Populate the TextViews with the retrieved event details
-        eventNameTextView.setText(eventName);
-        eventDateTimeTextView.setText(eventDateTime);
-        eventLocationTextView.setText(eventLocation);
-        eventDescriptionTextView.setText(eventDescription);
+        // Assuming you have the event ID from somewhere (e.g., intent, static variable, etc.)
+        String eventId = "yourEventId"; // Replace with actual event ID
+
+        AppDatabase.fetchEventDetails(eventId, new AppDatabase.FirestoreDocumentCallback() {
+            @Override
+            public void onCallback(Map<String, Object> data) {
+                if (data != null) {
+                    // Assuming the data map contains keys that match the Event model's field names
+                    String eventName = (String) data.get("eventName");
+                    String eventStartTime = (String) data.get("startTime"); // You might need to format date and time
+                    String eventEndTime = (String) data.get("endTime");
+                    String eventCost = (String) data.get("cost");
+                    String eventLocation = (String) data.get("location");
+                    String eventDescription = (String) data.get("description");
+
+                    // Populate the TextViews with the retrieved event details
+                    eventNameTextView.setText(eventName);
+                    eventStartTimeTextView.setText(eventStartTime);
+                    eventEndTimeTextView.setText(eventEndTime);
+                    eventCostTextView.setText(eventCost);
+                    eventLocationTextView.setText(eventLocation);
+                    eventDescriptionTextView.setText(eventDescription);
+                }
+            }
+        });
     }
 }
