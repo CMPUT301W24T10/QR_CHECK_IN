@@ -1,7 +1,5 @@
 package com.example.qr_check_in;
 
-import static androidx.fragment.app.FragmentManager.TAG;
-
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -69,7 +67,7 @@ public class ReuseQRcodeFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("eventId", selectedEventId);
                 bundle.putString("organizerId", (String)eventDetails.get("organizerId"));
-                Navigation.findNavController(view).navigate(R.id.action_reuseQRcodeFragment_to_displayQrCodeFragment, bundle);
+                Navigation.findNavController(view).navigate(R.id.displayQrCodeFragment, bundle);
             } else {
                 Toast.makeText(getContext(), "Please select an event first", Toast.LENGTH_SHORT).show();
             }

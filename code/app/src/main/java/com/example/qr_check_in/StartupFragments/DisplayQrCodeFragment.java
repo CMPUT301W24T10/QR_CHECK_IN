@@ -102,7 +102,7 @@ public class DisplayQrCodeFragment extends Fragment {
         Intent intent = new Intent(getActivity(), EventActivity.class);
 
         intent.putExtra("eventId", eventId);
-        intent.putExtra("organizerId", organizerId);
+        intent.putExtra("userId", organizerId);
 
         startActivity(intent);
     }
