@@ -90,7 +90,7 @@ public class input_info_fragment extends Fragment {
         Button uploadPosterButton = view.findViewById(R.id.uploadPosterButton);
         uploadPosterButton.setOnClickListener(v -> selectImage());
 
-        Button confirmButton = view.findViewById(R.id.confirm_button);
+        Button confirmButton = view.findViewById(R.id.button_confirm);
         confirmButton.setOnClickListener(v -> {
             boolean isNewQRCode = radioGroupQRCode.getCheckedRadioButtonId() == R.id.button_new_QRcode;
             // Check if the new QR code option is selected
@@ -132,12 +132,13 @@ public class input_info_fragment extends Fragment {
                         public void onCallback(String documentId) {
                             eventId = documentId;
 
-
                             if(eventId != null) {
                                 Bundle bundle = new Bundle();  // Create a bundle with event ID and organizer ID
                                 bundle.putString("eventId", eventId);
                                 bundle.putString("organizerId", organizerId);
                                 Log.d(TAG, "Navigation working fine.");
+//                                idlingResource.decrement();
+
                                 Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment, bundle); // Navigate to the display QR code fragment with the bundle
                             }
                         }
