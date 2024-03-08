@@ -1,5 +1,7 @@
 package com.example.qr_check_in.StartupFragments;
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri; // Import if you're planning to handle Uri for posters.
@@ -119,6 +121,7 @@ public class input_info_fragment extends Fragment {
                                 Bundle bundle = new Bundle();
                                 bundle.putString("eventId", eventId);
                                 bundle.putString("organizerId", organizerId);
+                                Log.d(TAG, "Navigation working fine.");
                                 Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment, bundle);
                             }
                         }
