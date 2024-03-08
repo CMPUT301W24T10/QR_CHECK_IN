@@ -64,40 +64,6 @@ public class DisplayQrCodeFragment extends Fragment {
         return view;
     }
 
-    /*private void checkPermissionAndSave() {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
-        } else {
-            saveQrCodeToDevice();
-        }
-    }*/ // For fututre if we plan to save the image to device as well.
-
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                saveQrCodeToDevice();
-            } else {
-                Toast.makeText(getContext(), "Permission Denied to write to storage", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }*/ // For future if saving to device is required
-
-    /*private void saveQrCodeToDevice() {
-        File qrCodeFile = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "QR_Code.png");
-        try (FileOutputStream out = new FileOutputStream(qrCodeFile)) {
-            qrCode.compress(Bitmap.CompressFormat.PNG, 100, out);
-            // Notify media scanner to make the image appear in gallery apps
-            MediaScannerConnection.scanFile(getContext(), new String[]{qrCodeFile.getAbsolutePath()}, null, null);
-            Toast.makeText(getContext(), "QR Code saved to " + qrCodeFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            Toast.makeText(getContext(), "Error saving QR Code", Toast.LENGTH_SHORT).show();
-        }
-    }
-*/  // For future if we need to save qr code to device as well.
-
-
     private void shareQrCodeViaEmail() {
         File qrCodeFile = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "QR_Code.png");
         try (FileOutputStream out = new FileOutputStream(qrCodeFile)) {
