@@ -57,6 +57,7 @@ dependencies {
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.test.uiautomator:uiautomator:2.3.0")
 
     // testing dependencies
     testImplementation("junit:junit:4.13.2")

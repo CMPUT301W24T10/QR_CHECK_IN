@@ -5,7 +5,6 @@ import static androidx.fragment.app.FragmentManager.TAG;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -14,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,11 +26,6 @@ import android.widget.Toast;
 
 import com.example.qr_check_in.R;
 import com.example.qr_check_in.data.AppDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.List;
 
 public class input_info_fragment extends Fragment {
     private EditText editTextOrganizerName, editTextEventName, editTextEventDescription;
@@ -99,7 +92,7 @@ public class input_info_fragment extends Fragment {
 
         Button confirmButton = view.findViewById(R.id.confirm_button);
         confirmButton.setOnClickListener(v -> {
-            boolean isNewQRCode = radioGroupQRCode.getCheckedRadioButtonId() == R.id.readRadioButton;
+            boolean isNewQRCode = radioGroupQRCode.getCheckedRadioButtonId() == R.id.button_new_QRcode;
             // Check if the new QR code option is selected
             if(isNewQRCode)
                 saveEventToFirestore(view); // creating a new event and save it to Firestore with a new QR code
