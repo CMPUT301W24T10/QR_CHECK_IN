@@ -27,7 +27,7 @@
         tools:layout="@layout/fragment_input_info_fragment" >
         <action
             android:id="@+id/action_input_info_fragment_to_displayQrCodeFragment"
-            app:destination="@id/action_reuseQRcodeFragment_to_displayQrCodeFragment" />
+            app:destination="@id/displayQrCodeFragment" />
         <action
             android:id="@+id/action_input_info_fragment_to_checkin_createEvent_fragment2"
             app:destination="@id/checkin_createEvent_fragment" />
@@ -36,7 +36,7 @@
             app:destination="@id/reuseQRcodeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/action_reuseQRcodeFragment_to_displayQrCodeFragment"
+        android:id="@+id/displayQrCodeFragment"
         android:name="com.example.qr_check_in.StartupFragments.DisplayQrCodeFragment"
         android:label="fragment_display_qr_code"
         tools:layout="@layout/fragment_display_qr_code" >
@@ -51,8 +51,8 @@
 
         tools:layout="@layout/fragment_reuse_q_rcode" >
         <action
-            android:id="@+id/action_reuseQRcodeFragment_to_displayQrCodeFragment"
-            app:destination="@id/action_reuseQRcodeFragment_to_displayQrCodeFragment" />
+            android:id="@+id/displayQrCodeFragment"
+            app:destination="@id/displayQrCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/QRCheckIn_fragment"
@@ -62,8 +62,8 @@
             android:id="@+id/action_QRCheckIn_fragment_to_attendeeSelection_fragment"
             app:destination="@id/attendeeSelection_fragment" />
         <action
-            android:id="@+id/action_reuseQRcodeFragment_to_displayQrCodeFragment"
-            app:destination="@id/action_reuseQRcodeFragment_to_displayQrCodeFragment" />
+            android:id="@+id/displayQrCodeFragment"
+            app:destination="@id/displayQrCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/attendeeSelection_fragment"
