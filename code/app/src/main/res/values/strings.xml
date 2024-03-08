@@ -57,5 +57,6 @@
     <string name="poster_preview" />
     <string name="event_poster_preview_desc" />
     <string name="upload_event_poster" />
+    <string name="menu_edit_profile">Edit Profile</string>
 
 </resources>

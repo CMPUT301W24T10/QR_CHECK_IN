@@ -27,6 +27,8 @@ private FragmentSlideshowBinding binding;
         return root;
     }
 
+
+
 @Override
     public void onDestroyView() {
         super.onDestroyView();
