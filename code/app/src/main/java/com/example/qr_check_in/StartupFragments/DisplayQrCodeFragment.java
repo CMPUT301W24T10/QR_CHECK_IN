@@ -51,7 +51,6 @@ public class DisplayQrCodeFragment extends Fragment {
 
         if (qrCode != null) {
             qrCodeImage.setImageBitmap(qrCode);
-            view.findViewById(R.id.saveToDeviceButton).setOnClickListener(v -> checkPermissionAndSave());
             view.findViewById(R.id.shareViaEmailButton).setOnClickListener(v -> shareQrCodeViaEmail());
         } else {
             Toast.makeText(getContext(), "Failed to generate QR code. Please try again.", Toast.LENGTH_LONG).show();
@@ -65,15 +64,15 @@ public class DisplayQrCodeFragment extends Fragment {
         return view;
     }
 
-    private void checkPermissionAndSave() {
+    /*private void checkPermissionAndSave() {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
         } else {
             saveQrCodeToDevice();
         }
-    }
+    }*/ // For fututre if we plan to save the image to device as well.
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE) {
@@ -83,9 +82,9 @@ public class DisplayQrCodeFragment extends Fragment {
                 Toast.makeText(getContext(), "Permission Denied to write to storage", Toast.LENGTH_SHORT).show();
             }
         }
-    }
+    }*/ // For future if saving to device is required
 
-    private void saveQrCodeToDevice() {
+    /*private void saveQrCodeToDevice() {
         File qrCodeFile = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "QR_Code.png");
         try (FileOutputStream out = new FileOutputStream(qrCodeFile)) {
             qrCode.compress(Bitmap.CompressFormat.PNG, 100, out);
@@ -96,7 +95,7 @@ public class DisplayQrCodeFragment extends Fragment {
             Toast.makeText(getContext(), "Error saving QR Code", Toast.LENGTH_SHORT).show();
         }
     }
-
+*/  // For future if we need to save qr code to device as well.
 
 
     private void shareQrCodeViaEmail() {

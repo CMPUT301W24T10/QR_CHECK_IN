@@ -64,7 +64,7 @@ public class input_info_fragment extends Fragment {
         deviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
-    @SuppressLint("MissingInflatedId")
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -102,14 +102,14 @@ public class input_info_fragment extends Fragment {
         String organizerName = editTextOrganizerName.getText().toString().trim();
         String eventName = editTextEventName.getText().toString().trim();
         String eventDescription = editTextEventDescription.getText().toString().trim();
-        boolean isNewQRCode = radioGroupQRCode.getCheckedRadioButtonId() == R.id.readRadioButton;
+
 
         if (!organizerName.isEmpty() && !eventName.isEmpty() && !eventDescription.isEmpty()) {
             appDatabase.saveOrganizer(organizerName, deviceId,getContext(), new AppDatabase.FirestoreCallback() {
                 @Override
                 public void onCallback(String documentId) {
                     organizerId = deviceId;
-                    appDatabase.saveEvent(organizerId, eventName, eventDescription, isNewQRCode,posterUri, getContext(), new AppDatabase.FirestoreCallback() {
+                    appDatabase.saveEvent(organizerId, eventName, eventDescription, posterUri, getContext(), new AppDatabase.FirestoreCallback() {
                         @Override
                         public void onCallback(String documentId) {
                             eventId = documentId;

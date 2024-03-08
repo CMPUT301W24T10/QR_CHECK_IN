@@ -30,11 +30,12 @@ public class AppDatabase {
         storage = FirebaseStorage.getInstance();
     }
 
-    public void saveEvent(String organizerId, String eventName, String eventDescription,boolean isNewQRCode, Uri posterUri, Context context, FirestoreCallback firestoreCallback) {
+    public void saveEvent(String organizerId, String eventName, String eventDescription, Uri posterUri, Context context, FirestoreCallback firestoreCallback) {
         Map<String, Object> event = new HashMap<>();
         event.put("organizerId", organizerId);
         event.put("eventName", eventName);
         event.put("eventDescription", eventDescription);
+
 
         db.collection("events").add(event)
                 .addOnSuccessListener(documentReference ->{
@@ -115,15 +116,15 @@ public class AppDatabase {
     private void updateOrganizerWithEvent(String organizerId, String eventId, Context context) {
         if (organizerId == null || eventId == null) {
             Log.e("FirestoreError", "Organizer ID or Event ID is null, cannot update organizer with event");
-            Toast.makeText(context, "Error updating organizer with event ID", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "null updating organizer with event ID", Toast.LENGTH_SHORT).show();
             return;
         }
-        DocumentReference organizerRef = db.collection("organizers").document(organizerId);
+        DocumentReference organizerRef = db.collection("users").document(organizerId);
 
         // Add the event ID to an array of organized eventIds. If the array doesn't exist, it will be created.
         organizerRef.update("organizedEventIds", FieldValue.arrayUnion(eventId))
                 .addOnSuccessListener(aVoid -> Toast.makeText(context, "Organizer updated with event ID", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(context, "Error updating organizer with event ID", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(context, "Error updating organizer with event ID"+e.getMessage(), Toast.LENGTH_SHORT).show());
     }
     // fetch the user details from database
     public void fetchUserDetails(String userId, FirestoreDocumentCallback firestoreDocumentCallback) {

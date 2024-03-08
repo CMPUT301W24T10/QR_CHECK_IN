@@ -33,12 +33,6 @@
             android:src="@drawable/ic_launcher_foreground" />
 
         <!-- Button to save QR code to the device -->
-        <Button
-            android:id="@+id/saveToDeviceButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Save to Device" />
 
         <!-- Button to share QR code via email -->
         <Button
@@ -46,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Share via Email" />
+            android:text="Share QR Code" />
 
         <Button
             android:id="@+id/openEventActivityButton"
