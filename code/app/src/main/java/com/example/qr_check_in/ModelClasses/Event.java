@@ -14,11 +14,11 @@ public class Event {
     private String location; // The location of the event
     private String description; // The description of the event
     private Organizer organizer; // The organizer of the event
-    private HashMap<String, Attendee> attendees; // The attendees of the event
-    private int numAttendees; // The number of attendees
-    private int maxAttendees; // The maximum number of attendees allowed
-    private boolean isFull; // Indicates if the event is full
-    private String eventID; // The unique identifier of the event
+    public HashMap<String, Attendee> attendees; // The attendees of the event
+    public int numAttendees; // The number of attendees
+    public int maxAttendees; // The maximum number of attendees allowed
+    public boolean isFull; // Indicates if the event is full
+    public String eventID; // The unique identifier of the event
 
     /**
      * Constructs a new Event object with the specified title, organizer, description, and eventID.
