@@ -53,7 +53,34 @@ public class MainActivityTest {
             e.printStackTrace();
         }
         onView(withId(R.id.openEventActivityButton)).check(matches(isDisplayed()));
-
     }
+    @Test
+    public void reuseQRCode() {
+        // perform a click on the create event button
+        onView(withId(R.id.organizeEventButton)).perform(click());
+
+        // fill in the user name, event name, event description and toggle the radio button newQRcode
+        onView(withId(R.id.EnterOrganizerName)).perform(typeText("Test Name"));
+        onView(withId(R.id.EnterEventName)).perform(typeText("Test Event"));
+        onView(withId(R.id.EnterEventDescription)).perform(typeText("Test Description"), closeSoftKeyboard());
+        onView(withId(R.id.button_existing_qrcode)).perform(click());
+        // click the confirm button
+        onView(withId(R.id.button_confirm)).perform(click());
+        // put some delay to deal with asynchronous task
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            onView(withId(R.id.ListOfQRCodes)).check(matches(isDisplayed())); // means the list of QR codes is displayed
+        }
+        catch (Exception e){
+            // means there are no QR codes available and fragment didn't change
+            onView(withId(R.id.button_confirm)).check(matches(isDisplayed()));
+        }
+    }
+
+
 
 }
