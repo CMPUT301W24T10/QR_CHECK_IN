@@ -241,19 +241,25 @@ public class AppDatabase {
         });
     }
 
-    public interface FirestoreEventArrayLengthCallback {
+    public interface FirestoreEventArrayLengthCallback { //Interface definition for a callback to be invoked when the length of an array of events is retrieved from Firestore.
         void onCallback(int arrayLength);
         void onError(String message);
     }
-    // fetch the length of the organizedEventIds array from the user document
+    /**
+     * Fetches the length of the array of organized event IDs associated with a given device ID from Firestore.
+     *
+     * @param deviceId The device ID of the user whose organized event IDs are to be fetched.
+     * @param context  The context of the application.
+     * @param callback The callback to be invoked when the length of the array is retrieved or when an error occurs.
+     */
     public void fetchOrganizedEventIdsLength(String deviceId, Context context, FirestoreEventArrayLengthCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(deviceId);
 
-        docRef.get().addOnCompleteListener(task -> {
+        docRef.get().addOnCompleteListener(task -> {   // Retrieve the document asynchronously
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                if (document != null && document.exists()) {
+                if (document != null && document.exists()) {  // Check if the document exists and contains data
                     List<String> organizedEventIds = (List<String>) document.get("organizedEventIds");
                     if (organizedEventIds != null) {
                         // If the array exists, pass its length to the callback
@@ -272,7 +278,7 @@ public class AppDatabase {
             }
         });
     }
-    public interface FirestoreFetchArrayCallback {
+    public interface FirestoreFetchArrayCallback {  //interface definition for a callback to be invoked when fetching an array from Firestore.
         void onCallback(List<String> array);
         void onError(String message);
     }
