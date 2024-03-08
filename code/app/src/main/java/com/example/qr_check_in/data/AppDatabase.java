@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.qr_check_in.ModelClasses.Event;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -149,48 +150,38 @@ public class AppDatabase {
     }
 
 
-    public void saveAttendee(String deviceId, Context context, String uniqueID, FirestoreCallback firestoreCallback) {
-        Map<String, Object> attendeeData = new HashMap<>();
-        attendeeData.put(deviceId, "guest"); // Using device ID as the key and "guest" as the name
-
+    public void saveAttendee(String deviceId, String attendeeName, Context context, String uniqueID, FirestoreCallback firestoreCallback) {
         DocumentReference documentReference = db.collection("events").document(uniqueID);
 
         documentReference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
+            if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
-                if (documentSnapshot != null && documentSnapshot.exists()){
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    Map<String, Object> attendeeData = new HashMap<>();
+                    attendeeData.put(deviceId, attendeeName);
+
+                    // Check if the 'attendees' field exists
                     if (documentSnapshot.contains("attendees")) {
-                        List<Map<String, Object>> existingAttendees = (List<Map<String, Object>>) documentSnapshot.get("attendees");
+                        // Get the existing attendees map
+                        Map<String, Object> existingAttendees = (Map<String, Object>) documentSnapshot.get("attendees");
 
-                        // Check if the device ID already exists in the list of attendees
-                        boolean deviceIdExists = false;
-                        for (Map<String, Object> existingAttendee : existingAttendees) {
-                            if (existingAttendee.containsKey(deviceId)) {
-                                deviceIdExists = true;
-                                break;
-                            }
-                        }
+                        // Add the new attendee to the existing map
+                        existingAttendees.put(deviceId, attendeeName);
 
-                        if (!deviceIdExists) {
-                            // If the device ID doesn't exist, add the new attendee
-                            existingAttendees.add(attendeeData);
-                            documentReference.update("attendees", existingAttendees)
-                                    .addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show();
-                                        firestoreCallback.onCallback(deviceId);
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
-                                        Log.e("FirestoreError", "Error adding attendee", e);
-                                    });
-                        } else {
-                            // If the device ID already exists, notify the callback without adding a new attendee
-                            firestoreCallback.onCallback(deviceId);
-                        }
+                        // Update the 'attendees' field with the modified map
+                        documentReference.update("attendees", existingAttendees)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show();
+                                    firestoreCallback.onCallback(deviceId);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
+                                    Log.e("FirestoreError", "Error adding attendee", e);
+                                });
                     } else {
-                        // If the 'attendees' field does not exist, create a new list and add the new attendee
-                        List<Map<String, Object>> newAttendees = new ArrayList<>();
-                        newAttendees.add(attendeeData);
+                        // If the 'attendees' field does not exist, create a new map and add the new attendee
+                        Map<String, Object> newAttendees = new HashMap<>();
+                        newAttendees.put(deviceId, attendeeName);
 
                         documentReference.update("attendees", newAttendees)
                                 .addOnSuccessListener(aVoid -> {
