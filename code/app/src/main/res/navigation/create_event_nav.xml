@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_QRCheckIn_fragment_to_attendeeSelection_fragment"
             app:destination="@id/attendeeSelection_fragment" />
+        <action
+            android:id="@+id/action_reuseQRcodeFragment_to_displayQrCodeFragment"
+            app:destination="@id/displayQrCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/attendeeSelection_fragment"

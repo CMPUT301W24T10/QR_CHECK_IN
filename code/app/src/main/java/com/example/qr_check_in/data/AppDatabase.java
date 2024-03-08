@@ -118,20 +118,37 @@ public class AppDatabase {
         documentReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 DocumentSnapshot documentSnapshot = task.getResult();
-                if (documentSnapshot.exists()){
-                    if(documentSnapshot.contains("attendees")){
+                if (documentSnapshot != null && documentSnapshot.exists()){
+                    if (documentSnapshot.contains("attendees")) {
                         List<Map<String, Object>> existingAttendees = (List<Map<String, Object>>) documentSnapshot.get("attendees");
-                        existingAttendees.add(attendeeData);
-                        documentReference.update("attendees", existingAttendees)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show();
-                                    firestoreCallback.onCallback(deviceId);
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
-                                    Log.e("FirestoreError", "Error adding attendee", e);
-                                });
-                    } else{
+
+                        // Check if the device ID already exists in the list of attendees
+                        boolean deviceIdExists = false;
+                        for (Map<String, Object> existingAttendee : existingAttendees) {
+                            if (existingAttendee.containsKey(deviceId)) {
+                                deviceIdExists = true;
+                                break;
+                            }
+                        }
+
+                        if (!deviceIdExists) {
+                            // If the device ID doesn't exist, add the new attendee
+                            existingAttendees.add(attendeeData);
+                            documentReference.update("attendees", existingAttendees)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show();
+                                        firestoreCallback.onCallback(deviceId);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
+                                        Log.e("FirestoreError", "Error adding attendee", e);
+                                    });
+                        } else {
+                            // If the device ID already exists, notify the callback without adding a new attendee
+                            firestoreCallback.onCallback(deviceId);
+                        }
+                    } else {
+                        // If the 'attendees' field does not exist, create a new list and add the new attendee
                         List<Map<String, Object>> newAttendees = new ArrayList<>();
                         newAttendees.add(attendeeData);
 
@@ -145,11 +162,11 @@ public class AppDatabase {
                                     Log.e("FirestoreError", "Error adding attendee", e);
                                 });
                     }
-                } else{
+                } else {
                     Log.e("FirestoreError", "Document does not exist");
                 }
             } else {
-                Log.e("FirestoreError","Error getting document", task.getException());
+                Log.e("FirestoreError", "Error getting document", task.getException());
             }
         });
     }
