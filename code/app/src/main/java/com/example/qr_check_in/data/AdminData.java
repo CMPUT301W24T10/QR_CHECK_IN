@@ -48,16 +48,18 @@ public class AdminData {
     }
 
 
-    public void deleteEvent(String documentId, EventDeletionListener listener) {
+    public void deleteEvent(String documentId, EventDeletionListener listener) {  // Accesses the "events" collection in Firestore and attempts to delete the document with the specified ID.
         db.collection("events").document(documentId).delete()
                 .addOnSuccessListener(aVoid -> {
-                    listener.onEventDeletionSuccess(documentId);
+                    listener.onEventDeletionSuccess(documentId);  // Notifies the provided listener that the deletion was successful by calling its onEventDeletionSuccess method.
+                    // Passes the documentId of the deleted event back to the caller through the listener.
                 })
                 .addOnFailureListener(e -> {
                     Log.e("DeleteEvent", "deleteEvent: "+ e.getMessage() );
                 });
     }
-    public interface ProfileFetchListener {
+    public interface ProfileFetchListener {   // Callback method invoked when the profile list is fetched successfully.
+        // It passes the fetched list of profile ID pairs back to the caller.
         void onProfileListFetched(List<ProfileIdPair> profileList);
     }
     public void fetchProfileNames(ProfileFetchListener listener) {
@@ -66,6 +68,7 @@ public class AdminData {
         db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
+                    // Retrieve the document ID and profile name from each document
                     String docId = document.getId();
                     String profileName = document.getString("Name");
                     if (profileName != null) { // Making sure profileName is not null

@@ -19,18 +19,35 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     public ImageAdapter(List<String> imageUrls) {
         this.imageUrls = imageUrls;
-    }
+    }  /**
+     * Adapter class for managing the list of image URLs.
+     */
 
+
+    /**
+     * ViewHolder class to hold the views for each item in the RecyclerView.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
-
+        /**
+         * Constructor for the ViewHolder class.
+         * Initializes the views for each item in the RecyclerView.
+         *
+         * @param view The view containing the ImageView for displaying images.
+         */
         public ViewHolder(View view) {
             super(view);
             imageView = view.findViewById(R.id.imageview);
         }
     }
 
-
+    /**
+     * Creates a new ViewHolder by inflating the layout for an item in the RecyclerView.
+     *
+     * @param parent   The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     @NonNull
     @Override
     public ImageAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

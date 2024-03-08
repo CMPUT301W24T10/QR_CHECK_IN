@@ -17,22 +17,30 @@ import java.util.List;
 public class EventListFetcher {
 
     private FirebaseFirestore db;
-
+    /**
+     * Constructor for the EventListFetcher class.
+     * Initializes the FirebaseFirestore instance for database operations.
+     */
     public EventListFetcher() {
         db = FirebaseFirestore.getInstance();
     }
 
+    /**
+     * Fetches a list of events from the Firestore database.
+     *
+     * @param listener The listener to be notified when the event list is received or if an error occurs.
+     */
     public void fetchEvents(final OnEventListReceivedListener listener) {
-        db.collection("events").get()
+        db.collection("events").get()   // Access the 'events' collection in Firestore and retrieve all documents
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()) {  // If the task is successful, iterate through the result documents
                             List<Event2> eventList = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String name = document.getString("eventName");
                                 String description = document.getString("eventDescription");
-                                eventList.add(new Event2(name, description));
+                                eventList.add(new Event2(name, description)); // Create an Event2 object with the retrieved details and add it to the list
                             }
                             listener.onEventListReceived(eventList);
                         } else {
@@ -42,7 +50,9 @@ public class EventListFetcher {
                     }
                 });
     }
-
+    /**
+     * Listener interface for receiving the event list or error message from EventListFetcher.
+     */
     public interface OnEventListReceivedListener {
         void onEventListReceived(List<Event2> eventList);
         void onError(String message);
