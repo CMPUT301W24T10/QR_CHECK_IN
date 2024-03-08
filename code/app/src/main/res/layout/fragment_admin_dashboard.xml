@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".AdminDashboardFragment">
+
+    <!-- TextView for Admin Dashboard title -->
+    <TextView
+        android:id="@+id/tvAdminDashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ADMIN DASHBOARD"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/btnRemoveEvents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remove Events"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnRemoveProfiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remove Profiles"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnRemoveImages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remove Images"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnBrowseEvents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Browse Events"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnBrowseProfiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Browse Profiles"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnBrowseImages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Browse Images"
+        android:layout_marginBottom="8dp"/>
+
+</LinearLayout>

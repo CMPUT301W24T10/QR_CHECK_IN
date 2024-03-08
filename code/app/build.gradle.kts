@@ -11,7 +11,7 @@ android {
     namespace = "com.example.qr_check_in"
     compileSdk = 34
 
-    defaultConfig {
+    defaultConfig {<<<<<<< tanay
         applicationId = "com.example.qr_check_in"
         minSdk = 28
         targetSdk = 34
