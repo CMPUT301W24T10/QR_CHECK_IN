@@ -45,6 +45,7 @@
         android:id="@+id/reuseQRcodeFragment"
         android:name="com.example.qr_check_in.ReuseQRcodeFragment"
         android:label="fragment_reuse_q_rcode"
+
         tools:layout="@layout/fragment_reuse_q_rcode" />
     <fragment
         android:id="@+id/QRCheckIn_fragment"
@@ -58,4 +59,5 @@
         android:id="@+id/attendeeSelection_fragment"
         android:name="com.example.qr_check_in.StartupFragments.AttendeeSelection_fragment"
         android:label="AttendeeSelection_fragment" />
+
 </navigation>

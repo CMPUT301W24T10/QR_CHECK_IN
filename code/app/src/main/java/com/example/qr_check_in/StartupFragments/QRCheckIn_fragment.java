@@ -1,12 +1,15 @@
 package com.example.qr_check_in.StartupFragments;
 
 
+
 import android.os.Bundle;
 import android.provider.Settings;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import androidx.navigation.Navigation;
 import androidx.activity.result.ActivityResultLauncher;
 
@@ -28,14 +31,17 @@ public class QRCheckIn_fragment extends Fragment {
 
     private String deviceId;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_qr_check_in, container, false);
+
         deviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         btnScan = view.findViewById(R.id.scanButton);
         appDatabase = new AppDatabase();
         btnScan.setOnClickListener(v -> {
             scanCode();
+
 
         });
 
@@ -52,6 +58,7 @@ public class QRCheckIn_fragment extends Fragment {
     }
 
     ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result -> {
+
         if (result != null && result.getContents() != null) {
             String uniqueId = result.getContents();
 
@@ -66,3 +73,4 @@ public class QRCheckIn_fragment extends Fragment {
         }
     });
 }
+

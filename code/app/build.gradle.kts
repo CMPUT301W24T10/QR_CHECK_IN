@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.qr_check_in"
-        minSdk = 34
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -50,8 +50,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+
+
     implementation ("com.google.zxing:core:3.3.0")
-    implementation ("com.journeyapps:zxing-android-embedded:<version>")
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.google.firebase:firebase-auth:22.3.1")
 
     // testing dependencies
     testImplementation("junit:junit:4.13.2")

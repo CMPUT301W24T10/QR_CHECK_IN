@@ -25,6 +25,16 @@
     <string name="confirm">confirm</string>
     <string name="cancel">cancel</string>
     <string name="app_header">QR_Check_In</string>
+
+    <string name="name">user_Name</string>
+    <string name="contact_information">User Contact Information (Phone No.)</string>
+    <string name="address">User Address</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="enable_geolocation_tracking">Enable Geolocation Tracking</string>
+    <string name="enable_notifications">Enable Notifications</string>
+    <string name="user_settings">User Settings</string>
+
     <string name="title_activity_event">EventActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -36,6 +46,8 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+
     <string name="scan_button">Scan</string>
     <string name="attendee_selection">User Options</string>
+
 </resources>

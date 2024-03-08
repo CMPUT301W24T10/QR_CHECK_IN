@@ -24,12 +24,11 @@ public class AppDatabase {
         db = FirebaseFirestore.getInstance();
     }
 
-    public void saveEvent(String organizerId, String eventName, String eventDescription, boolean isNewQRCode, Context context, FirestoreCallback firestoreCallback) {
+    public void saveEvent(String organizerId, String eventName, String eventDescription, Context context, FirestoreCallback firestoreCallback) {
         Map<String, Object> event = new HashMap<>();
         event.put("organizerId", organizerId);
         event.put("eventName", eventName);
         event.put("eventDescription", eventDescription);
-        event.put("isNewQRCode", isNewQRCode);
 
         db.collection("events").add(event)
                 .addOnSuccessListener(documentReference -> {
@@ -109,6 +108,7 @@ public class AppDatabase {
                 });
     }
 
+
     public void saveAttendee(String deviceId, Context context, String uniqueID, FirestoreCallback firestoreCallback) {
         Map<String, Object> attendeeData = new HashMap<>();
         attendeeData.put(deviceId, "guest"); // Using device ID as the key and "guest" as the name
@@ -153,4 +153,81 @@ public class AppDatabase {
             }
         });
     }
+
+    public interface FirestoreEventArrayLengthCallback {
+        void onCallback(int arrayLength);
+        void onError(String message);
+    }
+    // fetch the length of the organizedEventIds array from the user document
+    public void fetchOrganizedEventIdsLength(String deviceId, Context context, FirestoreEventArrayLengthCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(deviceId);
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+                    List<String> organizedEventIds = (List<String>) document.get("organizedEventIds");
+                    if (organizedEventIds != null) {
+                        // If the array exists, pass its length to the callback
+                        callback.onCallback(organizedEventIds.size());
+                    } else {
+                        // If the array does not exist, pass a length of 0 or indicate absence as needed
+                        callback.onCallback(0);
+                    }
+                } else {
+                    // Document does not exist
+                    callback.onError("Document does not exist");
+                }
+            } else {
+                // Task failed
+                callback.onError("Failed to fetch document: " + task.getException().getMessage());
+            }
+        });
+    }
+    public interface FirestoreFetchArrayCallback {
+        void onCallback(List<String> array);
+        void onError(String message);
+    }
+
+    public void fetchOrganizedEventIds(String deviceId, FirestoreFetchArrayCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if(deviceId == null) {
+            Log.e("FirestoreError", "Device ID is null");
+            return;
+        }
+        DocumentReference docRef = db.collection("users").document(deviceId);
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+                    Object organizedEventIdsObject = document.get("organizedEventIds");
+                    if (organizedEventIdsObject instanceof List<?>) {
+                        // This is a safe cast because we checked the instance type beforehand
+                        @SuppressWarnings("unchecked")
+                        List<String> organizedEventIds = (List<String>) organizedEventIdsObject;
+                        // Now you can use organizedEventIds as a List<String>
+                        if (organizedEventIds != null) {
+                            // If the array exists, pass it to the callback
+                            callback.onCallback(organizedEventIds);
+                        } else {
+                            // If the array does not exist, pass an empty list or null as needed
+                            callback.onCallback(new ArrayList<>()); // or callback.onCallback(null);
+                        }
+                    } else {
+                        // Handle the case where it's not a List or is null
+                    }
+                } else {
+                    // Document does not exist
+                    callback.onError("Document does not exist");
+                }
+            } else {
+                // Task failed
+                callback.onError("Failed to fetch document: " + task.getException().getMessage());
+            }
+        });
+    }
+
+
 }
