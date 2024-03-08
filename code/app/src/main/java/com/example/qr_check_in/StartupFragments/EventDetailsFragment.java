@@ -1,3 +1,4 @@
+
 package com.example.qr_check_in.StartupFragments;
 
 import android.annotation.SuppressLint;
@@ -18,6 +19,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
+/**
+ * This class represents the Event Details Fragment in the QR Check-In application.
+ * It fetches event details from Firestore and displays them.
+ * Outstanding issues: Need to input location, start time and end time into Firebase database
+ */
 public class EventDetailsFragment extends Fragment {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();

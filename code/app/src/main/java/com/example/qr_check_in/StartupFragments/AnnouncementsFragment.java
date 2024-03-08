@@ -1,3 +1,4 @@
+
 package com.example.qr_check_in.StartupFragments;
 
 import android.os.Bundle;
@@ -23,6 +24,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * This class represents the Announcements Fragment in the QR Check-In application.
+ * It retrieves announcements from Firebase Realtime Database and displays them in a ListView.
+ * Outstanding issues: None
+ */
 
 public class AnnouncementsFragment extends Fragment {
 

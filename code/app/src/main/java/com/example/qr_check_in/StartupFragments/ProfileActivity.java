@@ -1,3 +1,4 @@
+
 package com.example.qr_check_in.StartupFragments;
 
 import android.os.Bundle;
@@ -15,6 +16,11 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class represents the Profile Activity in the QR Check-In application. It allows users to view and edit their profile information.
+ * Users can save changes to their profile, which are then updated in Firebase Authentication.
+ * Outstanding issues: The updateProfile method in saveProfileChanges() is not implemented correctly, and it needs to be fixed to update user profile information in Firebase Authentication.
+ */
 public class ProfileActivity extends AppCompatActivity {
 
     private EditText nameEditText, contactEditText, addressEditText;
