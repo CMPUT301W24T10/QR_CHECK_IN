@@ -3,6 +3,7 @@ package com.example.qr_check_in;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import androidx.appcompat.widget.Toolbar;
 import android.provider.Settings;
 
 public class MainActivity extends AppCompatActivity {
