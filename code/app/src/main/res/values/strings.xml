@@ -59,5 +59,6 @@
     <string name="upload_event_poster" />
     <string name="confirm_delete">Confirm Delete</string>
     <string name="menu_edit_profile">Edit Profile</string>
+    <string name="profiles">Profiles</string>
 
 </resources>
