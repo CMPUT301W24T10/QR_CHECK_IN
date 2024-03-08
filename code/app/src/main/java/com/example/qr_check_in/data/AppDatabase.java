@@ -169,13 +169,13 @@ public class AppDatabase {
                     attendeesCollection.document(deviceId).set(attendeeData)
                             .addOnSuccessListener(aVoid -> Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show())
                             .addOnFailureListener(e -> {
-                                Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
-                                Log.e("FirestoreError", "Error adding attendee", e);
+                                //Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
+                                //Log.e("FirestoreError", "Error adding attendee", e);
                             });
                 }
                 firestoreCallback.onCallback(deviceId);
             } else {
-                Log.e("FirestoreError", "Error checking for attendee existence", task.getException());
+                //Log.e("FirestoreError", "Error checking for attendee existence", task.getException());
             }
         });
     }
