@@ -74,6 +74,6 @@ dependencies {
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 
-
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
 }
