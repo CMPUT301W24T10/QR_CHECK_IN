@@ -34,25 +34,44 @@ public class DisplayQrCodeFragment extends Fragment {
     private Bitmap qrCode;
     private static final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 
+    /**
+     * Called when the fragment is being created.
+     * This method is called after the fragment instance is created but before it is added to the activity.
+     * It is typically used to initialize fragment-specific data or resources.
+     *
+     * @param savedInstanceState A Bundle containing the fragment's previously saved state, if any.
+     *                            This argument may be null.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Called to create the view hierarchy associated with the fragment.
+     * This method is responsible for inflating the fragment's layout, initializing views, and setting up event listeners.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState A Bundle containing the fragment's previously saved state, if any.
+     *                            This argument may be null.
+     * @return The root View of the fragment's layout.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_display_qr_code, container, false);
-
+// Retrieve eventId and organizerId from fragment arguments
         eventId = requireArguments().getString("eventId");
         organizerId = requireArguments().getString("organizerId");
-
+// Generate QR code image using the eventId
         qrCode = QRCodeGenerator.generateQRCodeImage(eventId, 512, 512);
         ImageView qrCodeImage = view.findViewById(R.id.ShowQRCode);
 
-        if (qrCode != null) {
+        if (qrCode != null) { // Display the QR code image
             qrCodeImage.setImageBitmap(qrCode);
             view.findViewById(R.id.shareViaEmailButton).setOnClickListener(v -> shareQrCodeViaEmail());
-        } else {
+        } else { //QR code generation failed
             Toast.makeText(getContext(), "Failed to generate QR code. Please try again.", Toast.LENGTH_LONG).show();
         }
 
