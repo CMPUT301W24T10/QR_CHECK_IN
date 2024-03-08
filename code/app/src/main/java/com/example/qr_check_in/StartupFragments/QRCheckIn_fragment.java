@@ -60,17 +60,19 @@ public class QRCheckIn_fragment extends Fragment {
     ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result -> {
 
         if (result != null && result.getContents() != null) {
+            String attendeeName = "guest";
             String uniqueId = result.getContents();
 
-            appDatabase.saveAttendee(deviceId, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
+            appDatabase.saveAttendee(deviceId, attendeeName, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
                 @Override
                 public void onCallback(String documentId) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("device_id", deviceId);
-                    bundle.putString("event_id", uniqueId);
-                    Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment, bundle);
                 }
             });
+
+            Bundle bundle = new Bundle();
+            bundle.putString("device_id", deviceId);
+            bundle.putString("event_id", uniqueId);
+            Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment, bundle);
         }
     });
 }
