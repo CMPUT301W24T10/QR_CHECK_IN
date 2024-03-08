@@ -49,8 +49,11 @@ dependencies {
     implementation("com.google.zxing:javase:3.5.3")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation ("com.journeyapps:zxing-android-embedded:<version>")
+
+
+    implementation ("com.google.zxing:core:3.3.0")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("com.google.firebase:firebase-database:20.3.1")
@@ -68,6 +71,7 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-database")
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 

@@ -49,4 +49,13 @@
     <string name="menu_edit_profile">Edit profile</string>
     <string name="this_is_edit_profile_fragment">This is edit profile fragment</string>
 
+
+    <string name="scan_button">Scan</string>
+    <string name="attendee_selection">User Options</string>
+
+
+    <string name="poster_preview" />
+    <string name="event_poster_preview_desc" />
+    <string name="upload_event_poster" />
+
 </resources>
