@@ -15,12 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.qr_check_in.R;
-import com.example.qr_check_in.data.AppDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -30,17 +29,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
  */
 public class ProfilePageFragment extends Fragment {
 
-    private static final String ARG_DEVICE_ID = "device_id";
+    private static final String ARG_DEVICE_ID_KEY = "device_id";
+    private static final String ARG_EVENT_ID_KEY = "event_id";
+
     private String deviceID;
+    private String eventID;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private String fetchedName = "";
     private String fetchedAddress = "";
     private String fetchedPhoneNumber = "";
-
-    public ProfilePageFragment() {
-        // Required empty public constructor
-    }
 
     /**
      * Use this factory method to create a new instance of
@@ -49,10 +47,11 @@ public class ProfilePageFragment extends Fragment {
      * @param deviceId The device ID.
      * @return A new instance of fragment ProfilePageFragment.
      */
-    public static ProfilePageFragment newInstance(String deviceId) {
+    public static ProfilePageFragment newInstance(String deviceId, String eventId) {
         ProfilePageFragment fragment = new ProfilePageFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_DEVICE_ID, deviceId);
+        args.putString(ARG_DEVICE_ID_KEY, deviceId);
+        args.putString(ARG_EVENT_ID_KEY, eventId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,19 +61,23 @@ public class ProfilePageFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            deviceID = getArguments().getString(ARG_DEVICE_ID, "");
+            deviceID = getArguments().getString(ARG_DEVICE_ID_KEY, "");
+            eventID = getArguments().getString(ARG_EVENT_ID_KEY, "");
         }
         setActionBarTitle("Edit Profile");
     }
 
-    private void fetchUserDetails(String userId) {
-        db.collection("users").document(userId).get()
+    private void fetchUserDetails() {
+        db.collection("events").document(eventID)
+                .collection("attendees").document(deviceID).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        fetchedName = documentSnapshot.getString("name");
-                        fetchedAddress = documentSnapshot.getString("address");
-                        fetchedPhoneNumber = documentSnapshot.getString("phoneNumber");
-
+                        // Device ID has a document in the attendees subcollection
+                        // This means the device ID is registered as an attendee
+                        fetchedName = documentSnapshot.getString("Name");
+                        fetchedAddress = documentSnapshot.getString("Address");
+                        fetchedPhoneNumber = documentSnapshot.getString("Phone Number");
+                        // Proceed to update UI or handle as necessary with the attendee's details
                         updateUI(fetchedName, fetchedAddress, fetchedPhoneNumber);
                     }
                 });
@@ -116,7 +119,7 @@ public class ProfilePageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fetchUserDetails(deviceID);
+        fetchUserDetails();
 
         EditText nameEditView = view.findViewById(R.id.editTextName);
         EditText addressEditView = view.findViewById(R.id.editTextAddress);

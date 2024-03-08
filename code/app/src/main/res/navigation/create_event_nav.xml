@@ -68,6 +68,9 @@
         <argument
             android:name="deviceId"
             app:argType="string" />
+        <argument
+            android:name="eventId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/profilePageFragment"
@@ -75,8 +78,11 @@
         android:label="fragment_profile_page"
         tools:layout="@layout/fragment_profile_page">
         <argument
-        android:name="deviceId"
-        app:argType="string" />
+            android:name="deviceId"
+            app:argType="string" />
+        <argument
+            android:name="eventId"
+            app:argType="string" />
     </fragment>
 
 </navigation>

@@ -166,12 +166,7 @@ public class AppDatabase {
                     Map<String, Object> attendeeData = new HashMap<>();
                     attendeeData.put("status", "guest"); // You can add more attendee details here
 
-                    attendeesCollection.document(deviceId).set(attendeeData)
-                            .addOnSuccessListener(aVoid -> Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show())
-                            .addOnFailureListener(e -> {
-                                //Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
-                                //Log.e("FirestoreError", "Error adding attendee", e);
-                            });
+                    attendeesCollection.document(deviceId).set(attendeeData);
                 }
                 firestoreCallback.onCallback(deviceId);
             } else {

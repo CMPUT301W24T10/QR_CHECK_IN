@@ -66,7 +66,8 @@ public class QRCheckIn_fragment extends Fragment {
                 @Override
                 public void onCallback(String documentId) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("deviceId", deviceId);
+                    bundle.putString("device_id", deviceId);
+                    bundle.putString("event_id", uniqueId);
                     Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment, bundle);
                 }
             });
