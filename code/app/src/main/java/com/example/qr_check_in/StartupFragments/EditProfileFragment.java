@@ -1,3 +1,4 @@
+
 package com.example.qr_check_in.StartupFragments;
 
 import android.os.Bundle;
@@ -6,12 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.qr_check_in.R;
 
+/**
+ * This class represents the Edit Profile Fragment in the QR Check-In application.
+ * It allows users to edit their profile information.
+ * Outstanding issues: Firebase integration is not implemented
+ */
 public class EditProfileFragment extends Fragment {
 
     private EditText editTextName;

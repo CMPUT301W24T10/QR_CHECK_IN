@@ -1,3 +1,4 @@
+
 package com.example.qr_check_in.StartupFragments;
 
 import android.content.Intent;
@@ -21,7 +22,11 @@ import com.example.qr_check_in.R;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This class represents the Homepage Fragment in the QR Check-In application.
+ * It displays a list of events and provides options for profile editing, enabling/disabling notifications, and enabling/disabling geolocation tracking.
+ * Outstanding issues: None
+ */
 public class HomepageFragment extends Fragment {
 
     private ListView eventListView;
