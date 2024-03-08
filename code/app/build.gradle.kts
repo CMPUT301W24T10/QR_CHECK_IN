@@ -49,6 +49,7 @@ dependencies {
     implementation("com.google.zxing:javase:3.5.3")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation ("com.journeyapps:zxing-android-embedded:<version>")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
