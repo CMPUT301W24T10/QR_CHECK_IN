@@ -21,7 +21,7 @@ public class AdminData {
         void onEventListFetched(List<EventNameIdPair> eventList);
     }
 
-    public void fetchEventNames() {
+    public void fetchEventNames(EventFetchListener listener) {
         List<EventNameIdPair> eventList = new ArrayList<>();
 
         db.collection("events").get().addOnCompleteListener(task -> {
@@ -32,13 +32,30 @@ public class AdminData {
                     if (eventName != null) { // Making sure eventName is not null
                         eventList.add(new EventNameIdPair(docId, eventName));
                     }
+
                 }
+                listener.onEventListFetched(eventList);
                 // Here, eventList contains all pairs of document ID and eventName.
-                // You can proceed with using eventList as needed.
             } else {
                 // Handle the error
                 Log.d("AdminData", "Error getting documents: ", task.getException());
             }
         });
+    }
+
+    public interface EventDeletionListener {
+        void onEventDeletionSuccess(String documentId);
+    }
+
+
+    public void deleteEvent(String documentId, EventDeletionListener listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events").document(documentId).delete()
+                .addOnSuccessListener(aVoid -> {
+                    listener.onEventDeletionSuccess(documentId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("DeleteEvent", "deleteEvent: "+ e.getMessage() );
+                });
     }
 }
