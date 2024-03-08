@@ -62,9 +62,15 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation ("org.mockito:mockito-core:3.11.2")
+    androidTestImplementation ("androidx.navigation:navigation-testing:2.7.7")
 
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+
+    // Test Runner and Rules for JUnit
+    androidTestImplementation ("androidx.test:runner:1.4.0")
+    androidTestImplementation ("androidx.test:rules:1.4.0")
 
 
     // TODO: Add the dependencies for Firebase products you want to use
@@ -74,6 +80,8 @@ dependencies {
     implementation("com.google.firebase:firebase-database")
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
+
+    debugImplementation ("androidx.fragment:fragment-testing:1.4.1")
 
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
