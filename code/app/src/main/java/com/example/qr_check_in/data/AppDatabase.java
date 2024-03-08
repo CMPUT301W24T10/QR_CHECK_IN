@@ -111,10 +111,9 @@ public class AppDatabase {
 
     public void saveAttendee(String deviceId, Context context, String uniqueID, FirestoreCallback firestoreCallback) {
         Map<String, Object> attendeeData = new HashMap<>();
-        attendeeData.put("Name", "guest");
+        attendeeData.put(deviceId, "guest"); // Using device ID as the key and "guest" as the name
 
         DocumentReference documentReference = db.collection("events").document(uniqueID);
-
 
         documentReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
@@ -153,6 +152,5 @@ public class AppDatabase {
                 Log.e("FirestoreError","Error getting document", task.getException());
             }
         });
-
     }
 }
