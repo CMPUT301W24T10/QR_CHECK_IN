@@ -60,5 +60,7 @@
     <string name="confirm_delete">Confirm Delete</string>
     <string name="menu_edit_profile">Edit Profile</string>
     <string name="profiles">Profiles</string>
+    <string name="Announcements" />
+    <string name="announcements">Announcements</string>
 
 </resources>
