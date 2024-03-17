@@ -160,29 +160,15 @@ public class AppDatabase {
                     // Check if the 'attendees' field exists
                     if (documentSnapshot.contains("attendees")) {
                         // Get the existing attendees map
-                        Map<String, List<String>> existingAttendees = (Map<String, List<String>>) documentSnapshot.get("attendees");
+                        Map<String, String> existingAttendees = (Map<String, String>) documentSnapshot.get("attendees");
 
                         // Check if the attendee with the specified deviceId already exists
                         if (existingAttendees.containsKey(deviceId)) {
-                            // Add the new string to the existing list
-                            List<String> stringsForDeviceId = existingAttendees.get(deviceId);
-                            stringsForDeviceId.add(attendeeName);
 
-                            // Update the 'attendees' field with the modified map
-                            documentReference.update("attendees", existingAttendees)
-                                    .addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show();
-                                        firestoreCallback.onCallback(deviceId);
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
-                                        Log.e("FirestoreError", "Error adding attendee", e);
-                                    });
+
                         } else {
-                            // If the 'attendees' field exists but the deviceId is not present, create a new list and add the new string
-                            List<String> newStrings = new ArrayList<>();
-                            newStrings.add(attendeeName);
-                            existingAttendees.put(deviceId, newStrings);
+                            // If the 'attendees' field exists but the deviceId is not present, put new device id into field
+                            existingAttendees.put(deviceId, attendeeName);
 
                             documentReference.update("attendees", existingAttendees)
                                     .addOnSuccessListener(aVoid -> {
@@ -196,10 +182,9 @@ public class AppDatabase {
                         }
                     } else {
                         // If the 'attendees' field does not exist, create a new map with a list and add the new string
-                        Map<String, List<String>> newAttendees = new HashMap<>();
-                        List<String> newStrings = new ArrayList<>();
-                        newStrings.add(attendeeName);
-                        newAttendees.put(deviceId, newStrings);
+                        Map<String, String> newAttendees = new HashMap<>();
+
+                        newAttendees.put(deviceId, attendeeName);
 
                         documentReference.update("attendees", newAttendees)
                                 .addOnSuccessListener(aVoid -> {
