@@ -1,0 +1,27 @@
+<!-- fragment_announcements.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/headerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/headerViewStyle"
+        android:text="Announcements"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:padding="16dp"
+        android:textColor="@android:color/white"
+        android:gravity="center" />
+
+    <!-- Announcement List -->
+    <ListView
+        android:id="@+id/list_of_announcements"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerTextView" />
+
+</RelativeLayout>

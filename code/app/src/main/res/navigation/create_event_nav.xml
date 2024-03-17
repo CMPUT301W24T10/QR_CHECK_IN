@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_checkin_createEvent_fragment_to_QRCheckIn_fragment"
             app:destination="@id/QRCheckIn_fragment" />
+        <action
+            android:id="@+id/action_checkin_createEvent_fragment_to_adminLoginFragment"
+            app:destination="@id/adminLoginFragment" />
     </fragment>
     <fragment
         android:id="@+id/input_info_fragment"
@@ -46,7 +49,11 @@
         android:name="com.example.qr_check_in.ReuseQRcodeFragment"
         android:label="fragment_reuse_q_rcode"
 
-        tools:layout="@layout/fragment_reuse_q_rcode" />
+        tools:layout="@layout/fragment_reuse_q_rcode" >
+        <action
+            android:id="@+id/displayQrCodeFragment"
+            app:destination="@id/displayQrCodeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/QRCheckIn_fragment"
         android:name="com.example.qr_check_in.StartupFragments.QRCheckIn_fragment"
@@ -55,12 +62,75 @@
             android:id="@+id/action_QRCheckIn_fragment_to_attendeeSelection_fragment"
             app:destination="@id/attendeeSelection_fragment" />
         <action
-            android:id="@+id/action_reuseQRcodeFragment_to_displayQrCodeFragment"
+            android:id="@+id/displayQrCodeFragment"
             app:destination="@id/displayQrCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/attendeeSelection_fragment"
         android:name="com.example.qr_check_in.StartupFragments.AttendeeSelection_fragment"
         android:label="AttendeeSelection_fragment" />
+    <fragment
+        android:id="@+id/adminLoginFragment"
+        android:name="com.example.qr_check_in.AdminLoginFragment"
+        android:label="fragment_admin_login"
+        tools:layout="@layout/fragment_admin_login" >
+        <action
+            android:id="@+id/action_adminLoginFragment_to_adminDashboardFragment"
+            app:destination="@id/adminDashboardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminDashboardFragment"
+        android:name="com.example.qr_check_in.AdminDashboardFragment"
+        android:label="fragment_admin_dashboard"
+        tools:layout="@layout/fragment_admin_dashboard" >
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_imageListFragment"
+            app:destination="@id/imageListFragment" />
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_eventListFragment"
+            app:destination="@id/eventListFragment" />
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_profileListFragment"
+            app:destination="@id/profileListFragment" />
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_removeImageFragment"
+            app:destination="@id/removeImageFragment" />
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_removeProfileFragment"
+            app:destination="@id/removeProfileFragment" />
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_removeEventFragment"
+            app:destination="@id/removeEventFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageListFragment"
+        android:name="com.example.qr_check_in.ImageListFragment"
+        android:label="fragment_image_list"
+        tools:layout="@layout/fragment_image_list" />
+    <fragment
+        android:id="@+id/eventListFragment"
+        android:name="com.example.qr_check_in.EventListFragment"
+        android:label="fragment_event_list"
+        tools:layout="@layout/fragment_event_list" />
+    <fragment
+        android:id="@+id/profileListFragment"
+        android:name="com.example.qr_check_in.ProfileListFragment"
+        android:label="fragment_profile_list"
+        tools:layout="@layout/fragment_profile_list" />
+    <fragment
+        android:id="@+id/removeImageFragment"
+        android:name="com.example.qr_check_in.RemoveImageFragment"
+        android:label="fragment_remove_image"
+        tools:layout="@layout/fragment_remove_image" />
+    <fragment
+        android:id="@+id/removeProfileFragment"
+        android:name="com.example.qr_check_in.RemoveProfileFragment"
+        android:label="fragment_remove_profile"
+        tools:layout="@layout/fragment_remove_profile" />
+    <fragment
+        android:id="@+id/removeEventFragment"
+        android:name="com.example.qr_check_in.RemoveEventFragment"
+        android:label="fragment_remove_event"
+        tools:layout="@layout/fragment_remove_event" />
 
 </navigation>
