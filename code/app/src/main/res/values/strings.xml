@@ -46,6 +46,8 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_list_of_attendees">List Of Attendees</string>
+    <string name="settings_button_description">Description of the settings button</string>
 
 
     <string name="scan_button">Scan</string>
@@ -55,5 +57,10 @@
     <string name="poster_preview" />
     <string name="event_poster_preview_desc" />
     <string name="upload_event_poster" />
+    <string name="confirm_delete">Confirm Delete</string>
+    <string name="menu_edit_profile">Edit Profile</string>
+    <string name="profiles">Profiles</string>
+    <string name="Announcements" />
+    <string name="announcements">Announcements</string>
 
 </resources>
