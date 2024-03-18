@@ -65,7 +65,7 @@ public class QRCheckIn_fragment extends Fragment {
         thisContext = container.getContext();
         deviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         btnScan = view.findViewById(R.id.scanButton);
-        AlertDialog.Builder builder = new AlertDialog.Builder(thisContext);
+
         appDatabase = new AppDatabase();
         db = FirebaseFirestore.getInstance();
         btnScan.setOnClickListener(v -> {
