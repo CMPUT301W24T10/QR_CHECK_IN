@@ -62,5 +62,6 @@
     <string name="profiles">Profiles</string>
     <string name="Announcements" />
     <string name="announcements">Announcements</string>
+    <string name="events">Events\n</string>
 
 </resources>
