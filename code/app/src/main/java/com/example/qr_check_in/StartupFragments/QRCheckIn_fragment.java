@@ -181,7 +181,8 @@ public class QRCheckIn_fragment extends Fragment {
     }
 
     String nameCheck(String unique){
-
+        String[] name = {null};
+        name[0] = "DNE";
         CollectionReference userReference = db.collection("user");
 
         userReference.get().addOnCompleteListener(task -> {
@@ -190,8 +191,8 @@ public class QRCheckIn_fragment extends Fragment {
                 for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
                     if (documentSnapshot.getId() == unique) {
 
-                        String name;
-                        name = documentSnapshot.get("Name").toString();
+
+                        name[0] = documentSnapshot.get("Name").toString();
 
                     }
 
@@ -200,7 +201,7 @@ public class QRCheckIn_fragment extends Fragment {
 
         });
 
-        return name;
+        return name[0];
     }
 
 
