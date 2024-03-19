@@ -112,8 +112,17 @@ public class QRCheckIn_fragment extends Fragment {
                                                 builder.setMessage(eventDescription);
 
                                                 builder.setPositiveButton("Check In", (DialogInterface.OnClickListener) (dialog, which) -> {
-                                                   showCustomDialog();
-
+                                                    String name = nameCheck(deviceId);
+                                                    if (name != "DNE") {
+                                                        appDatabase.saveAttendee(deviceId, attendeeName, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
+                                                            @Override
+                                                            public void onCallback(String documentId) {
+                                                                // Your callback logic, if needed
+                                                            }
+                                                        });
+                                                    }else {
+                                                        showCustomDialog();
+                                                    }
                                                 });
 
                                                 builder.setNegativeButton("Back", (DialogInterface.OnClickListener) (dialog, which) -> {
@@ -144,8 +153,9 @@ public class QRCheckIn_fragment extends Fragment {
                     });*/
 
             //Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
-        }
+        };
     });
+
 
     void showCustomDialog(){
         final Dialog dialog = new Dialog(thisContext);
@@ -169,5 +179,32 @@ public class QRCheckIn_fragment extends Fragment {
         dialog.show();
 
     }
+
+    String nameCheck(String unique){
+
+        CollectionReference userReference = db.collection("user");
+
+        userReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                    if (documentSnapshot.getId() == unique) {
+
+                        String name;
+                        name = documentSnapshot.get("Name").toString();
+
+                    }
+
+                }
+            }
+
+        });
+
+        return name;
+    }
+
+
 }
+
+
 
