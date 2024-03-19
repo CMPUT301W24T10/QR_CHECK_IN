@@ -120,6 +120,7 @@ public class QRCheckIn_fragment extends Fragment {
                                                                 // Your callback logic, if needed
                                                             }
                                                         });
+                                                        Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
                                                     }else {
                                                         showCustomDialog();
                                                     }
