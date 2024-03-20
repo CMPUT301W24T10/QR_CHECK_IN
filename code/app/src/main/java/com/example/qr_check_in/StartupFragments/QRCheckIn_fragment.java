@@ -120,7 +120,7 @@ public class QRCheckIn_fragment extends Fragment {
                                                                 // Your callback logic, if needed
                                                             }
                                                         });
-                                                        Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+                                                        //Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
                                                     }else {
                                                         showCustomDialog();
                                                     }
@@ -216,7 +216,7 @@ public class QRCheckIn_fragment extends Fragment {
     String nameCheck(String unique){
         String[] name = {null};
         name[0] = "DNE";
-        CollectionReference userReference = db.collection("user");
+        CollectionReference userReference = db.collection("users");
 
         userReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
