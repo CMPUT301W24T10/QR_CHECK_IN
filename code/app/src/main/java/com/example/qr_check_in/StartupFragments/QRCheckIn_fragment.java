@@ -114,13 +114,13 @@ public class QRCheckIn_fragment extends Fragment {
                                                 builder.setPositiveButton("Check In", (DialogInterface.OnClickListener) (dialog, which) -> {
                                                     String name = nameCheck(deviceId);
                                                     if (name != "DNE") {
-                                                        appDatabase.saveAttendee(deviceId, attendeeName, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
+                                                        appDatabase.saveAttendee(deviceId, name, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
                                                             @Override
                                                             public void onCallback(String documentId) {
                                                                 // Your callback logic, if needed
                                                             }
                                                         });
-                                                        //Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+                                                        Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
                                                     }else {
                                                         showCustomDialog();
                                                     }
@@ -134,6 +134,13 @@ public class QRCheckIn_fragment extends Fragment {
                                                 alertDialog.show();
 
                                             }
+                                        }else{
+                                            appDatabase.saveAttendee(deviceId, attendeeName, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
+                                                @Override
+                                                public void onCallback(String documentId) {
+                                                    // Your callback logic, if needed
+                                                }
+                                            });
                                         }
 
 
@@ -188,12 +195,13 @@ public class QRCheckIn_fragment extends Fragment {
             if(address.equals("")){
                 address = "Blank";
             }
-            appDatabase.saveUser(deviceId, name, phoneNumber, emailAddress, address, thisContext, new AppDatabase.FirestoreCallback() {
-                @Override
-                public void onCallback(String documentId) {
-                    // Your callback logic, if needed
-                }
-            });
+
+//            appDatabase.saveUser(deviceId, name, phoneNumber, emailAddress, address, thisContext, new AppDatabase.FirestoreCallback() {
+//                @Override
+//                public void onCallback(String documentId) {
+//                    // Your callback logic, if needed
+//                }
+//            });
             appDatabase.saveAttendee(deviceId, name, getContext(), deviceId, new AppDatabase.FirestoreCallback() {
                 @Override
                 public void onCallback(String documentId) {
