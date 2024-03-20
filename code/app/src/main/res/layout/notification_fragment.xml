@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#EFEFEF">
+
+    <!-- Header for Send Notifications -->
+    <TextView
+        android:id="@+id/headerSendNotifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Notifications"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <!-- Default Notifications List -->
+
+    <!-- Custom Notification Section -->
+
+    <ListView
+        android:id="@+id/defaultNotificationsList"
+        android:layout_width="363dp"
+        android:layout_height="326dp"
+        android:layout_below="@id/headerSendNotifications"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="16dp"
+        android:choiceMode="multipleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10dp"
+        android:listSelector="@android:color/transparent" />
+
+    <LinearLayout
+        android:id="@+id/customNotificationSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/defaultNotificationsList"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/white"
+        android:padding="16dp">
+
+        <CheckBox
+            android:id="@+id/customNotificationCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Custom Notification"
+            android:checked="true" />
+
+        <EditText
+            android:id="@+id/customNotificationText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Time Changed to 4pm MST."
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+    <!-- Send and Back Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/customNotificationSection"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send" />
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
+
+</RelativeLayout>

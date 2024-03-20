@@ -11,12 +11,33 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.qr_check_in.R;
+import android.os.Build;
+import android.widget.Toast;
+import com.example.qr_check_in.Notification.Permission
 
 /**
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
 public class checkin_createEvent_fragment extends Fragment {
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        permissionManager
+                .request(Permission.Notification)
+                .rationale("We need permission to show Notifications")
+                .checkPermission(new PermissionCallback() {
+                    @Override
+                    public void onPermissionGranted(boolean granted) {
+                        if (granted) {
+                            Toast.makeText(requireContext(), "Permission Granted", Toast.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    }
+                });
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
