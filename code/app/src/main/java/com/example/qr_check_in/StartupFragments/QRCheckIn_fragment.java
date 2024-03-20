@@ -172,11 +172,43 @@ public class QRCheckIn_fragment extends Fragment {
         Button next = dialog.findViewById(R.id.nextButton);
         next.setOnClickListener((v -> {
             String name = nameEt.getText().toString();
-            String emailAddress = emailAddressEt.getText().toString();
-            String phoneNumber = phoneNumberEt.getText().toString();
-            dialog.dismiss();
-        }));
+            if( name.equals("")){
+                name = "guest";
+            }
 
+            String emailAddress = emailAddressEt.getText().toString();
+            if (emailAddress.equals("")){
+                emailAddress = "Blank";
+            }
+            String phoneNumber = phoneNumberEt.getText().toString();
+            if(phoneNumber.equals("")){
+                phoneNumber = "Blank";
+            }
+            String address = addressEt.getText().toString();
+            if(address.equals("")){
+                address = "Blank";
+            }
+            appDatabase.saveUser(deviceId, name, phoneNumber, emailAddress, address, thisContext, new AppDatabase.FirestoreCallback() {
+                @Override
+                public void onCallback(String documentId) {
+                    // Your callback logic, if needed
+                }
+            });
+            appDatabase.saveAttendee(deviceId, name, getContext(), deviceId, new AppDatabase.FirestoreCallback() {
+                @Override
+                public void onCallback(String documentId) {
+                    // Your callback logic, if needed
+                }
+            });
+            dialog.dismiss();
+            Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+        }));
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
 
     }
