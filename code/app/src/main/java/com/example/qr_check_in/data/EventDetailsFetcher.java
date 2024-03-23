@@ -1,77 +1,85 @@
 package com.example.qr_check_in.data;
 
-import android.content.Context;
-import android.provider.Settings.Secure;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
+
 import com.example.qr_check_in.ModelClasses.EventDetails;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+/**
+ * Class responsible for fetching event details from Firebase Firestore.
+ */
 public class EventDetailsFetcher {
 
-    private final FirebaseFirestore db;
-    private final String deviceId;
+    private FirebaseFirestore db;
 
-    public EventDetailsFetcher(Context context) {
-        this.db = FirebaseFirestore.getInstance();
-        this.deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+    /**
+     * Constructor initializing the Firestore database instance.
+     */
+    public EventDetailsFetcher() {
+        db = FirebaseFirestore.getInstance();
     }
 
-    public interface EventDetailsCallback {
-        void onEventDetailsFetched(EventDetails eventDetails);
-        void onError(Exception e);
-    }
-
-    public void fetchEventDetails(final EventDetailsCallback callback) {
-        db.collection("users")
-                .document(deviceId)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        DocumentSnapshot userSnapshot = task.getResult();
-                        String currentEventID = userSnapshot.getString("currentEventID");
-                        if (currentEventID != null && !currentEventID.isEmpty()) {
-                            fetchEvent(currentEventID, callback);
+    /**
+     * Fetches event details from the Firestore database.
+     *
+     * @param listener Listener to handle event details received and errors.
+     */
+    public void fetchEventDetails(final OnEventDetailsReceivedListener listener) {
+        db.collection("events").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<EventDetails> eventDetailsList = new ArrayList<>();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String name = document.getString("eventName") != null ? document.getString("eventName") : "----";
+                                String description = document.getString("eventDescription") != null ? document.getString("eventDescription") : "----";
+                                Timestamp startTimeStamp = document.getTimestamp("startTime");
+                                Timestamp endTimeStamp = document.getTimestamp("endTime");
+                                String startTime = startTimeStamp != null ? dateFormat.format(startTimeStamp.toDate()) : "TBD";
+                                String endTime = endTimeStamp != null ? dateFormat.format(endTimeStamp.toDate()) : "TBD";
+                                String location = document.getString("location") != null ? document.getString("location") : "TBD";
+                                String posterUrl = document.getString("posterUrl") != null ? document.getString("posterUrl") : "default_poster_url"; // default poster URL or handle null case
+                                eventDetailsList.add(new EventDetails(name, description, startTime, endTime, location, posterUrl));
+                            }
+                            listener.onEventDetailsReceived(eventDetailsList);
                         } else {
-                            callback.onError(new Exception("No currentEventID found for device."));
+                            Log.d("EventDetailsFetcher", "Error getting documents: ", task.getException());
+                            listener.onError(task.getException().toString());
                         }
-                    } else {
-                        callback.onError(task.getException());
                     }
                 });
     }
 
-    private void fetchEvent(String eventId, final EventDetailsCallback callback) {
-        db.collection("events").document(eventId)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        DocumentSnapshot eventSnapshot = task.getResult();
-                        EventDetails eventDetails = parseEvent(eventSnapshot);
-                        callback.onEventDetailsFetched(eventDetails);
-                    } else {
-                        callback.onError(task.getException());
-                    }
-                });
-    }
+    /**
+     * Interface for receiving event details and error messages.
+     */
+    public interface OnEventDetailsReceivedListener {
+        /**
+         * Called when event details are received successfully.
+         *
+         * @param eventDetailsList List of EventDetails objects.
+         */
+        void onEventDetailsReceived(List<EventDetails> eventDetailsList);
 
-    private EventDetails parseEvent(DocumentSnapshot eventSnapshot) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        Timestamp startTimeStamp = eventSnapshot.getTimestamp("startTime");
-        Timestamp endTimeStamp = eventSnapshot.getTimestamp("endTime");
-
-        String eventName = eventSnapshot.getString("eventName") != null ? eventSnapshot.getString("eventName") : "----";
-        String eventDescription = eventSnapshot.getString("eventDescription") != null ? eventSnapshot.getString("eventDescription") : "----";
-        String startTime = startTimeStamp != null ? dateFormat.format(startTimeStamp.toDate()) : "";
-        String endTime = endTimeStamp != null ? dateFormat.format(endTimeStamp.toDate()) : "";
-        String location = eventSnapshot.getString("location") != null ? eventSnapshot.getString("location") : "TBD";
-        // Assuming there's a field for the posterUrl in the Firestore document
-        String posterUrl = eventSnapshot.getString("posterUrl") != null ? eventSnapshot.getString("posterUrl") : "default_poster_url";
-
-        return new EventDetails(eventName, eventDescription, startTime, endTime, location, posterUrl);
+        /**
+         * Called when an error occurs during the fetching process.
+         *
+         * @param message Error message.
+         */
+        void onError(String message);
     }
 }
