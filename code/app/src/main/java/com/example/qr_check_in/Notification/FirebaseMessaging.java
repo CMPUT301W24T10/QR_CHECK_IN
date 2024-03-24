@@ -1,4 +1,4 @@
-package com.example.qr_check_in.data;
+package com.example.qr_check_in.Notification;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -18,6 +19,11 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Random;
+
+/**
+ * @Shubham Firebase messaging class to receive notification
+ */
+
 
 public class FirebaseMessaging extends FirebaseMessagingService {
 
@@ -32,6 +38,8 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage message) {
         super.onMessageReceived(message);
+
+
 
         /*----------------------- Show a notification based on the message -------------------- */
         if (tiramisuPermissionsCheck()) {
@@ -74,7 +82,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     }
 
     private void createNotificationChannel(NotificationManager notificationManager) {
-        String channelName = "TutorialNotificationsChannel";
+        String channelName = "QR Check-in";
         NotificationChannel channel = new NotificationChannel(
                 CHANNEL_ID,
                 channelName,

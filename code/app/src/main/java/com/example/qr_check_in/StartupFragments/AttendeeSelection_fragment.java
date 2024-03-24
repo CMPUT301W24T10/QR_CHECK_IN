@@ -10,15 +10,18 @@ import android.widget.Button;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.qr_check_in.R;
-
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class AttendeeSelection_fragment extends Fragment {
 
     Button geolocation;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendee_selection, container, false);
         geolocation = view.findViewById(R.id.geoTracking);
@@ -29,6 +32,14 @@ public class AttendeeSelection_fragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        subscribeToNewTopic("Event");
+
     }
 
     private void requestLocationPermissions() {
@@ -43,13 +54,30 @@ public class AttendeeSelection_fragment extends Fragment {
         }
     }
 
+    /**
+     * Created subscribe function to enter the topic name once the attendee will login @Shubham
+     *
+     * @param topicInput
+     */
+    public void subscribeToNewTopic(String topicInput) {
+        FirebaseMessaging.getInstance().subscribeToTopic(topicInput)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        System.out.println("successfully subscribed to the topic");
+                    } else {
+                        System.out.println("failed to subscribe to the topic");
+                    }
+                })
+                .addOnFailureListener(e -> System.out.println("failed to subscribe to the topic : " + e.getMessage()));
+    }
+
     ActivityResultLauncher<String[]> locationPermissionRequest =
             registerForActivityResult(new ActivityResultContracts
                             .RequestMultiplePermissions(), result -> {
                         Boolean fineLocationGranted = result.getOrDefault(
                                 Manifest.permission.ACCESS_FINE_LOCATION, false);
                         Boolean coarseLocationGranted = result.getOrDefault(
-                                Manifest.permission.ACCESS_COARSE_LOCATION,false);
+                                Manifest.permission.ACCESS_COARSE_LOCATION, false);
                         if (fineLocationGranted != null && fineLocationGranted) {
                             // Precise location access granted.
                         } else if (coarseLocationGranted != null && coarseLocationGranted) {

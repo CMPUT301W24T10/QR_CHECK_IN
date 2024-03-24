@@ -1,4 +1,6 @@
 package com.example.qr_check_in.Notification;
+import android.os.Build;
+
 import androidx.annotation.RequiresApi;
 
 public abstract class Permission {
@@ -25,7 +27,9 @@ public abstract class Permission {
             case "READ_EXTERNAL_STORAGE":
                 return Storage;
             case "POST_NOTIFICATIONS":
-                return Notification;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    return Notification;
+                }
             case "CAMERA":
                 return Camera;
             default:

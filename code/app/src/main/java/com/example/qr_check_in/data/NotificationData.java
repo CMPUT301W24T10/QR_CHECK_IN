@@ -1,18 +1,27 @@
 package com.example.qr_check_in.data;
 
+/**
+ * @Shubham NotificationData class for notification
+ */
+
 public class NotificationData {
-    private String message;
+        private final String title;
+        private final String message;
 
-    public NotificationData(String title, String message) {
-        this.message = message;
-    }
+        public NotificationData(String title, String message) {
+            this.title = title;
+            this.message = message;
+        }
 
-    public String getMessage() {
-        return message;
-    }
+        public String getTitle() {
+            return title;
+        }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+        public String getMessage() {
+            return message;
+        }
+
+
+
 }
 

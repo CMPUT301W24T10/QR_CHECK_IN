@@ -1,10 +1,17 @@
 package com.example.qr_check_in.Notification;
 
+import com.example.qr_check_in.data.PushNotification;
+
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+
+/**
+ * @Shubham Notification api to push notification
+ */
 
 public interface NotificationAPI {
     String CONTENT_TYPE = "application/json";
@@ -12,7 +19,7 @@ public interface NotificationAPI {
 
     @Headers({"Authorization: key=" + API_KEY, "Content-Type: " + CONTENT_TYPE})
     @POST("fcm/send")
-    Response<ResponseBody> postNotification(
+    Call<ResponseBody> postNotification(
             @Body PushNotification notification
     );
 }

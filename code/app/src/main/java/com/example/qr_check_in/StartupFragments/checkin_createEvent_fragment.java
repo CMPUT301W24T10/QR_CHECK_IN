@@ -1,7 +1,17 @@
 package com.example.qr_check_in.StartupFragments;
 
+import static androidx.core.content.ContextCompat.checkSelfPermission;
+
+import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -9,35 +19,26 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.example.qr_check_in.R;
-import android.os.Build;
 import android.widget.Toast;
-import com.example.qr_check_in.Notification.Permission
+
+import com.example.qr_check_in.Notification.RetrofitInstance;
+import com.example.qr_check_in.R;
+import com.example.qr_check_in.data.NotificationData;
+import com.example.qr_check_in.data.PushNotification;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import okhttp3.ResponseBody;
+import retrofit2.Callback;
 
 /**
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
 public class checkin_createEvent_fragment extends Fragment {
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        permissionManager
-                .request(Permission.Notification)
-                .rationale("We need permission to show Notifications")
-                .checkPermission(new PermissionCallback() {
-                    @Override
-                    public void onPermissionGranted(boolean granted) {
-                        if (granted) {
-                            Toast.makeText(requireContext(), "Permission Granted", Toast.LENGTH_SHORT)
-                                    .show();
-                        } else {
-                            Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                    }
-                });
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,8 @@ public class checkin_createEvent_fragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.input_info_fragment);
         });
 
+
+
         view.findViewById(R.id.checkInButton).setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.QRCheckIn_fragment);
         });
@@ -68,5 +71,38 @@ public class checkin_createEvent_fragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getRequiredPermissions();
+
+
+    }
+
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+
+            });
+
+    public void getRequiredPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(
+                    requireContext(),
+                    android.Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS);
+
+            } else {
+                // repeat the permission or open app details
+            }
+        }
+    }
+
+
+
+
+
 }
 
