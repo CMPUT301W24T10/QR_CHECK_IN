@@ -25,8 +25,7 @@ import com.bumptech.glide.Glide;
 
 /**
  * This class represents the Edit Profile Fragment in the QR Check-In application.
- * It allows users to edit their profile information.
- * Outstanding issues: Firebase integration is not implemented
+ @@ -30,102 +19,52 @@
  */
 public class EditProfileFragment extends Fragment {
 
