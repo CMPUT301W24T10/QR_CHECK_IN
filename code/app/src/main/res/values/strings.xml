@@ -60,5 +60,9 @@
     <string name="confirm_delete">Confirm Delete</string>
     <string name="menu_edit_profile">Edit Profile</string>
     <string name="profiles">Profiles</string>
+    <string name="send_notifications">Send Notifications</string>
+    <string name="default_notification_list">Default Notification List</string>
+    <string name="custom_notification">Custom Notification</string>
+    <string name="notification_title">Notification Title</string>
 
 </resources>

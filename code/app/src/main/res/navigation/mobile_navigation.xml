@@ -35,4 +35,8 @@
         android:name="com.example.qr_check_in.ui.listOfAttendee.ListOfAttendees"
         android:label="@string/menu_list_of_attendees"
         tools:layout="@layout/fragment_list_of_attendees" />
+    <fragment
+        android:id="@+id/notificationFragment2"
+        android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
+        android:label="NotificationFragment" />
 </navigation>

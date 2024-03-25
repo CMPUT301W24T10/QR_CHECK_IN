@@ -25,5 +25,10 @@
             android:id="@+id/nav_list_of_attendees"
             android:icon="@drawable/view_list_of_attendees"
             android:title="@string/menu_list_of_attendees" />
+
+        <item
+            android:id="@+id/notificationFragment2"
+            android:icon="@drawable/baseline_circle_notifications_24"
+            android:title="@string/send_notifications" />
     </group>
 </menu>
