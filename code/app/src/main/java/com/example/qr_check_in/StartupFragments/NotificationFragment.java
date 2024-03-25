@@ -24,7 +24,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * @Shubham notification fragment created to send notification
+ * notification fragment created to send notification
  */
 public class NotificationFragment extends Fragment {
     private FragmentNotificationBinding mBinding;
