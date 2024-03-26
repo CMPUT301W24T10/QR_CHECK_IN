@@ -100,49 +100,29 @@ public class QRCheckIn_fragment extends Fragment {
                                     Map<String, String> existingAttendees = (Map<String, String>) documentSnapshot.get("attendees");
                                     if (existingAttendees.containsKey(deviceId)) {
                                         Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
-                                    } else {
-                                        eventTitle = documentSnapshot.getString("eventName");
-                                        eventDescription = documentSnapshot.getString("eventDescription");
-                                        found = true;
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(thisContext);
-                                        builder.setTitle(eventTitle);
-                                        builder.setMessage(eventDescription);
-
-                                        builder.setPositiveButton("Check In", (DialogInterface.OnClickListener) (dialog, which) -> {
-                                            nameCheck(deviceId, new nameCallback() {
-                                                @Override
-                                                public void isNameExist(String name) {
-                                                    if(name != ""){
-                                                        appDatabase.saveAttendee(deviceId, name, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
-                                                            @Override
-                                                            public void onCallback(String documentId) {
-                                                                // Your callback logic, if needed
-                                                            }
-                                                        });
-                                                        Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
-                                                    }else{
-                                                        showCustomDialog();
-                                                    }
-                                                }
-                                            });
-
-                                        });
-
-                                        builder.setNegativeButton("Back", (DialogInterface.OnClickListener) (dialog, which) -> {
-                                            // If user click no then dialog box is canceled.
-                                            dialog.cancel();
-                                        });
-                                        AlertDialog alertDialog = builder.create();
-                                        alertDialog.show();
-
+                                    }else{
+                                        nameStuff(uniqueId);
                                     }
                                 } else {
-                                    appDatabase.saveAttendee(deviceId, attendeeName, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
-                                        @Override
-                                        public void onCallback(String documentId) {
-                                            // Your callback logic, if needed
-                                        }
+
+                                    eventTitle = documentSnapshot.getString("eventName");
+                                    eventDescription = documentSnapshot.getString("eventDescription");
+                                    found = true;
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(thisContext);
+                                    builder.setTitle(eventTitle);
+                                    builder.setMessage(eventDescription);
+
+                                    builder.setPositiveButton("Check In", (DialogInterface.OnClickListener) (dialog, which) -> {
+
+                                        nameStuff(uniqueId);
                                     });
+
+                                    builder.setNegativeButton("Back", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                        // If user click no then dialog box is canceled.
+                                        dialog.cancel();
+                                    });
+                                    AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
                                 }
 
 
@@ -154,20 +134,13 @@ public class QRCheckIn_fragment extends Fragment {
                 }
             });
 
-/*                    appDatabase.saveAttendee(deviceId, attendeeName, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
-                        @Override
-                        public void onCallback(String documentId) {
-                            // Your callback logic, if needed
-                        }
-                    });*/
 
-            //Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
         }
-        ;
+
     });
 
 
-    void showCustomDialog() {
+    void showCustomDialog(String eventId, nameDialogCallback nameDialogCallback) {
 
 
         final Dialog dialog = new Dialog(thisContext);
@@ -182,11 +155,8 @@ public class QRCheckIn_fragment extends Fragment {
         Button cancel = dialog.findViewById(R.id.cancelButton);
         Button next = dialog.findViewById(R.id.nextButton);
         next.setOnClickListener((v -> {
-            String name = nameEt.getText().toString();
-            if (name.equals("")) {
-                name = "guest";
-            }
-
+            final String name = nameEt.getText().toString();
+            nameDialogCallback.nameExist(name);
             String emailAddress = emailAddressEt.getText().toString();
             if (emailAddress.equals("")) {
                 emailAddress = "Blank";
@@ -201,20 +171,15 @@ public class QRCheckIn_fragment extends Fragment {
             }
 
 
-            appDatabase.saveUser(deviceId, name, phoneNumber, emailAddress, address, thisContext, new AppDatabase.FirestoreCallback() {
+            appDatabase.saveUser(deviceId, name, phoneNumber, emailAddress, address, eventId, thisContext, new AppDatabase.FirestoreCallback() {
                 @Override
                public void onCallback(String documentId) {
-                    // Your callback logic, if needed
-                }
-            });
-            appDatabase.saveAttendee(deviceId, name, getContext(), deviceId, new AppDatabase.FirestoreCallback() {
-                @Override
-                public void onCallback(String documentId) {
-                    // Your callback logic, if needed
+
                 }
             });
             dialog.dismiss();
-            Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+
+
         }));
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,6 +221,68 @@ public class QRCheckIn_fragment extends Fragment {
     interface nameCallback {
         void isNameExist(String name);
 
+    }
+
+    interface nameDialogCallback{
+        void nameExist(String name);
+    }
+
+    void currentEventIdUpdater(String deviceId, String eventId){
+        DocumentReference docReference = db.collection("users").document(deviceId);
+
+        docReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot docSnapshot = task.getResult();
+                if(docSnapshot.exists()){
+                    Map<String, Object> map = docSnapshot.getData();
+                    map.put("currentEventID", eventId);
+                    docReference.set(map);
+
+                }
+            }
+
+        });
+    }
+
+    void nameStuff(String uniqueId){
+        nameCheck(deviceId, new nameCallback() {
+            @Override
+            public void isNameExist(String name) {
+                if(name != ""){
+                    appDatabase.saveAttendee(deviceId, name, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
+                        @Override
+                        public void onCallback(String documentId) {
+                            // Your callback logic, if needed
+                        }
+                    });
+                    currentEventIdUpdater(deviceId, uniqueId);
+                    Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+                }else{
+                    showCustomDialog(uniqueId, new nameDialogCallback() {
+                        @Override
+                        public void nameExist(String name){
+                            if(name != ""){
+                                appDatabase.saveAttendee(deviceId, name, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
+                                    @Override
+                                    public void onCallback(String documentId) {
+                                        // Your callback logic, if needed
+                                    }
+                                });
+                                Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+                            }else{
+                                appDatabase.saveAttendee(deviceId, "Guest", getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
+                                    @Override
+                                    public void onCallback(String documentId) {
+                                        // Your callback logic, if needed
+                                    }
+                                });
+                                Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 }
 

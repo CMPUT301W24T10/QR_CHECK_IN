@@ -226,22 +226,23 @@ public class AppDatabase {
         });
     }
     //asldfosjogfijsdipgjsdlkfjsldfhoiwehoilkcvnlkjnvcoihfgoihroiptwjpefojqwpofj;dskjlksdnvlknxlvhjoishfogijwepifjopiwejoiwhetuohriuoghowrhgierjgojsifjoiwejfpiwejfp
-    public void saveUser(String deviceId, String userName, String userPhone, String emailAddress, String address, Context context, FirestoreCallback firestoreCallback) {
+    public void saveUser(String deviceId, String userName, String userPhone, String emailAddress, String address, String event, Context context, FirestoreCallback firestoreCallback) {
         Map<String, Object> info = new HashMap<>(); // Create a new HashMap to hold the user info
         info.put("Name", userName);
-        info.put("Phone Number", userPhone);
-        info.put("Email Address", emailAddress);
+        info.put("Phone", userPhone);
+        info.put("Email", emailAddress);
         info.put("Address",address);
+        info.put("currentEventID", event);
 
 
         db.collection("users").document(deviceId).set(info, SetOptions.merge())  // Add or merge the organizer data into the 'users' collection in Firestore, using the device ID as the document ID.
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "Organizer added successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "User added successfully", Toast.LENGTH_SHORT).show();
                     firestoreCallback.onCallback(deviceId); // This callback now safely uses deviceId
                 })
                 .addOnFailureListener(e -> { // If the database operation fails, display an error message and log the error.
-                    Toast.makeText(context, "Error adding organizer", Toast.LENGTH_SHORT).show();
-                    Log.e("FirestoreError", "Error adding organizer", e);
+                    Toast.makeText(context, "Error adding user", Toast.LENGTH_SHORT).show();
+                    Log.e("FirestoreError", "Error adding user", e);
                 });
     }
 
