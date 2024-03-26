@@ -49,11 +49,9 @@ public class QRCheckIn_fragment extends Fragment {
     boolean found;
 
 
-    Button checkIn, back;
-
     Context thisContext;
 
-    TextView title, description;
+
 
 
     @Override
@@ -85,7 +83,7 @@ public class QRCheckIn_fragment extends Fragment {
     ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result -> {
 
         if (result != null && result.getContents() != null) {
-            String attendeeName = "guest";
+
             String uniqueId = result.getContents();
 
             CollectionReference collectionReference = db.collection("events");
@@ -95,14 +93,37 @@ public class QRCheckIn_fragment extends Fragment {
                     if (task.isSuccessful()) {
                         QuerySnapshot querySnapshot = task.getResult();
                         for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                            //this will check if the qr code that is being scanned is actually a qr code for a valid event
                             if (documentSnapshot.getId().equals(uniqueId)) {
+                                //checking if attendess field exists in event
                                 if (documentSnapshot.contains("attendees")) {
                                     Map<String, String> existingAttendees = (Map<String, String>) documentSnapshot.get("attendees");
+                                    //checking if device is already registered into the event
                                     if (existingAttendees.containsKey(deviceId)) {
                                         Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
                                     }else{
-                                        nameStuff(uniqueId);
+                                        //if device is not registered into event will call this method
+                                        eventTitle = documentSnapshot.getString("eventName");
+                                        eventDescription = documentSnapshot.getString("eventDescription");
+                                        found = true;
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(thisContext);
+                                        builder.setTitle(eventTitle);
+                                        builder.setMessage(eventDescription);
+
+                                        builder.setPositiveButton("Check In", (DialogInterface.OnClickListener) (dialog, which) -> {
+
+                                            nameStuff(uniqueId);
+                                        });
+
+                                        builder.setNegativeButton("Back", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                            // If user click no then dialog box is canceled.
+                                            dialog.cancel();
+                                        });
+                                        AlertDialog alertDialog = builder.create();
+                                        alertDialog.show();
+
                                     }
+                                    //if attendees field doesnt exist will
                                 } else {
 
                                     eventTitle = documentSnapshot.getString("eventName");
