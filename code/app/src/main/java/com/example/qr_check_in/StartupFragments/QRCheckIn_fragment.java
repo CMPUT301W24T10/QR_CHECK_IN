@@ -15,6 +15,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -102,7 +103,7 @@ public class QRCheckIn_fragment extends Fragment {
                                     if (existingAttendees.containsKey(deviceId)) {
                                         Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
                                     }else{
-                                        //if device is not registered into event will call this method
+                                        //if device is not registered will make the alert dialog
                                         eventTitle = documentSnapshot.getString("eventName");
                                         eventDescription = documentSnapshot.getString("eventDescription");
                                         found = true;
@@ -111,7 +112,7 @@ public class QRCheckIn_fragment extends Fragment {
                                         builder.setMessage(eventDescription);
 
                                         builder.setPositiveButton("Check In", (DialogInterface.OnClickListener) (dialog, which) -> {
-
+                                            //this method is called to determine whether we need to ask for name or not
                                             nameStuff(uniqueId);
                                         });
 
@@ -123,7 +124,7 @@ public class QRCheckIn_fragment extends Fragment {
                                         alertDialog.show();
 
                                     }
-                                    //if attendees field doesnt exist will
+                                    //if attendees field doesnt exist will make the alert dialog box
                                 } else {
 
                                     eventTitle = documentSnapshot.getString("eventName");
@@ -163,7 +164,7 @@ public class QRCheckIn_fragment extends Fragment {
 
     void showCustomDialog(String eventId, nameDialogCallback nameDialogCallback) {
 
-
+        //method for asking the user for their information and using it to create a new user in firebase
         final Dialog dialog = new Dialog(thisContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -177,6 +178,13 @@ public class QRCheckIn_fragment extends Fragment {
         Button next = dialog.findViewById(R.id.nextButton);
         next.setOnClickListener((v -> {
             final String name = nameEt.getText().toString();
+            //ensuring that the user enters something in the name field
+            if(name.isEmpty()){
+                nameEt.setError("Name is required");
+                dialog.dismiss();
+                Toast.makeText(thisContext, "Please enter your name", Toast.LENGTH_SHORT).show();
+                return;
+            }
             nameDialogCallback.nameExist(name);
             String emailAddress = emailAddressEt.getText().toString();
             if (emailAddress.equals("")) {
@@ -213,6 +221,7 @@ public class QRCheckIn_fragment extends Fragment {
     }
 
     void nameCheck(String unique, nameCallback nameCallback) {
+        //method to check if the user and their info already exists in firebase.
         CollectionReference userReference = db.collection("users");
 
         userReference.get().addOnCompleteListener(task -> {
@@ -266,6 +275,7 @@ public class QRCheckIn_fragment extends Fragment {
     }
 
     void nameStuff(String uniqueId){
+        //this method will call on nameCheck and if the user exists will not prompt user for info. if the user doesnt exist will prompt user for info.
         nameCheck(deviceId, new nameCallback() {
             @Override
             public void isNameExist(String name) {
