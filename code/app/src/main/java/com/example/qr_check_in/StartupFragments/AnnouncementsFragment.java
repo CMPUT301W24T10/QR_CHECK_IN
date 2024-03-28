@@ -1,6 +1,7 @@
-
 package com.example.qr_check_in.StartupFragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,90 +9,95 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.qr_check_in.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.example.qr_check_in.data.AnnouncementFetcher;
+import com.example.qr_check_in.ModelClasses.Announcement;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-/**
- * This class represents the Announcements Fragment in the QR Check-In application.
- * It retrieves announcements from Firebase Realtime Database and displays them in a ListView.
- * Outstanding issues: None
+/*
+ * AnnouncementsFragment.java
+ * This fragment displays a list of announcements fetched from a server.
+ * It utilizes AnnouncementFetcher to fetch announcements asynchronously.
+ * It contains an AnnouncementAdapter for populating the list view with announcement data.
+ * Outstanding issue: None known.
  */
 
 public class AnnouncementsFragment extends Fragment {
-
     private ListView announcementListView;
-    private ArrayAdapter<String> adapter;
-    private List<String> announcementsList;
-    private DatabaseReference announcementsRef;
+    private AnnouncementAdapter announcementAdapter;
+    private List<Announcement> announcements;
 
-    @Nullable
+    // Fragment lifecycle method for creating the view
+    @SuppressLint("MissingInflatedId")
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_announcements, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_announcements, container, false);
 
-        announcementListView = view.findViewById(R.id.announcementListView);
-        announcementsList = new ArrayList<>();
-        adapter = new ArrayAdapter<String>(getContext(), R.layout.announcement_item, R.id.messageTextView, announcementsList) {
-            @NonNull
+        // Initialize views and adapters
+        announcements = new ArrayList<>();
+        announcementListView = root.findViewById(R.id.list_of_announcements);
+        announcementAdapter = new AnnouncementAdapter(getContext(), announcements);
+        announcementListView.setAdapter(announcementAdapter);
+
+        // Fetch announcements asynchronously
+        new AnnouncementFetcher().fetchAnnouncements(new AnnouncementFetcher.OnAnnouncementListReceivedListener() {
             @Override
-            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.announcement_item, parent, false);
-                }
-
-                TextView timeTextView = convertView.findViewById(R.id.timeTextView);
-                TextView messageTextView = convertView.findViewById(R.id.messageTextView);
-
-                String announcement = announcementsList.get(position);
-                String[] parts = announcement.split(" - ");
-                String time = parts[0];
-                String message = parts[1];
-
-                timeTextView.setText(time);
-                messageTextView.setText(message);
-
-                return convertView;
+            public void onAnnouncementListReceived(List<Announcement> announcementList) {
+                // Update UI with fetched announcements
+                announcements.clear();
+                announcements.addAll(announcementList);
+                announcementAdapter.notifyDataSetChanged();
             }
-        };
-        announcementListView.setAdapter(adapter);
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            announcementsRef = FirebaseDatabase.getInstance().getReference().child("announcements");
+            @Override
+            public void onError(String message) {
+                // Show error message if fetching fails
+                Toast.makeText(getContext(), "Error fetching announcements: " + message, Toast.LENGTH_SHORT).show();
+            }
+        });
 
-            announcementsRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    announcementsList.clear();
-                    for (DataSnapshot announcementSnapshot : dataSnapshot.getChildren()) {
-                        String message = announcementSnapshot.child("message").getValue(String.class);
-                        String time = announcementSnapshot.child("time").getValue(String.class);
-                        announcementsList.add(time + " - " + message);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
+        return root;
+    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // Handle errors here
-                }
-            });
+    // Custom adapter for displaying announcements in a list view
+    private class AnnouncementAdapter extends ArrayAdapter<Announcement> {
+        public AnnouncementAdapter(@NonNull Context context, List<Announcement> announcements) {
+            super(context, 0, announcements);
         }
 
-        return view;
+        // Method to populate the view for each announcement item
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.announcement_item, parent, false);
+            }
+
+            // Get references to view elements
+            TextView tvTime = convertView.findViewById(R.id.tv_announcement_time);
+            TextView tvMessage = convertView.findViewById(R.id.tv_announcement_message);
+
+            // Get the current announcement object
+            Announcement announcement = getItem(position);
+            if (announcement != null) {
+                // Format the time and set it to the time text view
+                String formattedTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(announcement.getTime().toDate());
+                tvTime.setText(formattedTime);
+                // Set the announcement message to the message text view
+                tvMessage.setText(announcement.getMessage());
+            }
+
+            return convertView;
+        }
     }
 }

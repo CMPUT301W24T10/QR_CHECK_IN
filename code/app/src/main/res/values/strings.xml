@@ -60,6 +60,10 @@
     <string name="confirm_delete">Confirm Delete</string>
     <string name="menu_edit_profile">Edit Profile</string>
     <string name="profiles">Profiles</string>
+    <string name="Announcements" />
+    <string name="announcements">Announcements</string>
+    <string name="events">Events\n</string>
+    <string name="save_button_text">Save</string>
     <string name="send_notifications">Send Notifications</string>
     <string name="default_notification_list">Default Notification List</string>
     <string name="custom_notification">Custom Notification</string>

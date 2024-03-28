@@ -35,6 +35,19 @@
         android:name="com.example.qr_check_in.ui.listOfAttendee.ListOfAttendees"
         android:label="@string/menu_list_of_attendees"
         tools:layout="@layout/fragment_list_of_attendees" />
+
+    <fragment
+        android:id="@+id/nav_announcements"
+        android:name="com.example.qr_check_in.StartupFragments.AnnouncementsFragment"
+        android:label="@string/announcements"
+        tools:layout="@layout/fragment_announcements" />
+    <fragment
+        android:id="@+id/nav_events"
+        android:name="com.example.qr_check_in.StartupFragments.EventsFragment"
+        android:label="@string/events"
+        tools:layout="@layout/fragment_events" >
+    </fragment>
+
     <fragment
         android:id="@+id/notificationFragment2"
         android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
