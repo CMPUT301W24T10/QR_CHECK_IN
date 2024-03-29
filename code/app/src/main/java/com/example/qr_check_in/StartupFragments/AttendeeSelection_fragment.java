@@ -10,60 +10,25 @@ import android.widget.Button;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.qr_check_in.R;
 
+
+
 public class AttendeeSelection_fragment extends Fragment {
 
-    private Button geolocation;
-    private Button editProfile;
-    private static final String ARG_DEVICE_ID_KEY = "device_id";
-    private static final String ARG_EVENT_ID_KEY = "event_id";
-
-    // Method to create a new instance of AttendeeSelection_fragment with device ID
-    public static AttendeeSelection_fragment newInstance(String deviceId, String eventId) {
-        AttendeeSelection_fragment fragment = new AttendeeSelection_fragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_DEVICE_ID_KEY, deviceId);
-        args.putString(ARG_EVENT_ID_KEY, eventId);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    Button geolocation;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendee_selection, container, false);
-
-        String deviceId = getArguments().getString(ARG_DEVICE_ID_KEY, "");
-        String eventId = getArguments().getString(ARG_EVENT_ID_KEY, "");
-
-        setActionBarTitle("User Options");
         geolocation = view.findViewById(R.id.geoTracking);
-        editProfile = view.findViewById(R.id.editProfile);
-
-        editProfile.setOnClickListener(new View.OnClickListener() {
+        geolocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString(ARG_DEVICE_ID_KEY, deviceId);
-                bundle.putString(ARG_EVENT_ID_KEY, eventId);
-                Navigation.findNavController(requireView()).navigate(R.id.action_attendeeSelection_fragment_to_profilePageFragment, bundle);
+                requestLocationPermissions();
             }
         });
-
-        geolocation.setOnClickListener(v -> requestLocationPermissions());
         return view;
-    }
-
-    private void setActionBarTitle(String title) {
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (activity != null && activity.getSupportActionBar() != null) {
-            activity.getSupportActionBar().setTitle(title);
-        }
     }
 
     private void requestLocationPermissions() {

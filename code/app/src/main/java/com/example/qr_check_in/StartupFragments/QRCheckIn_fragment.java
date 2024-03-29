@@ -66,13 +66,11 @@ public class QRCheckIn_fragment extends Fragment {
             appDatabase.saveAttendee(deviceId, attendeeName, getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
                 @Override
                 public void onCallback(String documentId) {
+                    // Your callback logic, if needed
                 }
             });
 
-            Bundle bundle = new Bundle();
-            bundle.putString("device_id", deviceId);
-            bundle.putString("event_id", uniqueId);
-            Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment, bundle);
+            Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
         }
     });
 }

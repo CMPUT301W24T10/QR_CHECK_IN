@@ -178,19 +178,16 @@ public class AppDatabase {
             if (task.isSuccessful()) {
                 DocumentSnapshot documentSnapshot = task.getResult();
                 if (documentSnapshot != null && documentSnapshot.exists()) {
-
-                    Map<String, Object> attendeeData = new HashMap<>();
-                    attendeeData.put(deviceId, attendeeName);
-
                     // Check if the 'attendees' field exists
                     if (documentSnapshot.contains("attendees")) {
                         // Get the existing attendees map
-                        Map<String, Object> existingAttendees = (Map<String, Object>) documentSnapshot.get("attendees");
+                        Map<String, List<String>> existingAttendees = (Map<String, List<String>>) documentSnapshot.get("attendees");
 
                         // Check if the attendee with the specified deviceId already exists
-                        if (!existingAttendees.containsKey(deviceId)) {
-                            // Add the new attendee to the existing map
-                            existingAttendees.put(deviceId, attendeeName);
+                        if (existingAttendees.containsKey(deviceId)) {
+                            // Add the new string to the existing list
+                            List<String> stringsForDeviceId = existingAttendees.get(deviceId);
+                            stringsForDeviceId.add(attendeeName);
 
                             // Update the 'attendees' field with the modified map
                             documentReference.update("attendees", existingAttendees)

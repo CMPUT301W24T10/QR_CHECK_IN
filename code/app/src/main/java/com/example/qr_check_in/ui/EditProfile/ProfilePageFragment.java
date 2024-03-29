@@ -1,4 +1,6 @@
-package com.example.qr_check_in.StartupFragments;
+package com.example.qr_check_in.ui.EditProfile;
+
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,8 +29,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.example.qr_check_in.ProfileImageGenerator;
 import com.example.qr_check_in.R;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -37,21 +42,14 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfilePageFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfilePageFragment extends Fragment {
 
     private static final String ARG_DEVICE_ID_KEY = "device_id";
-    private static final String ARG_EVENT_ID_KEY = "event_id";
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private CircleImageView profileImageView;
 
     private String deviceID;
-    private String eventID;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private String fetchedName = "";
@@ -59,61 +57,37 @@ public class ProfilePageFragment extends Fragment {
     private String fetchedPhoneNumber = "";
     private String fetchedImageURL = "";
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided device ID.
-     *
-     * @param deviceId The device ID.
-     * @return A new instance of fragment ProfilePageFragment.
-     */
-    public static ProfilePageFragment newInstance(String deviceId, String eventId) {
-        ProfilePageFragment fragment = new ProfilePageFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_DEVICE_ID_KEY, deviceId);
-        args.putString(ARG_EVENT_ID_KEY, eventId);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    Button saveButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            deviceID = getArguments().getString(ARG_DEVICE_ID_KEY, "");
-            eventID = getArguments().getString(ARG_EVENT_ID_KEY, "");
-        }
         setActionBarTitle("Edit Profile");
     }
 
-    private void fetchAttendeesDetails() {
-        db.collection("events").document(eventID).get()
+    private void findDeviceID() {
+        deviceID = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
+    private void fetchUserDetails() {
+        ProfileImageGenerator profileImageGenerator = new ProfileImageGenerator(getContext());
+
+        db.collection("users").document(deviceID).get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists() && documentSnapshot.getData() != null) {
-                        Object attendeesObject = documentSnapshot.getData().get("attendees");
+                    if (documentSnapshot.exists()) {
+                        String fetchedName = documentSnapshot.contains("Name") ?
+                                documentSnapshot.getString("Name") : "";
+                        String fetchedAddress = documentSnapshot.contains("Address") ?
+                                documentSnapshot.getString("Address") : "";
+                        String fetchedPhoneNumber = documentSnapshot.contains("Phone Number") ?
+                                documentSnapshot.getString("Phone Number") : "";
+                        String fetchedImageUrl = documentSnapshot.contains("profileImageUrl") ?
+                                documentSnapshot.getString("profileImageUrl") : profileImageGenerator.generateImageUrlFromName(fetchedName);
 
-                        if (attendeesObject instanceof Map) {
-                            Map<String, Object> attendees = (Map<String, Object>) attendeesObject;
-
-                            for (Map.Entry<String, Object> entry : attendees.entrySet()) {
-                                Object attendeeObject = entry.getValue();
-
-                                if (attendeeObject instanceof Map) {
-                                    Map<String, Object> attendeeDetails = (Map<String, Object>) attendeeObject;
-                                    String fetchedName = (String) attendeeDetails.getOrDefault("Name", "");
-                                    String fetchedAddress = (String) attendeeDetails.getOrDefault("Address", "");
-                                    String fetchedPhoneNumber = (String) attendeeDetails.getOrDefault("Phone Number", "");
-                                    String fetchedImageUrl = (String) attendeeDetails.getOrDefault("profileImageUrl", "");
-
-                                    // Update the UI with fetched details
-                                    updateUI(fetchedName, fetchedAddress, fetchedPhoneNumber, fetchedImageUrl);
-                                }
-                            }
-                        }
+                        updateUI(fetchedName, fetchedAddress, fetchedPhoneNumber, fetchedImageUrl);
                     }
                 });
     }
-
 
     private void updateUI(String name, String address, String phoneNumber, String imageUrl) {
         View view = getView();
@@ -137,6 +111,8 @@ public class ProfilePageFragment extends Fragment {
                         .into(profileImageView);
             }
         }
+
+        disableSaveButton();
     }
 
     private void setActionBarTitle(String title) {
@@ -152,38 +128,26 @@ public class ProfilePageFragment extends Fragment {
         EditText nameEditView = view.findViewById(R.id.editTextName);
         EditText addressEditView = view.findViewById(R.id.editTextAddress);
         EditText phoneNumberEditView = view.findViewById(R.id.editTextPhone);
-        Button saveButton = view.findViewById(R.id.buttonSave);
-
-
 
         String currentName = nameEditView.getText().toString();
         String currentAddress = addressEditView.getText().toString();
         String currentPhoneNumber = phoneNumberEditView.getText().toString();
         String currentImageURL = fetchedImageURL;
 
-        Context context = getContext();
-        if (context != null) {
-            saveButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.darker_gray)));
-            saveButton.setEnabled(false);
-        }
-
-        Map<String, Object> updatedAttendeeDetails = new HashMap<>();
-        updatedAttendeeDetails.put("Name", currentName);
-        updatedAttendeeDetails.put("Address", currentAddress);
-        updatedAttendeeDetails.put("Phone Number", currentPhoneNumber);
-        updatedAttendeeDetails.put("profileImageUrl", currentImageURL);
-
-        // Wrap the updated details in the attendees map for the update
         Map<String, Object> updates = new HashMap<>();
-        updates.put("attendees." + deviceID, updatedAttendeeDetails);
+        updates.put("Name", currentName);
+        updates.put("Address", currentAddress);
+        updates.put("Phone Number", currentPhoneNumber);
+        updates.put("profileImageUrl", currentImageURL); // Update the image URL if necessary
 
-        // Update the Firestore document
-        db.collection("events").document(eventID).update(updates)
+        db.collection("users").document(deviceID).update(updates)
                 .addOnSuccessListener(aVoid -> {
-                    // Update the fetched values
+                    disableSaveButton();
+
                     fetchedName = currentName;
                     fetchedAddress = currentAddress;
                     fetchedPhoneNumber = currentPhoneNumber;
+                    fetchedImageURL = currentImageURL;
                 });
     }
 
@@ -212,24 +176,12 @@ public class ProfilePageFragment extends Fragment {
     }
 
     private void saveImageUrlToFirestore(String imageUrl) {
-        db.collection("events").document(eventID).get()
-         .addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists() && documentSnapshot.getData() != null) {
-                Object attendeesObject = documentSnapshot.getData().get("attendees");
 
-                if (attendeesObject instanceof Map) {
-                    Map<String, Object> updatedAttendeeDetails = new HashMap<>();
-                    updatedAttendeeDetails.put("Name", fetchedName);
-                    updatedAttendeeDetails.put("Address", fetchedAddress);
-                    updatedAttendeeDetails.put("Phone Number", fetchedPhoneNumber);
-                    updatedAttendeeDetails.put("profileImageUrl", imageUrl);
-                    fetchedImageURL = imageUrl;
-                    Map<String, Object> updates = new HashMap<>();
-                    updates.put("attendees." + deviceID, updatedAttendeeDetails);
-                    db.collection("events").document(eventID).update(updates);
-                }
-            }
-         });
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("profileImageUrl", imageUrl);
+        fetchedImageURL = imageUrl;
+
+        saveProfileChanges();
     }
 
     @Override
@@ -259,12 +211,13 @@ public class ProfilePageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fetchAttendeesDetails();
+        findDeviceID();
+        fetchUserDetails();
 
         EditText nameEditView = view.findViewById(R.id.editTextName);
         EditText addressEditView = view.findViewById(R.id.editTextAddress);
         EditText phoneNumberEditView = view.findViewById(R.id.editTextPhone);
-        Button saveButton = view.findViewById(R.id.buttonSave);
+        saveButton = view.findViewById(R.id.buttonSave);
 
 
         TextWatcher textWatcher = new TextWatcher() {
@@ -272,13 +225,7 @@ public class ProfilePageFragment extends Fragment {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Context context = getContext();
-                if (context != null) {
-                    saveButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.app_buttons)));
-                    saveButton.setEnabled(true);
-                }
-            }
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { enableSaveButton(); }
 
             @Override
             public void afterTextChanged(Editable editable) {}
@@ -289,9 +236,25 @@ public class ProfilePageFragment extends Fragment {
         profileImageView = view.findViewById(R.id.profile_image);
         profileImageView.setOnClickListener(v -> openGallery());
 
-
         nameEditView.addTextChangedListener(textWatcher);
         addressEditView.addTextChangedListener(textWatcher);
         phoneNumberEditView.addTextChangedListener(textWatcher);
+
+    }
+
+    private void disableSaveButton() {
+        Context context = getContext();
+        if (context != null) {
+            saveButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.darker_gray)));
+            saveButton.setEnabled(false);
+        }
+    }
+
+    private void enableSaveButton() {
+        Context context = getContext();
+        if (context != null) {
+            saveButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.app_buttons)));
+            saveButton.setEnabled(true);
+        }
     }
 }

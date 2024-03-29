@@ -57,12 +57,17 @@
     <string name="poster_preview" />
     <string name="event_poster_preview_desc" />
     <string name="upload_event_poster" />
-
-    <string name="profile_save">Save</string>
-    <string name="profile_phone_number">Phone Number</string>
-    <string name="profile_address">Address</string>
-    <string name="profile_name">Name</string>
     <string name="confirm_delete">Confirm Delete</string>
     <string name="menu_edit_profile">Edit Profile</string>
+    <string name="profiles">Profiles</string>
+    <string name="Announcements" />
+    <string name="announcements">Announcements</string>
+    <string name="events">Events\n</string>
+    <string name="save_button_text">Save</string>
+
+    <string name="profile_name">Name</string>
+    <string name="profile_address">Address</string>
+    <string name="profile_phone_number">Phone Number</string>
+    <string name="profile_save">Save</string>
 
 </resources>
