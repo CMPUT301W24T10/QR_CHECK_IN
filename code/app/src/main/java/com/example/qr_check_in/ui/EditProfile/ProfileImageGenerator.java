@@ -24,14 +24,14 @@ public class ProfileImageGenerator {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document != null && document.exists()) {
-                            String profileImageURL = document.getString("profileImageURL");
+                            String profileImageURL = document.getString("profileImageUrl");
                             if (profileImageURL == null || profileImageURL.trim().isEmpty()) {
                                 // Profile image URL is blank or not present, generate from name
                                 String name = document.getString("Name");
                                 if (name != null && !name.trim().isEmpty()) {
                                     String generatedImageUrl = generateImageUrlFromName(name);
                                     // Update Firestore document with generated image URL
-                                    document.getReference().update("profileImageURL", generatedImageUrl);
+                                    document.getReference().update("profileImageUrl", generatedImageUrl);
                                     // Create and update defaultProfileImage field
                                     document.getReference().update("defaultProfileImage", true);
                                 }
