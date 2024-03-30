@@ -31,9 +31,9 @@
 
     <fragment
         android:id="@+id/nav_edit_profile"
-        android:name="com.example.qr_check_in.StartupFragments.EditProfileFragment"
+        android:name="com.example.qr_check_in.ui.EditProfile.ProfilePageFragment"
         android:label="@string/menu_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" />
+        tools:layout="@layout/fragment_profile_page" />
 
     <fragment
         android:id="@+id/nav_list_of_attendees"
