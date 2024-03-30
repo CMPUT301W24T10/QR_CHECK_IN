@@ -33,10 +33,6 @@
             android:id="@+id/nav_events"
             android:icon="@drawable/ic_menu_events"
             android:title="@string/events" />
-        <item
-            android:id="@+id/nav_my_event"
-            android:icon="@drawable/ic_menu_events"
-            android:title="My Event" />
 
     </group>
 </menu>
