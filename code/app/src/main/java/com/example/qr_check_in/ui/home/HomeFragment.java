@@ -59,12 +59,8 @@ public class HomeFragment extends Fragment {
                                     String eventDescription = document.getString("eventDescription");
                                     String posterUrl = document.getString("posterUrl");
 
-                                    // Modify the event name and description as needed
-                                    String formattedEventName = "Event: " + eventName;
-                                    String formattedEventDescription = "Description: " + eventDescription;
-
-                                    binding.textEventName.setText(formattedEventName);
-                                    binding.textEventDescription.setText(formattedEventDescription);
+                                    binding.textEventName.setText(eventName);
+                                    binding.textEventDescription.setText(eventDescription);
 
                                     // Only load image if posterUrl is not null and not empty
                                     if (posterUrl != null && !posterUrl.isEmpty()) {
@@ -84,7 +80,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
 
     @Override
     public void onDestroyView() {
