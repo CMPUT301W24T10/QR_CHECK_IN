@@ -1,4 +1,4 @@
-package com.example.qr_check_in;
+package com.example.qr_check_in.ui.EditProfile;
 
 import android.content.Context;
 import android.provider.Settings;
