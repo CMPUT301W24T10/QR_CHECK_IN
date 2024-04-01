@@ -1,5 +1,7 @@
 package com.example.qr_check_in;
 
+import static com.example.qr_check_in.constants.SELECTEDEVENTIDREQUIRED;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -30,6 +32,8 @@ public class ReuseQRcodeFragment extends Fragment {
 
     private AppDatabase db;
     private String selectedEventId; // QR code is the eventId
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +99,7 @@ public class ReuseQRcodeFragment extends Fragment {
                         String eventId = eventIds.get(position);
                         // Navigate to the DisplayQrCodeFragment
                         selectedEventId = eventIds.get(position); // Save the selected eventId
+                        SELECTEDEVENTIDREQUIRED = eventIds.get(position);
                         // Optionally, you can give visual feedback here or log the selected item
                         Log.d("SelectedEventId", "Selected event ID: " + selectedEventId);
                     });

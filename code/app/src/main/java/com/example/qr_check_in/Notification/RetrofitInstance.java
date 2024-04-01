@@ -4,7 +4,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * retorifit instance to call API
+ * @Shubham retorifit instance to call API
  */
 
 public class RetrofitInstance {

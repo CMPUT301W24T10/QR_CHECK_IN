@@ -38,7 +38,6 @@ public class AttendeeSelection_fragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        subscribeToNewTopic("Event");
 
     }
 
@@ -59,17 +58,7 @@ public class AttendeeSelection_fragment extends Fragment {
      *
      * @param topicInput
      */
-    public void subscribeToNewTopic(String topicInput) {
-        FirebaseMessaging.getInstance().subscribeToTopic(topicInput)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        System.out.println("successfully subscribed to the topic");
-                    } else {
-                        System.out.println("failed to subscribe to the topic");
-                    }
-                })
-                .addOnFailureListener(e -> System.out.println("failed to subscribe to the topic : " + e.getMessage()));
-    }
+
 
     ActivityResultLauncher<String[]> locationPermissionRequest =
             registerForActivityResult(new ActivityResultContracts
