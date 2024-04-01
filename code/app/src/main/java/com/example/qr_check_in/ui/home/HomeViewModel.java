@@ -6,14 +6,20 @@ import androidx.lifecycle.ViewModel;
 
 public class HomeViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<String> eventName = new MutableLiveData<>();
+    private final MutableLiveData<String> eventDescription = new MutableLiveData<>();
 
     public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+        // Example initial data
+        eventName.setValue("Community Event");
+        eventDescription.setValue("This is a description of the event.");
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<String> getEventName() {
+        return eventName;
+    }
+
+    public LiveData<String> getEventDescription() {
+        return eventDescription;
     }
 }

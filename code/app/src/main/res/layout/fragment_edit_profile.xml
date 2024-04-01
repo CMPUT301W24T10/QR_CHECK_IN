@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartupFragments.EditProfileFragment"
+    tools:context=".ui.EditProfile.EditProfileFragment"
     android:background="@color/background">
 
     <!-- Header -->
@@ -21,8 +21,8 @@
 
     <ImageView
         android:id="@+id/imageViewProfile"
-        android:layout_width="500dp"
-        android:layout_height="400dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="16dp"
@@ -58,13 +58,26 @@
         android:inputType="textEmailAddress"
         android:textSize="32sp" />
 
+    <!-- Add EditText field for homepage -->
+
+    <EditText
+        android:id="@+id/editTextHomepage"
+        android:layout_width="385dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextEmail"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="15dp"
+        android:hint="Homepage"
+        android:inputType="textUri"
+        android:textSize="32sp" />
+
     <Button
         android:id="@+id/buttonSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextEmail"
+        android:layout_below="@+id/editTextHomepage"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="16dp"
         android:text="@string/save_button_text"
         android:textSize="20sp" />
-</RelativeLayout>
+    </RelativeLayout>
