@@ -1,4 +1,4 @@
-package com.example.qr_check_in.StartupFragments;
+package com.example.qr_check_in.ui.EditProfile;
 
 import android.os.Bundle;
 import android.provider.Settings;
@@ -13,9 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.qr_check_in.ProfileImageGenerator;
 import com.example.qr_check_in.R;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
