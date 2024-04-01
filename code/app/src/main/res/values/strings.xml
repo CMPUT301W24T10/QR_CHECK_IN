@@ -64,6 +64,13 @@
     <string name="announcements">Announcements</string>
     <string name="events">Events\n</string>
     <string name="save_button_text">Save</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="event_poster">Event Poster</string>
+
+    <string name="profile_name">Name</string>
+    <string name="profile_address">Address</string>
+    <string name="profile_phone_number">Phone Number</string>
+    <string name="profile_save">Save</string>
     <string name="send_notifications">Send Notifications</string>
     <string name="default_notification_list">Default Notification List</string>
     <string name="custom_notification">Custom Notification</string>
