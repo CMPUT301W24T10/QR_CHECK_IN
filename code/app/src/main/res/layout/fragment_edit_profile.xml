@@ -1,65 +1,83 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.EditProfile.EditProfileFragment"
+    android:background="@color/background">
 
-    <RelativeLayout
+    <!-- Header -->
+    <TextView
+        android:id="@+id/headerTextView"
+        style="@style/headerViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="Profile"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
-        <!-- Profile Picture -->
-        <ImageView
-            android:id="@+id/imageViewProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/default_profile_image"
-            android:layout_centerHorizontal="true"/>
+    <ImageView
+        android:id="@+id/imageViewProfile"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="98dp" />
 
-        <!-- Name -->
-        <EditText
-            android:id="@+id/editTextName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Name"
-            android:textSize="28sp"
-            android:inputType="text"
-            android:layout_below="@id/imageViewProfile"
-            android:layout_marginTop="16dp"
-            android:layout_alignParentStart="true"/>
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="225dp"
+        android:layout_height="56dp"
+        android:layout_below="@+id/imageViewProfile"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="16dp"
+        android:inputType="textPersonName"
+        android:textSize="32sp" />
 
-        <!-- Phone -->
-        <EditText
-            android:id="@+id/editTextPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Phone"
-            android:textSize="28sp"
-            android:inputType="phone"
-            android:layout_below="@id/editTextName"
-            android:layout_marginTop="16dp"
-            android:layout_alignParentStart="true"/>
+    <EditText
+        android:id="@+id/editTextPhone"
+        android:layout_width="224dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextName"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="16dp"
+        android:inputType="phone"
+        android:textSize="32sp" />
 
-        <!-- Email -->
-        <EditText
-            android:id="@+id/editTextEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Email"
-            android:textSize="28sp"
-            android:inputType="textEmailAddress"
-            android:layout_below="@id/editTextPhone"
-            android:layout_marginTop="16dp"
-            android:layout_alignParentStart="true"/>
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="385dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextPhone"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="16dp"
+        android:inputType="textEmailAddress"
+        android:textSize="32sp" />
 
-        <!-- Save Button -->
-        <Button
-            android:id="@+id/buttonSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:layout_below="@id/editTextEmail"
-            android:layout_marginTop="16dp"
-            android:layout_alignParentStart="true"/>
+    <!-- Add EditText field for homepage -->
+
+    <EditText
+        android:id="@+id/editTextHomepage"
+        android:layout_width="385dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextEmail"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="15dp"
+        android:hint="Homepage"
+        android:inputType="textUri"
+        android:textSize="32sp" />
+
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextHomepage"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/save_button_text"
+        android:textSize="20sp" />
     </RelativeLayout>
-</ScrollView>
