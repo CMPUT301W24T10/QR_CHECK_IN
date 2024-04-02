@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.example.qr_check_in.R;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -86,6 +87,7 @@ public class ProfilePageFragment extends Fragment {
                             fetchedImageURL = profileImageGenerator.generateImageUrlFromName(fetchedName);
                         }
 
+
                         updateUI();
                     }
                 });
@@ -138,14 +140,12 @@ public class ProfilePageFragment extends Fragment {
         String currentEmailAddress = emailAddressEditView.getText().toString();
         String currentPhoneNumber = phoneNumberEditView.getText().toString();
         String currentHomepage = homepageEditView.getText().toString();
-        String currentImageURL = fetchedImageURL;
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("Name", currentName);
         updates.put("Email Address", currentEmailAddress);
         updates.put("Phone Number", currentPhoneNumber);
         updates.put("Homepage", currentHomepage);
-        updates.put("profileImageUrl", currentImageURL); // Update the image URL if necessary
 
         uploadImageToFirebaseStorage(selectedImageUri);
 
@@ -156,7 +156,6 @@ public class ProfilePageFragment extends Fragment {
                     fetchedEmailAddress = currentEmailAddress;
                     fetchedPhoneNumber = currentPhoneNumber;
                     fetchedHomepage = currentHomepage;
-                    fetchedImageURL = currentImageURL;
                 });
     }
 
@@ -176,10 +175,18 @@ public class ProfilePageFragment extends Fragment {
                         // Image uploaded successfully
                         // Get the download URL of the uploaded image
                         storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                            fetchedImageURL = uri.toString();
+                            saveImageUrlToFirestore(uri.toString());
                         });
                     });
         }
+    }
+
+    private void saveImageUrlToFirestore(String imageUrl) {
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("profileImageUrl", imageUrl);
+        db.collection("users").document(deviceID).update(updates);
+        fetchedImageURL = imageUrl;
     }
 
     @Override
@@ -249,7 +256,9 @@ public class ProfilePageFragment extends Fragment {
         fetchedImageURL = profileImageGenerator.generateImageUrlFromName(fetchedName);
         selectedImageUri = null;
         updateUI();
-        enableButton(saveButton);
+
+        db.collection("users").document(deviceID).update("profileImageUrl", FieldValue.delete());
+
         disableButton(removeProfilePicButton);
     }
 
