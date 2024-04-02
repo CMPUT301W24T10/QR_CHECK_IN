@@ -23,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.qr_check_in.EventActivity;
 import com.example.qr_check_in.R;
 import com.example.qr_check_in.data.AppDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,6 +47,8 @@ public class QRCheckIn_fragment extends Fragment {
     private String deviceId, eventTitle, eventDescription;
 
     private FirebaseFirestore db;
+
+    public String uniqueId;
 
     boolean found;
 
@@ -85,7 +88,7 @@ public class QRCheckIn_fragment extends Fragment {
 
         if (result != null && result.getContents() != null) {
 
-            String uniqueId = result.getContents();
+            uniqueId = result.getContents();
 
             CollectionReference collectionReference = db.collection("events");
             collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -101,7 +104,8 @@ public class QRCheckIn_fragment extends Fragment {
                                     Map<String, String> existingAttendees = (Map<String, String>) documentSnapshot.get("attendees");
                                     //checking if device is already registered into the event
                                     if (existingAttendees.containsKey(deviceId)) {
-                                        Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+                                        navigateToEventActivity();
+                                        requireActivity().finish();
                                     }else{
                                         //if device is not registered will make the alert dialog
                                         eventTitle = documentSnapshot.getString("eventName");
@@ -287,7 +291,8 @@ public class QRCheckIn_fragment extends Fragment {
                         }
                     });
                     currentEventIdUpdater(deviceId, uniqueId);
-                    Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+                    navigateToEventActivity();
+                    requireActivity().finish();
                 }else{
                     showCustomDialog(uniqueId, new nameDialogCallback() {
                         @Override
@@ -299,13 +304,21 @@ public class QRCheckIn_fragment extends Fragment {
                                         // Your callback logic, if needed
                                     }
                                 });
-                                Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+                                navigateToEventActivity();
+                                requireActivity().finish();
                             }
                         }
                     });
                 }
             }
         });
+    }
+
+    public void navigateToEventActivity() {
+        Intent intent = new Intent(getActivity(), EventActivity.class);
+        intent.putExtra("eventId", uniqueId);
+        intent.putExtra("userId", deviceId);
+        startActivity(intent);
     }
 }
 
