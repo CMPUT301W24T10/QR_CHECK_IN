@@ -1,5 +1,6 @@
 package com.example.qr_check_in.StartupFragments;
 
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static com.example.qr_check_in.constants.SELECTEDEVENTIDREQUIRED;
 
 import android.os.Bundle;
@@ -7,33 +8,48 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.qr_check_in.Notification.RetrofitInstance;
+import com.example.qr_check_in.NotificationAdapter;
 import com.example.qr_check_in.data.AppDatabase;
 import com.example.qr_check_in.data.Notification;
 import com.example.qr_check_in.data.NotificationData;
 import com.example.qr_check_in.data.PushNotification;
 import com.example.qr_check_in.databinding.FragmentNotificationBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import org.checkerframework.checker.units.qual.N;
+import org.w3c.dom.Document;
 
 import java.lang.ref.Reference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Callback;
@@ -45,6 +61,8 @@ import retrofit2.Response;
 public class NotificationFragment extends Fragment {
     private FragmentNotificationBinding mBinding;
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
+    NotificationAdapter adapter;
 
 
     @Override
@@ -66,6 +84,9 @@ public class NotificationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        retrieveData(SELECTEDEVENTIDREQUIRED);
+
 
         mBinding.sendButton.setOnClickListener((new View.OnClickListener() {
 
@@ -132,8 +153,69 @@ public class NotificationFragment extends Fragment {
     }
 
     private void submitData(String title, String notification, String selectedeventidrequired) {
-        // Notification notificationData = new Notification(title,notification);
+        Notification notificationData = new Notification(title, notification,selectedeventidrequired);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Get a reference to the "notifications" collection
+        CollectionReference notificationsRef = db.collection("notifications");
+        notificationsRef.add(notificationData).addOnSuccessListener(documentReference -> {
+                    // Notification data successfully added to Firestore
+                    Toast.makeText(requireContext(), "Notification added in firebase", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // Error occurred while adding notification data to Firestore
+                    Toast.makeText(requireContext(), "Error sending the notification", Toast.LENGTH_SHORT).show();
+                });
 
 
     }
+
+    private void retrieveData(String eventId) {
+        db.collection("notifications").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    ArrayList<Notification> list = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if(document.getData()!=null) {
+
+                            Map<String, Object> map = document.getData();
+                            String notificationTitle = Objects.requireNonNull(map.get("notificationTitle")).toString();
+                            String notification = Objects.requireNonNull(map.get("notification")).toString();
+                            String eventID= "";
+                            if (map.get("eventId")!=null) {
+                                 eventID = map.get("eventId").toString();
+                            }
+                            list.add(new Notification(notificationTitle, notification, eventID));
+                        }
+
+                    }
+//                    int count = 0;
+//                   for (int i=0;i<list.size();i++)
+//                   {
+//                       if (list.get(i).getEventId() ==eventId)
+//                       {
+//                           count++;
+//                           Log.d("count", "onComplete: "+count);
+//
+//                       }
+//                   }
+
+                    mBinding.defaultNotificationsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+                    adapter = new NotificationAdapter(list,requireContext());
+                    mBinding.defaultNotificationsRecycler.setAdapter(adapter);
+
+
+                } else {
+                    Log.d("Error", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+
+
+    }
+
+
 }

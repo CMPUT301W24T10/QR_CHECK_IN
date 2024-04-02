@@ -3,13 +3,15 @@ package com.example.qr_check_in.data;
 import java.util.Objects;
 
 public class Notification {
+
     private String notificationTitle;
     private String notification;
     private String eventId;
 
-    public Notification(String notificationTitle, String notification) {
+    public Notification(String notificationTitle, String notification, String selectedeventidrequired) {
         this.notificationTitle = notificationTitle;
         this.notification = notification;
+        this.eventId = selectedeventidrequired;
     }
 
     public String getNotificationTitle() {

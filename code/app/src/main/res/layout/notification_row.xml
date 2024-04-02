@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:elevation="20dp"
     app:cardUseCompatPadding="true"
+    android:padding="20dp"
     app:cardCornerRadius="10dp"
     android:backgroundTint="@color/white"
     android:background="@color/white">
@@ -14,6 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
+        android:padding="10dp"
         android:layout_marginStart="5dp"
         android:background="@color/white">
 
@@ -22,17 +24,44 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:scaleType="fitXY"
+            android:layout_gravity="center"
             android:src="@drawable/baseline_circle_notifications_24" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="top"
+        android:gravity="top"
+        android:layout_marginStart="10dp"
+        android:background="@color/white">
+
         <TextView
-            android:id="@+id/notification"
+            android:id="@+id/NotificationTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:gravity="top"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
             android:text="Event has been started"
             android:textColor="@color/black"
-            android:textSize="12sp"
-            android:layout_marginStart="10dp"
-             />
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/Notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="Please gather"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
 
 
 
