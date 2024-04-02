@@ -33,6 +33,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -80,10 +81,12 @@ public class ProfilePageFragment extends Fragment {
                         fetchedHomepage = documentSnapshot.contains("Homepage") ?
                                 documentSnapshot.getString("Homepage") : "";
 
-                        if (documentSnapshot.contains("profileImageUrl")) {
+                        if (documentSnapshot.contains("profileImageUrl") && !Objects.equals(documentSnapshot.getString("profileImageUrl"), "")) {
                             enableButton(removeProfilePicButton);
+                            selectedImageUri = Uri.parse(documentSnapshot.getString("profileImageUrl"));
                             fetchedImageURL = documentSnapshot.getString("profileImageUrl");
                         } else {
+                            selectedImageUri = null;
                             fetchedImageURL = profileImageGenerator.generateImageUrlFromName(fetchedName);
                         }
 
@@ -149,14 +152,17 @@ public class ProfilePageFragment extends Fragment {
 
         uploadImageToFirebaseStorage(selectedImageUri);
 
-        db.collection("users").document(deviceID).update(updates)
-                .addOnSuccessListener(aVoid -> {
-                    disableButton(saveButton);
-                    fetchedName = currentName;
-                    fetchedEmailAddress = currentEmailAddress;
-                    fetchedPhoneNumber = currentPhoneNumber;
-                    fetchedHomepage = currentHomepage;
-                });
+        db.collection("users").document(deviceID).update(updates);
+
+        disableButton(saveButton);
+        fetchedName = currentName;
+        fetchedEmailAddress = currentEmailAddress;
+        fetchedPhoneNumber = currentPhoneNumber;
+        fetchedHomepage = currentHomepage;
+
+        if (selectedImageUri == null) {
+            removeProfilePic();
+        }
     }
 
     private void openGallery() {
@@ -175,6 +181,7 @@ public class ProfilePageFragment extends Fragment {
                         // Image uploaded successfully
                         // Get the download URL of the uploaded image
                         storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            selectedImageUri = uri;
                             saveImageUrlToFirestore(uri.toString());
                         });
                     });
@@ -255,9 +262,17 @@ public class ProfilePageFragment extends Fragment {
         ProfileImageGenerator profileImageGenerator = new ProfileImageGenerator(getContext());
         fetchedImageURL = profileImageGenerator.generateImageUrlFromName(fetchedName);
         selectedImageUri = null;
-        updateUI();
 
-        db.collection("users").document(deviceID).update("profileImageUrl", FieldValue.delete());
+        if (!fetchedImageURL.isEmpty()) {
+            Context context = getContext();
+            if (context != null) {
+                Glide.with(context)
+                        .load(fetchedImageURL)
+                        .into(profileImageView);
+            }
+        }
+
+        db.collection("users").document(deviceID).update("profileImageUrl", "");
 
         disableButton(removeProfilePicButton);
     }
