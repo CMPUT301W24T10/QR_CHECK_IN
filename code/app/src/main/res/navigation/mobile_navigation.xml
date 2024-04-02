@@ -58,4 +58,11 @@
         tools:layout="@layout/fragment_event_details" >
     </fragment>
 
+    <fragment
+        android:id="@+id/nav_check"
+        android:name="com.example.qr_check_in.StartupFragments.QRCheckIn_fragment"
+        android:label="Check"
+        tools:layout="@layout/fragment_check_in" >
+    </fragment>
+
 </navigation>
