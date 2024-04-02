@@ -300,14 +300,6 @@ public class QRCheckIn_fragment extends Fragment {
                                     }
                                 });
                                 Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
-                            }else{
-                                appDatabase.saveAttendee(deviceId, "Guest", getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
-                                    @Override
-                                    public void onCallback(String documentId) {
-                                        // Your callback logic, if needed
-                                    }
-                                });
-                                Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
                             }
                         }
                     });
