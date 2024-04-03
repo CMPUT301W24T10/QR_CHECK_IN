@@ -19,6 +19,10 @@
         <action
             android:id="@+id/action_checkin_createEvent_fragment_to_adminLoginFragment"
             app:destination="@id/adminLoginFragment" />
+        <action
+            android:id="@+id/action_checkin_createEvent_fragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/input_info_fragment"
@@ -132,5 +136,9 @@
         android:name="com.example.qr_check_in.RemoveEventFragment"
         android:label="fragment_remove_event"
         tools:layout="@layout/fragment_remove_event" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
+        android:label="NotificationFragment" />
 
 </navigation>

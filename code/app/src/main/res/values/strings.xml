@@ -73,5 +73,9 @@
     <string name="profile_homepage">Homepage</string>
     <string name="profile_save">Save</string>
     <string name="profile_remove_pic">Remove Picture</string>
+    <string name="send_notifications">Send Notifications</string>
+    <string name="default_notification_list">Default Notification List</string>
+    <string name="custom_notification">Custom Notification</string>
+    <string name="notification_title">Notification Title</string>
 
 </resources>

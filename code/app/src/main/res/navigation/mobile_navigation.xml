@@ -58,4 +58,8 @@
         tools:layout="@layout/fragment_event_details" >
     </fragment>
 
+    <fragment
+        android:id="@+id/notificationFragment2"
+        android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
+        android:label="NotificationFragment" />
 </navigation>
