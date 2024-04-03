@@ -1,7 +1,5 @@
 package com.example.qr_check_in.ui.EditProfile;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,25 +15,25 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.example.qr_check_in.R;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,11 +48,13 @@ public class ProfilePageFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private String fetchedName = "";
-    private String fetchedAddress = "";
+    private String fetchedEmailAddress = "";
     private String fetchedPhoneNumber = "";
+    private String fetchedHomepage = "";
     private String fetchedImageURL = "";
-
-    Button saveButton;
+    Uri selectedImageUri;
+    private Button saveButton;
+    private Button removeProfilePicButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,44 +72,56 @@ public class ProfilePageFragment extends Fragment {
         db.collection("users").document(deviceID).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String fetchedName = documentSnapshot.contains("Name") ?
+                        fetchedName = documentSnapshot.contains("Name") ?
                                 documentSnapshot.getString("Name") : "";
-                        String fetchedAddress = documentSnapshot.contains("Address") ?
-                                documentSnapshot.getString("Address") : "";
-                        String fetchedPhoneNumber = documentSnapshot.contains("Phone Number") ?
+                        fetchedEmailAddress = documentSnapshot.contains("Email Address") ?
+                                documentSnapshot.getString("Email Address") : "";
+                        fetchedPhoneNumber = documentSnapshot.contains("Phone Number") ?
                                 documentSnapshot.getString("Phone Number") : "";
-                        String fetchedImageUrl = documentSnapshot.contains("profileImageUrl") ?
-                                documentSnapshot.getString("profileImageUrl") : profileImageGenerator.generateImageUrlFromName(fetchedName);
+                        fetchedHomepage = documentSnapshot.contains("Homepage") ?
+                                documentSnapshot.getString("Homepage") : "";
 
-                        updateUI(fetchedName, fetchedAddress, fetchedPhoneNumber, fetchedImageUrl);
+                        if (documentSnapshot.contains("profileImageUrl") && !Objects.equals(documentSnapshot.getString("profileImageUrl"), "")) {
+                            enableButton(removeProfilePicButton);
+                            selectedImageUri = Uri.parse(documentSnapshot.getString("profileImageUrl"));
+                            fetchedImageURL = documentSnapshot.getString("profileImageUrl");
+                        } else {
+                            selectedImageUri = null;
+                            fetchedImageURL = profileImageGenerator.generateImageUrlFromName(fetchedName);
+                        }
+
+
+                        updateUI();
                     }
                 });
     }
 
-    private void updateUI(String name, String address, String phoneNumber, String imageUrl) {
+    private void updateUI() {
         View view = getView();
         if (view == null) return;
 
         EditText nameEditView = view.findViewById(R.id.editTextName);
-        EditText addressEditView = view.findViewById(R.id.editTextAddress);
+        EditText emailAddressEditView = view.findViewById(R.id.editTextEmailAddress);
         EditText phoneNumberEditView = view.findViewById(R.id.editTextPhone);
+        EditText homepageEditView = view.findViewById(R.id.editTextHomepage);
         CircleImageView profileImageView = view.findViewById(R.id.profile_image);
 
-        nameEditView.setText(name);
-        addressEditView.setText(address);
-        phoneNumberEditView.setText(phoneNumber);
+        nameEditView.setText(fetchedName);
+        emailAddressEditView.setText(fetchedEmailAddress);
+        phoneNumberEditView.setText(fetchedPhoneNumber);
+        homepageEditView.setText(fetchedHomepage);
 
         // Load image using Glide
-        if (!imageUrl.isEmpty()) {
+        if (!fetchedImageURL.isEmpty()) {
             Context context = getContext();
             if (context != null) {
                 Glide.with(context)
-                        .load(imageUrl)
+                        .load(fetchedImageURL)
                         .into(profileImageView);
             }
         }
 
-        disableSaveButton();
+        disableButton(saveButton);
     }
 
     private void setActionBarTitle(String title) {
@@ -123,29 +135,34 @@ public class ProfilePageFragment extends Fragment {
         View view = getView();
 
         EditText nameEditView = view.findViewById(R.id.editTextName);
-        EditText addressEditView = view.findViewById(R.id.editTextAddress);
+        EditText emailAddressEditView = view.findViewById(R.id.editTextEmailAddress);
         EditText phoneNumberEditView = view.findViewById(R.id.editTextPhone);
+        EditText homepageEditView = view.findViewById(R.id.editTextHomepage);
 
         String currentName = nameEditView.getText().toString();
-        String currentAddress = addressEditView.getText().toString();
+        String currentEmailAddress = emailAddressEditView.getText().toString();
         String currentPhoneNumber = phoneNumberEditView.getText().toString();
-        String currentImageURL = fetchedImageURL;
+        String currentHomepage = homepageEditView.getText().toString();
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("Name", currentName);
-        updates.put("Address", currentAddress);
+        updates.put("Email Address", currentEmailAddress);
         updates.put("Phone Number", currentPhoneNumber);
-        updates.put("profileImageUrl", currentImageURL); // Update the image URL if necessary
+        updates.put("Homepage", currentHomepage);
 
-        db.collection("users").document(deviceID).update(updates)
-                .addOnSuccessListener(aVoid -> {
-                    disableSaveButton();
+        uploadImageToFirebaseStorage(selectedImageUri);
 
-                    fetchedName = currentName;
-                    fetchedAddress = currentAddress;
-                    fetchedPhoneNumber = currentPhoneNumber;
-                    fetchedImageURL = currentImageURL;
-                });
+        db.collection("users").document(deviceID).update(updates);
+
+        disableButton(saveButton);
+        fetchedName = currentName;
+        fetchedEmailAddress = currentEmailAddress;
+        fetchedPhoneNumber = currentPhoneNumber;
+        fetchedHomepage = currentHomepage;
+
+        if (selectedImageUri == null) {
+            removeProfilePic();
+        }
     }
 
     private void openGallery() {
@@ -164,9 +181,8 @@ public class ProfilePageFragment extends Fragment {
                         // Image uploaded successfully
                         // Get the download URL of the uploaded image
                         storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                            String imageUrl = uri.toString();
-                            // Save the download URL to Firestore under the event's attendees hashmap
-                            saveImageUrlToFirestore(imageUrl);
+                            selectedImageUri = uri;
+                            saveImageUrlToFirestore(uri.toString());
                         });
                     });
         }
@@ -176,18 +192,17 @@ public class ProfilePageFragment extends Fragment {
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("profileImageUrl", imageUrl);
+        db.collection("users").document(deviceID).update(updates);
         fetchedImageURL = imageUrl;
-
-        saveProfileChanges();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-            Uri selectedImageUri = data.getData();
+            selectedImageUri = data.getData();
             profileImageView.setImageURI(selectedImageUri);
-            uploadImageToFirebaseStorage(selectedImageUri);
+            enableButton(removeProfilePicButton);
         }
 
         View v = getView();
@@ -212,9 +227,11 @@ public class ProfilePageFragment extends Fragment {
         fetchUserDetails();
 
         EditText nameEditView = view.findViewById(R.id.editTextName);
-        EditText addressEditView = view.findViewById(R.id.editTextAddress);
+        EditText emailAddressEditView = view.findViewById(R.id.editTextEmailAddress);
         EditText phoneNumberEditView = view.findViewById(R.id.editTextPhone);
+        EditText homepageEditView = view.findViewById(R.id.editTextHomepage);
         saveButton = view.findViewById(R.id.buttonSave);
+        removeProfilePicButton = view.findViewById(R.id.buttonRemovePic);
 
 
         TextWatcher textWatcher = new TextWatcher() {
@@ -222,36 +239,57 @@ public class ProfilePageFragment extends Fragment {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { enableSaveButton(); }
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { enableButton(saveButton); }
 
             @Override
             public void afterTextChanged(Editable editable) {}
         };
 
         saveButton.setOnClickListener(v -> saveProfileChanges());
+        removeProfilePicButton.setOnClickListener(v -> removeProfilePic());
 
         profileImageView = view.findViewById(R.id.profile_image);
         profileImageView.setOnClickListener(v -> openGallery());
 
         nameEditView.addTextChangedListener(textWatcher);
-        addressEditView.addTextChangedListener(textWatcher);
+        emailAddressEditView.addTextChangedListener(textWatcher);
         phoneNumberEditView.addTextChangedListener(textWatcher);
+        homepageEditView.addTextChangedListener(textWatcher);
 
     }
 
-    private void disableSaveButton() {
+    private void removeProfilePic() {
+        ProfileImageGenerator profileImageGenerator = new ProfileImageGenerator(getContext());
+        fetchedImageURL = profileImageGenerator.generateImageUrlFromName(fetchedName);
+        selectedImageUri = null;
+
+        if (!fetchedImageURL.isEmpty()) {
+            Context context = getContext();
+            if (context != null) {
+                Glide.with(context)
+                        .load(fetchedImageURL)
+                        .into(profileImageView);
+            }
+        }
+
+        db.collection("users").document(deviceID).update("profileImageUrl", "");
+
+        disableButton(removeProfilePicButton);
+    }
+
+    private void disableButton(Button button) {
         Context context = getContext();
         if (context != null) {
-            saveButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.darker_gray)));
-            saveButton.setEnabled(false);
+            button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.darker_gray)));
+            button.setEnabled(false);
         }
     }
 
-    private void enableSaveButton() {
+    private void enableButton(Button button) {
         Context context = getContext();
         if (context != null) {
-            saveButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.app_buttons)));
-            saveButton.setEnabled(true);
+            button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.app_buttons)));
+            button.setEnabled(true);
         }
     }
 }

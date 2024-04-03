@@ -26,7 +26,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/profile_name"
-        android:inputType="textPersonName"
         android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/profile_image"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,11 +34,10 @@
 
     <!-- EditText for Address -->
     <EditText
-        android:id="@+id/editTextAddress"
+        android:id="@+id/editTextEmailAddress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/profile_address"
-        android:inputType="textPostalAddress"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/editTextName"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +52,19 @@
         android:hint="@string/profile_phone_number"
         android:inputType="phone"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/editTextAddress"
+        app:layout_constraintTop_toBottomOf="@id/editTextEmailAddress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <!-- EditText for Homepage -->
+    <EditText
+        android:id="@+id/editTextHomepage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/profile_homepage"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/editTextPhone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8" />
@@ -68,8 +78,25 @@
         android:enabled="false"
         android:backgroundTint="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonRemovePic"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Remove Pic Button -->
+    <Button
+        android:id="@+id/buttonRemovePic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/profile_remove_pic"
+        android:enabled="false"
+        android:backgroundTint="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/buttonSave"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
