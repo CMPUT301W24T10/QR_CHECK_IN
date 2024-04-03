@@ -191,16 +191,20 @@ public class NotificationFragment extends Fragment {
                         }
 
                     }
-//                    int count = 0;
-//                   for (int i=0;i<list.size();i++)
-//                   {
-//                       if (list.get(i).getEventId() ==eventId)
-//                       {
-//                           count++;
-//                           Log.d("count", "onComplete: "+count);
-//
-//                       }
-//                   }
+                    ArrayList<Notification> particularEventList = new ArrayList<>();
+
+                    for (int i=0;i<list.size();i++)
+                    {
+                        if (Objects.equals(list.get(i).getEventId(), eventId))
+                        {
+                            particularEventList.add(list.get(i));
+
+                        }
+                    }
+
+                    mBinding.defaultNotificationsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+                    adapter = new NotificationAdapter(particularEventList,requireContext());
+                    mBinding.defaultNotificationsRecycler.setAdapter(adapter);
 
                     mBinding.defaultNotificationsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
                     adapter = new NotificationAdapter(list,requireContext());
