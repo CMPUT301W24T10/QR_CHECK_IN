@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -49,6 +50,11 @@
             android:exported="false"
             android:label="@string/title_activity_event"
             android:theme="@style/Theme.QR_check_in.NoActionBar" />
+        <activity android:name=".EventDetailsActivity"
+            android:exported="false"
+            android:label="EventDetailsActivity"
+            android:theme="@style/Theme.QR_check_in.NoActionBar">
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -62,6 +68,14 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"/>
+
+        <service android:name=".Notification.FirebaseMessaging"
+            android:exported="false"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
 
     </application>
 

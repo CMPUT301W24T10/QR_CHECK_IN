@@ -34,5 +34,10 @@
             android:icon="@drawable/ic_menu_events"
             android:title="@string/events" />
 
+
+        <item
+            android:id="@+id/notificationFragment2"
+            android:icon="@drawable/baseline_circle_notifications_24"
+            android:title="@string/send_notifications" />
     </group>
 </menu>

@@ -66,6 +66,11 @@ public class AppDatabase {
                     Log.e("FirestoreError", "Error adding event", e);
                 });
     }
+
+
+
+
+
     /**
      * Updates the details of an existing event in Firestore.
      *

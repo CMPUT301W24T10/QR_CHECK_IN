@@ -68,11 +68,20 @@
     <string name="event_poster">Event Poster</string>
 
     <string name="profile_name">Name</string>
-    <string name="profile_address">Address</string>
+    <string name="profile_address">Email</string>
     <string name="profile_phone_number">Phone Number</string>
+    <string name="profile_homepage">Homepage</string>
     <string name="profile_save">Save</string>
+<<<<<<< HEAD
     <string name="sign_up">Sign Up</string>
     <string name="current_events">Current Events</string>
     <string name="singup">Sign UP</string>
+=======
+    <string name="profile_remove_pic">Remove Picture</string>
+    <string name="send_notifications">Send Notifications</string>
+    <string name="default_notification_list">Default Notification List</string>
+    <string name="custom_notification">Custom Notification</string>
+    <string name="notification_title">Notification Title</string>
+>>>>>>> 6a08bcf66217c3a4470513aa2ddccf118bfa60fa
 
 </resources>

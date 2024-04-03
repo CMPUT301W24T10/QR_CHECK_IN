@@ -20,8 +20,14 @@
             android:id="@+id/action_checkin_createEvent_fragment_to_adminLoginFragment"
             app:destination="@id/adminLoginFragment" />
         <action
+<<<<<<< HEAD
             android:id="@+id/action_checkin_createEvent_fragment_to_sign_up"
             app:destination="@id/sign_up" />
+=======
+            android:id="@+id/action_checkin_createEvent_fragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
+
+>>>>>>> 6a08bcf66217c3a4470513aa2ddccf118bfa60fa
     </fragment>
     <fragment
         android:id="@+id/input_info_fragment"
@@ -136,9 +142,15 @@
         android:label="fragment_remove_event"
         tools:layout="@layout/fragment_remove_event" />
     <fragment
+<<<<<<< HEAD
         android:id="@+id/sign_up"
         android:name="com.example.qr_check_in.sign_up"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" />
+=======
+        android:id="@+id/notificationFragment"
+        android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
+        android:label="NotificationFragment" />
+>>>>>>> 6a08bcf66217c3a4470513aa2ddccf118bfa60fa
 
 </navigation>
