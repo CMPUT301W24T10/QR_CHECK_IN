@@ -45,6 +45,10 @@ public class checkin_createEvent_fragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.adminLoginFragment);
         });
 
+        view.findViewById(R.id.signUpButton).setOnClickListener(v->{
+            Navigation.findNavController(view).navigate(R.id.sign_up);
+        });
+
         return view;
     }
 }
