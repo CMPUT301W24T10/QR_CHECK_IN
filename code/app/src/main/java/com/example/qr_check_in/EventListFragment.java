@@ -55,7 +55,7 @@ public class EventListFragment extends Fragment {
             }
         });
 
-        root.findViewById(R.id.buttonConfirmSelectedDeleteEvent).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.sg_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(selectedPosition == -1) {
