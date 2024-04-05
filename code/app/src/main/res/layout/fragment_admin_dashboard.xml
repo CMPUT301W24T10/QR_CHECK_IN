@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".AdminDashboardFragment">
@@ -12,52 +13,33 @@
         android:id="@+id/tvAdminDashboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ADMIN DASHBOARD"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:layout_marginBottom="24dp"
+        android:background="@color/app_header"
         android:gravity="center"
-        android:layout_marginBottom="24dp" />
-
-    <Button
-        android:id="@+id/btnRemoveEvents"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Remove Events"
-        android:layout_marginBottom="8dp"/>
+        android:text="ADMIN DASHBOARD"
+        android:textColor="#CFA9A9"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnRemoveProfiles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Remove Profiles"
-        android:layout_marginBottom="8dp"/>
-
-    <Button
-        android:id="@+id/btnRemoveImages"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Remove Images"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:text="Remove Profiles" />
 
     <Button
         android:id="@+id/btnBrowseEvents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Browse Events"
-        android:layout_marginBottom="8dp"/>
-
-    <Button
-        android:id="@+id/btnBrowseProfiles"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Browse Profiles"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:text="Browse Events" />
 
     <Button
         android:id="@+id/btnBrowseImages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Browse Images"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:text="Browse Images" />
 
 </LinearLayout>

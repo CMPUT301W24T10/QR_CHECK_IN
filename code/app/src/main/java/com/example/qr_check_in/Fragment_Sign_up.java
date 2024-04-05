@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.qr_check_in.ModelClasses.Event;
+import com.example.qr_check_in.ModelClasses.User;
+import com.example.qr_check_in.admin.EventListAdapter;
 import com.example.qr_check_in.data.AdminData;
 import com.example.qr_check_in.data.EventNameIdPair;
 import com.example.qr_check_in.data.EventSignUpHandler;
@@ -26,9 +29,8 @@ public class Fragment_Sign_up extends Fragment {
 
     private AdminData adminData;
     private ListView eventListView;
-    private ArrayList<String> events;
-    private ArrayAdapter<String> eventAdapter;
-    private List<EventNameIdPair> eventIdPairList;
+    private ArrayList<Event> events;
+    private ArrayAdapter<Event> eventAdapter;
     private int selectedPosition;
     private User_name userNameFetcher; // Assuming User_name is your UserNameFetcher class
     private EventSignUpHandler eventSignUpHandler; // Ensure this class is implemented as described
@@ -51,12 +53,12 @@ public class Fragment_Sign_up extends Fragment {
         View root = inflater.inflate(R.layout.fragment_sign_up, container, false);
         adminData = new AdminData();
         events = new ArrayList<>();
-        eventIdPairList = new ArrayList<>();
+
         selectedPosition = -1;
         userNameFetcher = new User_name(); // Assuming this fetches or creates a user
 
         eventListView = root.findViewById(R.id.list_of_events);
-        eventAdapter = new ArrayAdapter<>(getContext(), R.layout.attendee_list_element, events);
+        eventAdapter = new EventListAdapter(getContext(), events);
         eventListView.setAdapter(eventAdapter);
 
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -68,23 +70,20 @@ public class Fragment_Sign_up extends Fragment {
 
         adminData.fetchEventNames(new AdminData.EventFetchListener() {
             @Override
-            public void onEventListFetched(List<EventNameIdPair> eventList) {
-                eventIdPairList = eventList;
-                Log.e("EventList", eventList.toString());
-                for (EventNameIdPair event : eventList) {
-                    events.add(event.getEventName());
-                }
+            public void onEventListFetched(ArrayList<Event> eventList) {
+                events.clear();
+                events.addAll(eventList);
                 eventAdapter.notifyDataSetChanged();
             }
         });
 
         Button signUpButton = root.findViewById(R.id.sg_button);
         signUpButton.setOnClickListener(v -> {
-            if (selectedPosition < 0 || selectedPosition >= eventIdPairList.size()) {
+            if (selectedPosition < 0 || selectedPosition >= events.size()) {
                 Toast.makeText(getContext(), "Please select an event to sign up for.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            EventNameIdPair selectedEvent = eventIdPairList.get(selectedPosition);
+            Event selectedEvent = events.get(selectedPosition);
 
             deviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
             userNameFetcher.getUserNameOrCreateGuest(deviceId, new User_name.UserNameFetchListener() {

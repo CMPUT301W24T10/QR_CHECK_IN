@@ -83,7 +83,7 @@ public class EventActivity extends AppCompatActivity {
                 String description = (String)data.get("eventDescription");
                 String organizerId = (String)data.get("organizerId");
                 // putting arbitrary string for organizer name as current user doesnot need to know about organizer name
-                event = new Event(eventName, new Organizer("organizer", organizerId), description, eventId);
+                event = new Event(eventName, new Organizer("organizer", organizerId), description, eventId, null);
 
 
 
