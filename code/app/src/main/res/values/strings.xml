@@ -80,5 +80,6 @@
     <string name="sign_up">Sign UP</string>
     <string name="current_events">Current Events</string>
     <string name="singup">Sign UP</string>
+    <string name="event_location">Event Location</string>
 
 </resources>
