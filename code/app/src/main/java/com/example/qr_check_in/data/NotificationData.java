@@ -1,7 +1,7 @@
 package com.example.qr_check_in.data;
 
 /**
- * @Shubham NotificationData class for notification
+ * NotificationData class for notification
  */
 
 public class NotificationData {

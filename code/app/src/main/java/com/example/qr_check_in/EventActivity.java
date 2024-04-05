@@ -67,7 +67,7 @@ public class EventActivity extends AppCompatActivity {
         // menu should be considered as top level destinations.
 
         /**
-         * created icon for notification in the dashboard to send notification @Shubham
+         * created icon for notification in the dashboard to send notification
          */
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_list_of_attendees,R.id.notificationFragment2)

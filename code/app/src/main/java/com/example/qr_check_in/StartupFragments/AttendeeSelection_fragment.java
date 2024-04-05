@@ -54,7 +54,7 @@ public class AttendeeSelection_fragment extends Fragment {
     }
 
     /**
-     * Created subscribe function to enter the topic name once the attendee will login @Shubham
+     * Created subscribe function to enter the topic name once the attendee will login
      *
      * @param topicInput
      */

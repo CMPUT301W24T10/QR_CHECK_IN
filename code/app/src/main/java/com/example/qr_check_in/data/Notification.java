@@ -1,17 +1,20 @@
 package com.example.qr_check_in.data;
 
 import java.util.Objects;
+import java.util.Date;
 
 public class Notification {
 
     private String notificationTitle;
     private String notification;
     private String eventId;
+    private String DateandTime;
 
-    public Notification(String notificationTitle, String notification, String selectedeventidrequired) {
+    public Notification(String notificationTitle, String notification, String selectedeventidrequired, String DateandTime) {
         this.notificationTitle = notificationTitle;
         this.notification = notification;
         this.eventId = selectedeventidrequired;
+        this.DateandTime = DateandTime;
     }
 
     public String getNotificationTitle() {
@@ -24,6 +27,10 @@ public class Notification {
 
     public String getNotification() {
         return notification;
+    }
+
+    public String getDateandTime(){
+        return DateandTime;
     }
 
     public void setNotification(String notification) {
@@ -50,7 +57,7 @@ public class Notification {
 
     @Override
     public int hashCode() {
-        return Objects.hash(notificationTitle, notification, eventId);
+        return Objects.hash(notificationTitle, notification, eventId, DateandTime);
     }
 
     @Override
