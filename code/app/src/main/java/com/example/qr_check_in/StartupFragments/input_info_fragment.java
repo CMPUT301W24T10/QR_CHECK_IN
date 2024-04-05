@@ -28,7 +28,7 @@ import com.example.qr_check_in.R;
 import com.example.qr_check_in.data.AppDatabase;
 
 public class input_info_fragment extends Fragment {
-    private EditText editTextOrganizerName, editTextEventName, editTextEventDescription;
+    private EditText editTextOrganizerName, editTextEventName, editTextEventDescription, editTextEventLocation;
     private RadioGroup radioGroupQRCode;
     private AppDatabase appDatabase;
     private String organizerId;
@@ -79,10 +79,11 @@ public class input_info_fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_input_info_fragment, container, false);
-// Initialize views
+        // Initialize views
         editTextOrganizerName = view.findViewById(R.id.EnterOrganizerName);
         editTextEventName = view.findViewById(R.id.EnterEventName);
         editTextEventDescription = view.findViewById(R.id.EnterEventDescription);
+        editTextEventLocation = view.findViewById(R.id.EnterEventLocation);
         radioGroupQRCode = view.findViewById(R.id.read_status);
 
         posterPreview = view.findViewById(R.id.PosterPreview);
@@ -119,14 +120,15 @@ public class input_info_fragment extends Fragment {
         String organizerName = editTextOrganizerName.getText().toString().trim();
         String eventName = editTextEventName.getText().toString().trim();
         String eventDescription = editTextEventDescription.getText().toString().trim();
+        String eventlocation = editTextEventLocation.getText().toString().trim();
 
-// organizer name, event name, and event description are not empty
-        if (!organizerName.isEmpty() && !eventName.isEmpty() && !eventDescription.isEmpty()) {
+        // organizer name, event name, and event description are not empty
+        if (!organizerName.isEmpty() && !eventName.isEmpty() && !eventDescription.isEmpty() && !eventlocation.isEmpty()) {
             appDatabase.saveOrganizer(organizerName, deviceId,getContext(), new AppDatabase.FirestoreCallback() { // Save the organizer information to Firestore database
                 @Override
                 public void onCallback(String documentId) {
                     organizerId = deviceId;
-                    appDatabase.saveEvent(organizerId, eventName, eventDescription, posterUri, getContext(), new AppDatabase.FirestoreCallback() {  // Save the event information to Firestore database
+                    appDatabase.saveEvent(organizerId, eventName, eventDescription, eventlocation,posterUri, getContext(), new AppDatabase.FirestoreCallback() {  // Save the event information to Firestore database
                         @SuppressLint("RestrictedApi")
                         @Override
                         public void onCallback(String documentId) {
