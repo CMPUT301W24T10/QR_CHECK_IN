@@ -21,7 +21,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Random;
 
 /**
- * @Shubham Firebase messaging class to receive notification
+ * Firebase messaging class to receive notification
  */
 
 

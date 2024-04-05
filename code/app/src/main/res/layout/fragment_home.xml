@@ -46,12 +46,12 @@
 
         <ImageView
             android:id="@+id/image_event"
-            android:layout_width="400dp"
+            android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
             android:contentDescription="@string/event_poster"
-            android:src="@drawable/default_poster"
-            android:layout_marginTop="16dp"/>
+            android:src="@drawable/default_poster" />
 
         <TextView
             android:id="@+id/text_event_name"

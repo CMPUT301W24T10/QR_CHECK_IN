@@ -10,7 +10,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 /**
- * @Shubham Notification api to push notification
+ * Notification api to push notification
  */
 
 public interface NotificationAPI {
