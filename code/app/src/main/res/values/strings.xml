@@ -77,5 +77,8 @@
     <string name="default_notification_list">Default Notification List</string>
     <string name="custom_notification">Custom Notification</string>
     <string name="notification_title">Notification Title</string>
+    <string name="sign_up">Sign UP</string>
+    <string name="current_events">Current Events</string>
+    <string name="singup">Sign UP</string>
 
 </resources>

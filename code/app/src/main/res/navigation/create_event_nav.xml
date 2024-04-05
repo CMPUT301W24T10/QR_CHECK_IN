@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_checkin_createEvent_fragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_checkin_createEvent_fragment_to_fragment_Sign_up"
+            app:destination="@id/fragment_Sign_up" />
 
     </fragment>
     <fragment
@@ -140,5 +143,10 @@
         android:id="@+id/notificationFragment"
         android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
         android:label="NotificationFragment" />
+    <fragment
+        android:id="@+id/fragment_Sign_up"
+        android:name="com.example.qr_check_in.Fragment_Sign_up"
+        android:label="fragment__sign_up"
+        tools:layout="@layout/fragment_sign_up" />
 
 </navigation>
