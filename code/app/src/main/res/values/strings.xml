@@ -80,5 +80,7 @@
     <string name="sign_up">Sign UP</string>
     <string name="current_events">Current Events</string>
     <string name="singup">Sign UP</string>
+    <string name="sign_ups_list">Sign Ups List</string>
+    <string name="limit_sign_ups">Limit sign ups</string>
 
 </resources>

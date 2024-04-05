@@ -39,5 +39,17 @@
             android:id="@+id/notificationFragment2"
             android:icon="@drawable/baseline_circle_notifications_24"
             android:title="@string/send_notifications" />
+
+        <item
+            android:id="@+id/nav_signups"
+            android:icon="@drawable/ic_sign_up"
+            android:title="@string/sign_ups_list" />
+
+        <item
+            android:id="@+id/nav_signups_limit"
+            android:icon="@drawable/ic_sign_up_limit"
+            android:title="@string/limit_sign_ups" />
+
+
     </group>
 </menu>
