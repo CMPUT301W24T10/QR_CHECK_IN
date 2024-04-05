@@ -234,10 +234,9 @@ public class AppDatabase {
     public void saveUser(String deviceId, String userName, String userPhone, String emailAddress, String address, String event, Context context, FirestoreCallback firestoreCallback) {
         Map<String, Object> info = new HashMap<>(); // Create a new HashMap to hold the user info
         info.put("Name", userName);
-        info.put("Phone", userPhone);
-        info.put("Email", emailAddress);
-        info.put("Address",address);
-        info.put("currentEventID", event);
+        info.put("Phone Number", userPhone);
+        info.put("Email Address", emailAddress);
+        info.put("Homepage",address);
 
 
         db.collection("users").document(deviceId).set(info, SetOptions.merge())  // Add or merge the organizer data into the 'users' collection in Firestore, using the device ID as the document ID.

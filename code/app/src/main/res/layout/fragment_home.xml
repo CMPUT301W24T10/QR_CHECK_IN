@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/headerTextView"
         style="@style/headerViewStyle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="16dp"
@@ -19,65 +19,79 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Current Event Details -->
-    <LinearLayout
-        android:id="@+id/currentEventDetailsLayout"
+    <!-- Current Event Header -->
+    <TextView
+        android:id="@+id/currentEventHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
+        android:layout_marginTop="32dp"
+        android:text="Current Event"
+        android:textColor="@android:color/black"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/headerTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
-            android:id="@+id/currentEventHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Current Event"
-            android:gravity="center"
-            android:textColor="@android:color/black"
-            android:textSize="50sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"/>
+    <!-- Event Poster Image -->
+    <ImageView
+        android:id="@+id/image_event"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="50dp"
+        android:contentDescription="@string/event_poster"
+        android:src="@drawable/default_poster"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentEventHeader" />
 
-        <ImageView
-            android:id="@+id/image_event"
-            android:layout_width="400dp"
-            android:layout_height="300dp"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/event_poster"
-            android:src="@drawable/default_poster"
-            android:layout_marginTop="16dp"/>
+    <!-- Event Name -->
 
-        <TextView
-            android:id="@+id/text_event_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Current Event Name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="36sp"
-            android:layout_marginTop="16dp"/>
+    <!-- Event Description -->
 
-        <TextView
-            android:id="@+id/text_event_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event Description"
-            android:textSize="30sp"
-            android:layout_marginTop="14dp"/>
+    <TextView
+        android:id="@+id/text_event_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:gravity="start"
+        android:text="Current Event Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_event" />
 
-        <Button
-            android:id="@+id/button_more_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="More Details"
-            android:textStyle="bold"
-            android:layout_marginTop="18dp"/>
+    <TextView
+        android:id="@+id/text_event_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:gravity="start"
+        android:text="Event Description"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_event_name" />
 
-    </LinearLayout>
-
+    <!-- More Details Button -->
+    <Button
+        android:id="@+id/button_more_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:text="More Details"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_event_description" />
 </androidx.constraintlayout.widget.ConstraintLayout>

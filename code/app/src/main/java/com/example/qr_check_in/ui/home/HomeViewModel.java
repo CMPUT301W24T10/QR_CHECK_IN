@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class HomeViewModel extends ViewModel {
-
     private final MutableLiveData<String> eventName = new MutableLiveData<>();
     private final MutableLiveData<String> eventDescription = new MutableLiveData<>();
+    private final MutableLiveData<String> eventId = new MutableLiveData<>();
 
     public HomeViewModel() {
         // Example initial data
@@ -21,5 +21,13 @@ public class HomeViewModel extends ViewModel {
 
     public LiveData<String> getEventDescription() {
         return eventDescription;
+    }
+
+    public LiveData<String> getEventId() { // Getter for eventId
+        return eventId;
+    }
+
+    public void setEventId(String eventId) { // Setter for eventId
+        this.eventId.setValue(eventId);
     }
 }
