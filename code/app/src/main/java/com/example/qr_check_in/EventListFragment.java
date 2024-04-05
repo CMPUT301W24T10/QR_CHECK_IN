@@ -13,6 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.qr_check_in.ModelClasses.Event;
+import com.example.qr_check_in.ModelClasses.User;
+import com.example.qr_check_in.admin.EventListAdapter;
 import com.example.qr_check_in.data.AdminData;
 import com.example.qr_check_in.data.EventNameIdPair;
 
@@ -22,9 +25,9 @@ import java.util.List;
 public class EventListFragment extends Fragment {
     private AdminData adminData;
     private ListView eventListView;
-    private ArrayList<String> events;
-    private ArrayAdapter<String> eventAdapter;
-    private List<EventNameIdPair> eventIdPairList;
+    private ArrayList<Event> events;
+    private ArrayAdapter<Event> eventAdapter;
+
     private int selectedPosition;
 
     @Override
@@ -39,11 +42,11 @@ public class EventListFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_event_list, container, false);
         adminData = new AdminData();
-        events = new ArrayList<>();
-        eventIdPairList = new ArrayList<>();
+        events = new ArrayList<Event>();
+
         selectedPosition = -1;
         eventListView = root.findViewById(R.id.list_of_events);
-        eventAdapter = new ArrayAdapter<>(getContext(), R.layout.attendee_list_element, events);
+        eventAdapter = new EventListAdapter(getContext(), events);
         eventListView.setAdapter(eventAdapter);
 
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,10 +66,10 @@ public class EventListFragment extends Fragment {
                     Toast.makeText(getContext(), "Please select an event to delete", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                // Get the selected event
-                EventNameIdPair selectedEvent = eventIdPairList.get(selectedPosition);
+                // get the selected event
+                Event selectedEvent = events.get(selectedPosition);
                 // Delete the event from the database
-                adminData.deleteEvent(selectedEvent.getDocumentId(), new AdminData.EventDeletionListener() {
+                adminData.deleteEvent(selectedEvent.getEventID(), new AdminData.EventDeletionListener() {
                     @Override
                     public void onEventDeletionSuccess(String documentId) {
                         Log.e("EventDeletion", "Event with document ID " + documentId + " deleted successfully");
@@ -84,12 +87,9 @@ public class EventListFragment extends Fragment {
 
         adminData.fetchEventNames(new AdminData.EventFetchListener() {
             @Override
-            public void onEventListFetched(List<EventNameIdPair> eventList) {
-                eventIdPairList = eventList;
-                Log.e("EventList",eventList.toString());
-                for (EventNameIdPair event : eventList) {
-                    events.add(event.getEventName());
-                }
+            public void onEventListFetched(ArrayList<Event> eventList) {
+                events.clear();
+                events.addAll(eventList);
                 eventAdapter.notifyDataSetChanged();
             }
         });
