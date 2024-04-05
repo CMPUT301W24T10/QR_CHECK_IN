@@ -4,7 +4,7 @@ import com.example.qr_check_in.data.NotificationData;
 import java.util.Objects;
 
 /**
- * @Shubham Push notification to send notification
+ * Push notification to send notification
  */
 
 public class PushNotification {

@@ -54,13 +54,12 @@ public class ReuseQRcodeFragment extends Fragment {
         if (requireArguments().getString("eventName") == null) {
             Log.e("EventNameError", "Event name is null");
         }
-        Log.e("EventDescription", "onCreateView: " + requireArguments().getString("eventDescription"));
         eventDetails.put("organizerId",requireArguments().getString("organizerId"));
         eventDetails.put("eventName",requireArguments().getString("eventName"));
         eventDetails.put("eventDescription",requireArguments().getString("eventDescription"));
 
         // Call getEvents to fetch eventIds and setup ListView
-        getEvents(view);   // this is making the app crash
+        getEvents(view);
 
         Button confirmButton = view.findViewById(R.id.buttonConfirmSelectedQRcode); // Assuming the button's ID is confirmButton
         confirmButton.setOnClickListener(v -> {
