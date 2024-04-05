@@ -16,7 +16,7 @@ public class EventTest {
     @Before
     public void setUp() {
         organizer = new Organizer("organizerUsername", "organizerUID");
-        event = new Event("Test Event", organizer, "This is a test event description.", "eventID123");
+        event = new Event("Test Event", organizer, "This is a test event description.", "eventID123", null);
 
         // Assume maximum attendees is a public field or can be set via a method
         event.maxAttendees = 10;
