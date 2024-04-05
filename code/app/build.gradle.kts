@@ -76,7 +76,7 @@ dependencies {
 
     // Add the dependencies for the Firebase Cloud Messaging and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.firebase:firebase-messaging:23.4.1")
     implementation("com.google.firebase:firebase-analytics")
 
     // Retrofit
