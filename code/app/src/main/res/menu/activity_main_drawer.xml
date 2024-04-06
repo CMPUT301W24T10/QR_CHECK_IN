@@ -31,10 +31,5 @@
             android:id="@+id/notificationFragment2"
             android:icon="@drawable/baseline_circle_notifications_24"
             android:title="@string/send_notifications" />
-
-        <item
-            android:id="@+id/map"
-            android:icon="@drawable/map"
-            android:title="Map" />
     </group>
 </menu>

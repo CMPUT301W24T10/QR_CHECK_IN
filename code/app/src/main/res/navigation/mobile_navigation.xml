@@ -62,9 +62,4 @@
         android:id="@+id/notificationFragment2"
         android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
         android:label="NotificationFragment" />
-    <fragment
-        android:id="@+id/map"
-        android:name="com.example.qr_check_in.geolocation.MapsFragment"
-        android:label="NotificationFragment" />
-
 </navigation>
