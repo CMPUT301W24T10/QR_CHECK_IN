@@ -138,6 +138,7 @@ public class input_info_fragment extends Fragment {
                                 Bundle bundle = new Bundle();  // Create a bundle with event ID and organizer ID
                                 bundle.putString("eventId", eventId);
                                 bundle.putString("organizerId", organizerId);
+                                bundle.putString("UserType", "Organizer");
                                 Log.d(TAG, "Navigation working fine.");
 //                                idlingResource.decrement();
 
@@ -179,6 +180,8 @@ public class input_info_fragment extends Fragment {
                     bundle.putString("eventName", editTextEventName.getText().toString().trim());
                     bundle.putString("eventDescription", editTextEventDescription.getText().toString().trim());
                     bundle.putString("eventLocation", editTextEventLocation.getText().toString().trim());
+                    bundle.putString("posterUri", posterUri.toString());
+//                    bundle.putParcelable("posterUri", posterUri);
                     Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_reuseQRcodeFragment, bundle);
                 } else {
                     Toast.makeText(getContext(), "You don't have any reusable QR code", Toast.LENGTH_SHORT).show();

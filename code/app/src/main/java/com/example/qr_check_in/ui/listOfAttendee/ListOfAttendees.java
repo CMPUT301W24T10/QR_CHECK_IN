@@ -57,7 +57,6 @@ public class ListOfAttendees extends Fragment {
         eventId = (sharedViewModel.getEventId());
 
         attendeeList = root.findViewById(R.id.list_of_attendees);
-        attendees.add("Attendee 1");
         // Create an ArrayAdapter from List of String
         attendeeAdapter = new ArrayAdapter<String>
                 (getContext(),R.layout.attendee_list_element, attendees);
@@ -80,6 +79,8 @@ public class ListOfAttendees extends Fragment {
 
                             // Notify the adapter about the data change
                             attendeeAdapter.notifyDataSetChanged();
+                            TextView textView = root.findViewById(R.id.header_list_of_attendees);
+                            textView.setText("Current Attendees Count: " + attendees.size());
                         }
                     });
                 }
