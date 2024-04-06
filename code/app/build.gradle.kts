@@ -53,7 +53,6 @@ dependencies {
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
 
-    //dependency for diaplying images
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
@@ -84,19 +83,10 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    //geolocation
-    implementation ("com.google.android.gms:play-services-location:17.1.0")
-
-    //dependency for view of maps
-    implementation ("com.google.android.gms:play-services-maps:17.0.1")
-
-
 
     // Test Runner and Rules for JUnit
     androidTestImplementation ("androidx.test:runner:1.4.0")
     androidTestImplementation ("androidx.test:rules:1.4.0")
-
-
 
 
     // TODO: Add the dependencies for Firebase products you want to use
