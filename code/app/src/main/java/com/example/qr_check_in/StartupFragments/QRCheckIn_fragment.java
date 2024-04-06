@@ -359,23 +359,7 @@ public class QRCheckIn_fragment extends Fragment {
         void nameExist(String name);
     }
 
-    /**void currentEventIdUpdater(String deviceId, String eventId) {
-        DocumentReference docReference = db.collection("users").document(deviceId);
 
-        docReference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot docSnapshot = task.getResult();
-                if (docSnapshot.exists()) {
-                    Map<String, Object> map = docSnapshot.getData();
-                    map.put("currentEventID", eventId);
-
-                    docReference.set(map);
-
-                }
-            }
-
-        });
-    }**/
 
     void nameStuff(String uniqueId) {
         //this method will call on nameCheck and if the user exists will not prompt user for info. if the user doesnt exist will prompt user for info.
