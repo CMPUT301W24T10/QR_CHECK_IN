@@ -71,6 +71,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     testImplementation ("org.mockito:mockito-core:3.11.2")
     androidTestImplementation ("androidx.navigation:navigation-testing:2.7.7")
+    androidTestImplementation ("org.mockito:mockito-android:4.0.0")
 
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
