@@ -97,12 +97,13 @@ public class ReuseQRcodeFragment extends Fragment {
     public void getEvents(View view) {
         ListView listView = view.findViewById(R.id.ListOfQRCodes); // Find ListView by ID
 
+
         db.fetchOrganizedEventIds((String) eventDetails.get("organizerId"), new AppDatabase.FirestoreFetchArrayCallback() {
             @Override
             public void onCallback(Map<String, String> eventIdss) {
                 events.clear();
                 for (Map.Entry<String, String> entry : eventIdss.entrySet()) {
-                    events.add(new Event(entry.getValue(), null,null,entry.getKey(), null));
+                    events.add(new Event(entry.getKey(), null,null,entry.getValue(), null));
                 }
                 reuseQrAdapter.notifyDataSetChanged();
                 getActivity().runOnUiThread(() -> {

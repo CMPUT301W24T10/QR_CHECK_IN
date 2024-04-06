@@ -316,6 +316,7 @@ public class AppDatabase {
 
     public void fetchOrganizedEventIds(String deviceId, FirestoreFetchArrayCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         if(deviceId == null) {
             Log.e("FirestoreError", "Device ID is null");
             return;
@@ -327,7 +328,7 @@ public class AppDatabase {
                 DocumentSnapshot document = task.getResult();
                 if (document != null && document.exists()) {
                     Object organizedEventIdsObject = document.get("organizedEventIds");
-                    if (organizedEventIdsObject instanceof List<?>) {
+                    if (organizedEventIdsObject instanceof Map) {
                         // This is a safe cast because we checked the instance type beforehand
                         @SuppressWarnings("unchecked")
                         Map<String, String> organizedEventIds = (Map<String, String>) organizedEventIdsObject;
