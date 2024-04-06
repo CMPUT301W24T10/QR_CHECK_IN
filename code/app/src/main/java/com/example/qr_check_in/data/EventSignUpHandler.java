@@ -40,10 +40,10 @@ public class EventSignUpHandler {
                     eventInfo.put("name", selectedEvent.getTitle());
 
                     // Add the event to the user's 'eventsSignedUpFor'
-                    List<Map<String, String>> eventsSignedUpFor = new ArrayList<>();
+//                    List<Map<String, String>> eventsSignedUpFor = new ArrayList<>();
 
                     if (userSnapshot.contains("eventsSignedUpFor")) {
-                        eventsSignedUpFor = (List<Map<String, String>>) userSnapshot.get("eventsSignedUpFor");
+//                        eventsSignedUpFor = (List<Map<String, String>>) userSnapshot.get("eventsSignedUpFor");
                     }
                     // no need to check as there are unique id:pairs in a hashmap no duplicates
                     // Check if the event is already in the list
@@ -65,11 +65,12 @@ public class EventSignUpHandler {
 //                    } else
                     {
                         // User has not signed up for this event, add it to the list
-                        eventsSignedUpFor.add(eventInfo);
-                        List<Map<String, String>> finalEventsSignedUpFor = eventsSignedUpFor;
-                        transaction.set(userDocRef, new HashMap<String, Object>() {{
-                            put("eventsSignedUpFor", finalEventsSignedUpFor);
-                        }}, SetOptions.merge());
+//                        eventsSignedUpFor.add(eventInfo);
+//                        List<Map<String, String>> finalEventsSignedUpFor = eventsSignedUpFor;
+//                        transaction.set(userDocRef, new HashMap<String, Object>() {{
+//                            put("eventsSignedUpFor", finalEventsSignedUpFor);
+//                        }}, SetOptions.merge());
+                        transaction.update(userDocRef, "eventsSignedUpFor."+ selectedEvent.getEventID(),selectedEvent.getTitle());
 
                         // Reference to the event's document in the 'events' collection
                         DocumentReference eventDocRef = db.collection("events").document(selectedEvent.getEventID());

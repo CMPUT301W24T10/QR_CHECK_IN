@@ -9,6 +9,7 @@ import com.example.qr_check_in.ModelClasses.Event;
 import com.example.qr_check_in.ModelClasses.Organizer;
 import com.example.qr_check_in.ModelClasses.User;
 import com.example.qr_check_in.data.AppDatabase;
+
 import com.example.qr_check_in.ui.home.HomeViewModel;
 import com.example.qr_check_in.ui.listOfAttendee.ListOfAttendeesViewModel;
 import com.google.android.material.snackbar.Snackbar;
@@ -46,6 +47,7 @@ public class EventActivity extends AppCompatActivity {
             // Obtain HomeViewModel and set eventId here
             HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
             homeViewModel.setEventId(eventId);
+
         }
 
 
@@ -67,7 +69,7 @@ public class EventActivity extends AppCompatActivity {
         // menu should be considered as top level destinations.
 
         /**
-         * created icon for notification in the dashboard to send notification @Shubham
+         * created icon for notification in the dashboard to send notification
          */
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_list_of_attendees,R.id.notificationFragment2)

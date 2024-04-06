@@ -39,6 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -46,6 +47,7 @@ import org.checkerframework.checker.units.qual.N;
 import org.w3c.dom.Document;
 
 import java.lang.ref.Reference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,9 @@ import java.util.Objects;
 import okhttp3.ResponseBody;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * notification fragment created to send notification
@@ -85,6 +90,7 @@ public class NotificationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
+
         retrieveData(SELECTEDEVENTIDREQUIRED);
 
 
@@ -153,7 +159,9 @@ public class NotificationFragment extends Fragment {
     }
 
     private void submitData(String title, String notification, String selectedeventidrequired) {
-        Notification notificationData = new Notification(title, notification,selectedeventidrequired);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss z");
+        String currentDateAndTime = sdf.format(new Date());
+        Notification notificationData = new Notification(title, notification, selectedeventidrequired, currentDateAndTime);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -178,36 +186,36 @@ public class NotificationFragment extends Fragment {
                 if (task.isSuccessful()) {
                     ArrayList<Notification> list = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        if(document.getData()!=null) {
+                        if (document.getData() != null) {
 
                             Map<String, Object> map = document.getData();
                             String notificationTitle = Objects.requireNonNull(map.get("notificationTitle")).toString();
                             String notification = Objects.requireNonNull(map.get("notification")).toString();
-                            String eventID= "";
-                            if (map.get("eventId")!=null) {
-                                 eventID = map.get("eventId").toString();
+                            String eventID = "";
+                            if (map.get("eventId") != null) {
+                                eventID = map.get("eventId").toString();
                             }
-                            list.add(new Notification(notificationTitle, notification, eventID));
+                            String dateAndTime = "";
+                            if (map.get("dateandTime") != null) {
+                                dateAndTime = Objects.requireNonNull(map.get("dateandTime")).toString();
+
+                            }
+
+                            list.add(new Notification(notificationTitle, notification, eventID, dateAndTime));
                         }
 
                     }
                     ArrayList<Notification> particularEventList = new ArrayList<>();
 
-                    for (int i=0;i<list.size();i++)
-                    {
-                        if (Objects.equals(list.get(i).getEventId(), eventId))
-                        {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (Objects.equals(list.get(i).getEventId(), eventId)) {
                             particularEventList.add(list.get(i));
 
                         }
                     }
 
                     mBinding.defaultNotificationsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
-                    adapter = new NotificationAdapter(particularEventList,requireContext());
-                    mBinding.defaultNotificationsRecycler.setAdapter(adapter);
-
-                    mBinding.defaultNotificationsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
-                    adapter = new NotificationAdapter(list,requireContext());
+                    adapter = new NotificationAdapter(particularEventList, requireContext());
                     mBinding.defaultNotificationsRecycler.setAdapter(adapter);
 
 
@@ -216,7 +224,6 @@ public class NotificationFragment extends Fragment {
                 }
             }
         });
-
 
 
     }
