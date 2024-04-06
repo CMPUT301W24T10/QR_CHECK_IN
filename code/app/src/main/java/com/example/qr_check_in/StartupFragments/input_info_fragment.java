@@ -178,6 +178,7 @@ public class input_info_fragment extends Fragment {
                     bundle.putString("organizerId", organizerId); // organizerId is the deviceId
                     bundle.putString("eventName", editTextEventName.getText().toString().trim());
                     bundle.putString("eventDescription", editTextEventDescription.getText().toString().trim());
+                    bundle.putString("eventLocation", editTextEventLocation.getText().toString().trim());
                     Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_reuseQRcodeFragment, bundle);
                 } else {
                     Toast.makeText(getContext(), "You don't have any reusable QR code", Toast.LENGTH_SHORT).show();

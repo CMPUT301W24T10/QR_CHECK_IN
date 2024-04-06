@@ -31,7 +31,7 @@ public class AdminData {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String docId = document.getId();
                     String eventName = document.getString("eventName");
-                    String eventLocation = document.getString("eventLocation");
+                    String eventLocation = document.getString("location");
                     String eventDescription = document.getString("eventDescription");
                     if (eventName != null) { // Making sure eventName is not null
                         eventList.add(new Event(eventName,null,eventDescription,docId, eventLocation));
