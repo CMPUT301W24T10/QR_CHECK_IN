@@ -13,7 +13,7 @@ public class Organizer extends User {
      * @param UID      The unique identifier of the organizer.
      */
     public Organizer(String username, String UID) {
-        super(username, UID, null,null);
+        super(username, UID);
     }
 
     /**

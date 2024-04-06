@@ -7,8 +7,6 @@ package com.example.qr_check_in.ModelClasses;
 public abstract class User {
     private String username; // The username of the user
     private String UID; // The unique identifier of the user
-    private String email; // The email of the user
-    private String phoneNumber; // The phone number of the user
 
     /**
      * Constructs a new User object with the specified username and UID.
@@ -16,11 +14,9 @@ public abstract class User {
      * @param username The username of the user.
      * @param UID      The unique identifier of the user.
      */
-    public User(String username, String UID, String email, String phoneNumber) {
+    public User(String username, String UID) {
         this.username = username;
         this.UID = UID;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
     }
 
     /**
@@ -39,12 +35,6 @@ public abstract class User {
      */
     public String getUID() {
         return UID;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public String getPhoneNumber() {
-        return phoneNumber;
     }
 
     /**

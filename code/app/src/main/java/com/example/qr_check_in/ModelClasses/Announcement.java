@@ -6,45 +6,35 @@ package com.example.qr_check_in.ModelClasses;
  * It encapsulates the data related to an announcement.
  */
 
+import com.google.firebase.Timestamp;
+
 public class Announcement {
-    private String notificationTitle;
-    private String dateandTime;
-    private String notification;
+    private String message;
+    private Timestamp time;
 
     // Constructor
-    public Announcement(String notificationTitle, String dateandTime, String notification) {
-        this.notificationTitle = notificationTitle;
-        this.dateandTime = dateandTime;
-        this.notification = notification;
+    public Announcement(String message, Timestamp time) {
+        this.message = message;
+        this.time = time;
     }
 
-    // Getter for notificationTitle
-    public String getNotificationTitle() {
-        return notificationTitle;
+    // Getter for message
+    public String getMessage() {
+        return message;
     }
 
-    // Getter for dateandTime
-    public String getDateandTime() {
-        return dateandTime;
+    // Getter for time
+    public Timestamp getTime() {
+        return time;
     }
 
-    // Getter for notification
-    public String getNotification() {
-        return notification;
+    // Setter for message
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    // Setter for notificationTitle
-    public void setNotificationTitle(String notificationTitle) {
-        this.notificationTitle = notificationTitle;
-    }
-
-    // Setter for dateandTime
-    public void setDateandTime(String dateandTime) {
-        this.dateandTime = dateandTime;
-    }
-
-    // Setter for notification
-    public void setNotification(String notification) {
-        this.notification = notification;
+    // Setter for time
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 }

@@ -159,7 +159,7 @@ public class NotificationFragment extends Fragment {
     }
 
     private void submitData(String title, String notification, String selectedeventidrequired) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss z");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
         String currentDateAndTime = sdf.format(new Date());
         Notification notificationData = new Notification(title, notification, selectedeventidrequired, currentDateAndTime);
 
@@ -217,6 +217,7 @@ public class NotificationFragment extends Fragment {
                     mBinding.defaultNotificationsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
                     adapter = new NotificationAdapter(particularEventList, requireContext());
                     mBinding.defaultNotificationsRecycler.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
 
 
                 } else {

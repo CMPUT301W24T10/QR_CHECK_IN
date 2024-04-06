@@ -1,4 +1,4 @@
-package com.example.qr_check_in.admin;
+package com.example.qr_check_in;
 
 import android.os.Bundle;
 
@@ -13,9 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.qr_check_in.ModelClasses.User;
-import com.example.qr_check_in.R;
-import com.example.qr_check_in.UserListAdapter;
 import com.example.qr_check_in.data.AdminData;
 import com.example.qr_check_in.data.EventNameIdPair;
 import com.example.qr_check_in.data.ProfileIdPair;
@@ -26,8 +23,9 @@ import java.util.List;
 public class RemoveProfileFragment extends Fragment {
     private AdminData adminData;
     private ListView profileListView;
-    private ArrayList<User> profiles;
-    private ArrayAdapter<User> profileAdapter;
+    private ArrayList<String> profiles;
+    private ArrayAdapter<String> profileAdapter;
+    private List<ProfileIdPair> profileIdPairList;
     private int selectedPosition;
 
 
@@ -43,11 +41,11 @@ public class RemoveProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_remove_profile, container, false);
         adminData = new AdminData();
-        profiles = new ArrayList<User>();
-
+        profiles = new ArrayList<>();
+        profileIdPairList = new ArrayList<>();
         selectedPosition = -1;
         profileListView = root.findViewById(R.id.list_of_profiles);
-        profileAdapter = new UserListAdapter(getContext(), profiles);
+        profileAdapter = new ArrayAdapter<>(getContext(), R.layout.attendee_list_element, profiles);
         profileListView.setAdapter(profileAdapter);
 
         profileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -68,16 +66,17 @@ public class RemoveProfileFragment extends Fragment {
                     return;
                 }
                 // Get the selected profile
-                User selectedProfile = profiles.get(selectedPosition);
+                ProfileIdPair selectedProfile = profileIdPairList.get(selectedPosition);
                 // Delete the profile from the database
-                adminData.deleteProfile(selectedProfile.getUID(), new AdminData.ProfileDeletionListener() {
+                adminData.deleteProfile(selectedProfile.getDocumentId(), new AdminData.ProfileDeletionListener() {
                     @Override
                     public void onProfileDeletionSuccess(String documentId) {
+                        Log.e("EventDeletion", "Event with document ID " + documentId + " deleted successfully");
                         // Remove the event from the list
                         profiles.remove(selectedPosition);
                         selectedPosition = -1;
                         profileAdapter.notifyDataSetChanged();
-                        Toast.makeText(getContext(), "Profile deleted successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Event deleted successfully", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -87,9 +86,12 @@ public class RemoveProfileFragment extends Fragment {
 
         adminData.fetchProfileNames(new AdminData.ProfileFetchListener() {
             @Override
-            public void onProfileListFetched(ArrayList<User> profileList) {
-                profiles.clear();
-                profiles.addAll(profileList);
+            public void onProfileListFetched(List<ProfileIdPair> profileList) {
+                profileIdPairList = profileList;
+                Log.e("EventList",profileList.toString());
+                for (ProfileIdPair profile : profileList) {
+                    profiles.add(profile.getEventName());
+                }
                 profileAdapter.notifyDataSetChanged();
             }
         });

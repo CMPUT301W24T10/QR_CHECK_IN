@@ -2,8 +2,6 @@ package com.example.qr_check_in.data;
 
 import android.util.Log;
 
-import com.example.qr_check_in.ModelClasses.Event;
-import com.example.qr_check_in.ModelClasses.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -20,25 +18,20 @@ public class AdminData {
         storage = FirebaseStorage.getInstance();
     }
     public interface EventFetchListener {
-        void onEventListFetched(ArrayList<Event> eventList);
+        void onEventListFetched(List<EventNameIdPair> eventList);
     }
 
     public void fetchEventNames(EventFetchListener listener) {
-        ArrayList<Event> eventList = new ArrayList<>();
+        List<EventNameIdPair> eventList = new ArrayList<>();
 
         db.collection("events").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String docId = document.getId();
                     String eventName = document.getString("eventName");
-                    String eventLocation = document.getString("location");
-                    String eventDescription = document.getString("eventDescription");
                     if (eventName != null) { // Making sure eventName is not null
-                        eventList.add(new Event(eventName,null,eventDescription,docId, eventLocation));
+                        eventList.add(new EventNameIdPair(docId, eventName));
                     }
-//                    if (eventList.size()>10){
-//                        break;
-//                    }
 
                 }
                 listener.onEventListFetched(eventList);
@@ -65,30 +58,18 @@ public class AdminData {
                 });
     }
     public interface ProfileFetchListener {
-        void onProfileListFetched(ArrayList<User> profileList);
+        void onProfileListFetched(List<ProfileIdPair> profileList);
     }
     public void fetchProfileNames(ProfileFetchListener listener) {
-        ArrayList<User> profileList = new ArrayList<>();
+        List<ProfileIdPair> profileList = new ArrayList<>();
 
         db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String docId = document.getId();
                     String profileName = document.getString("Name");
-                    String profileEmail = document.getString("Email Address");
-                    String profilePhone = document.getString("Phone Number");
                     if (profileName != null) { // Making sure profileName is not null
-                        profileList.add(new User(profileName, docId, profileEmail, profilePhone) {
-                            @Override
-                            public boolean isOrganizer() {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean isAttendee() {
-                                return false;
-                            }
-                        });
+                        profileList.add(new ProfileIdPair(docId, profileName));
                     }
 
                 }

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="background">#F6E7CB</color>
     <color name="app_buttons">#DD9787</color>
     <color name="app_header">#074F57</color>
-    <color name="black">#000000</color> <!-- Pure black for strong contrast -->
-    <color name="dark_gray">#424242</color> <!-- A slightly lighter shade of gray for less contrast -->
-    <color name="light_gray">#BDBDBD</color> <!-- Light gray for subtle elements -->
-    <color name="accent">#03A9F4</color> <!-- An accent color for highlighting important information -->
+
 </resources>

@@ -13,7 +13,7 @@ public class Attendee extends User {
      * @param UID      The unique identifier of the attendee.
      */
     public Attendee(String username, String UID) {
-        super(username, UID, null,null);
+        super(username, UID);
     }
 
     /**

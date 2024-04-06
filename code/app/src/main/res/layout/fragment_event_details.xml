@@ -44,8 +44,8 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="50dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="32sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventPoster"
         tools:text="Event Name" />

@@ -61,13 +61,20 @@ public class AdminDashboardFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_admin_dashboard, container, false);
-
+        view.findViewById(R.id.btnRemoveEvents).setOnClickListener(v->{
+            Navigation.findNavController(view).navigate(R.id.removeEventFragment);
+        });
         view.findViewById(R.id.btnRemoveProfiles).setOnClickListener(v->{
             Navigation.findNavController(view).navigate(R.id.removeProfileFragment);
         });
-
+        view.findViewById(R.id.btnRemoveImages).setOnClickListener(v->{
+            Navigation.findNavController(view).navigate(R.id.removeImageFragment);
+        });
         view.findViewById(R.id.btnBrowseEvents).setOnClickListener(v->{
             Navigation.findNavController(view).navigate(R.id.eventListFragment);
+        });
+        view.findViewById(R.id.btnBrowseProfiles).setOnClickListener(v->{
+            Navigation.findNavController(view).navigate(R.id.profileListFragment);
         });
         view.findViewById(R.id.btnBrowseImages).setOnClickListener(v->{
             Navigation.findNavController(view).navigate(R.id.imageListFragment);
