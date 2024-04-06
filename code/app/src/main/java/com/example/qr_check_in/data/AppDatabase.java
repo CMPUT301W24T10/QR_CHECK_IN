@@ -285,13 +285,18 @@ public class AppDatabase {
         docRef.get().addOnCompleteListener(task -> {   // Retrieve the document asynchronously
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
+
                 if (document != null && document.exists()) {  // Check if the document exists and contains data
-                    List<String> organizedEventIds = (List<String>) document.get("organizedEventIds");
+                    Log.d("document ", "document is not null");
+                    Map<String, String> organizedEventIds = (Map<String, String>) document.get("organizedEventIds");
+                    Log.d("check", "check  success");
                     if (organizedEventIds != null) {
                         // If the array exists, pass its length to the callback
+                        Log.d("length", "fetchOrganizedEventIdsLength: "+organizedEventIds.size());
                         callback.onCallback(organizedEventIds.size());
                     } else {
                         // If the array does not exist, pass a length of 0 or indicate absence as needed
+                        Log.d("length ", "organized event ids array does not exist");
                         callback.onCallback(0);
                     }
                 } else {
@@ -305,12 +310,13 @@ public class AppDatabase {
         });
     }
     public interface FirestoreFetchArrayCallback {  //interface definition for a callback to be invoked when fetching an array from Firestore.
-        void onCallback(List<String> array);
+        void onCallback(Map<String, String> array);
         void onError(String message);
     }
 
     public void fetchOrganizedEventIds(String deviceId, FirestoreFetchArrayCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         if(deviceId == null) {
             Log.e("FirestoreError", "Device ID is null");
             return;
@@ -322,17 +328,17 @@ public class AppDatabase {
                 DocumentSnapshot document = task.getResult();
                 if (document != null && document.exists()) {
                     Object organizedEventIdsObject = document.get("organizedEventIds");
-                    if (organizedEventIdsObject instanceof List<?>) {
+                    if (organizedEventIdsObject instanceof Map) {
                         // This is a safe cast because we checked the instance type beforehand
                         @SuppressWarnings("unchecked")
-                        List<String> organizedEventIds = (List<String>) organizedEventIdsObject;
+                        Map<String, String> organizedEventIds = (Map<String, String>) organizedEventIdsObject;
                         // Now you can use organizedEventIds as a List<String>
                         if (organizedEventIds != null) {
                             // If the array exists, pass it to the callback
                             callback.onCallback(organizedEventIds);
                         } else {
                             // If the array does not exist, pass an empty list or null as needed
-                            callback.onCallback(new ArrayList<>()); // or callback.onCallback(null);
+                            callback.onCallback(null); // or callback.onCallback(null);
                         }
                     } else {
                         // Handle the case where it's not a List or is null
