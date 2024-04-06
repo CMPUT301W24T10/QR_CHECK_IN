@@ -28,10 +28,11 @@ public class Event {
      * @param description The description of the event.
      * @param eventID     The unique identifier of the event.
      */
-    public Event(String title, Organizer organizer, String description, String eventID) {
+    public Event(String title, Organizer organizer, String description, String eventID, String location) {
         this.title = title;
         this.organizer = organizer;
         this.description = description;
+        this.location = location;
         this.attendees = new HashMap<>();
         this.numAttendees = 0;
         this.eventID = eventID;
@@ -54,6 +55,9 @@ public class Event {
     public Organizer getOrganizer() {
         return organizer;
     }
+    public String getEventID() {
+        return eventID;
+    }
 
     /**
      * Gets the description of the event.
@@ -62,6 +66,9 @@ public class Event {
      */
     public String getDescription() {
         return description;
+    }
+    public String getLocation() {
+        return location;
     }
 
     /**

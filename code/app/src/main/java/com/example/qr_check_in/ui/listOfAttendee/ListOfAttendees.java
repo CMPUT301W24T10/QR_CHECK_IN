@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.qr_check_in.ModelClasses.AttendeeCount;
 import com.example.qr_check_in.R;
 import com.example.qr_check_in.data.AttendeeInfo;
 import com.example.qr_check_in.databinding.FragmentGalleryBinding;
@@ -39,8 +38,8 @@ public class ListOfAttendees extends Fragment {
     private ListOfAttendeesViewModel mViewModel;
     private FragmentListOfAttendeesBinding binding;
     private ListView attendeeList;
-    private ArrayList<AttendeeCount> attendees;
-    private ArrayAdapter<AttendeeCount> attendeeAdapter;
+    private ArrayList<String> attendees;
+    private ArrayAdapter<String> attendeeAdapter;
     private String eventId;
 
     public static ListOfAttendees newInstance() {
@@ -58,15 +57,16 @@ public class ListOfAttendees extends Fragment {
         eventId = (sharedViewModel.getEventId());
 
         attendeeList = root.findViewById(R.id.list_of_attendees);
+        attendees.add("Attendee 1");
         // Create an ArrayAdapter from List of String
-        attendeeAdapter = new ArrayAdapter<AttendeeCount>
-                (getContext(),R.layout.attendee_list_element,attendees);
+        attendeeAdapter = new ArrayAdapter<String>
+                (getContext(),R.layout.attendee_list_element, attendees);
         // DataBind ListView with items from ArrayAdapter
         attendeeList.setAdapter(attendeeAdapter);
 
         attendeeInfo.getAttendeesMap(eventId, new AttendeeInfo.getAttendeesMapCallback() {
             @Override
-            public void onCallback(Map<String, AttendeeCount> attendeesMap) {
+            public void onCallback(Map<String, String> attendeesMap) {
                 if(getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override

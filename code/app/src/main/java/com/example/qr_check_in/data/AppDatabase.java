@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.qr_check_in.ModelClasses.AttendeeCount;
 import com.example.qr_check_in.ModelClasses.Event;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -45,20 +44,20 @@ public class AppDatabase {
      * @param context           Android context, required for making Toasts.
      * @param firestoreCallback Callback to be called after operation is complete or if there's an error.
      */
-    public void saveEvent(String organizerId, String eventName, String eventDescription, Uri posterUri, Context context, FirestoreCallback firestoreCallback) {
+    public void saveEvent(String organizerId, String eventName, String eventDescription, String location,Uri posterUri, Context context, FirestoreCallback firestoreCallback) {
         Map<String, Object> event = new HashMap<>(); // Create a new HashMap to hold the event details.
         event.put("organizerId", organizerId);
         event.put("eventName", eventName);
         event.put("eventDescription", eventDescription);
-
+        event.put("location", location);
 
         db.collection("events").add(event) // Add the event details to the "events" collection in Firestore.
                 .addOnSuccessListener(documentReference ->{
                     if (posterUri != null) { // If a poster URI is provided, upload the poster image using the document ID as the reference.
-                        uploadPosterImage(posterUri,documentReference.getId(),organizerId, context, firestoreCallback);
+                        uploadPosterImage(posterUri,documentReference.getId(),organizerId, eventName,context, firestoreCallback);
                     } else {
                         Toast.makeText(context, "Event added successfully without poster", Toast.LENGTH_SHORT).show();
-                        updateOrganizerWithEvent(organizerId, documentReference.getId(), context);
+                        updateOrganizerWithEvent(organizerId, eventName,documentReference.getId(), context);
                         firestoreCallback.onCallback(documentReference.getId());
                     }
                 })
@@ -95,7 +94,7 @@ public class AppDatabase {
                 });
     }
 
-    private void uploadPosterImage(Uri imageUri, String eventId,String organizerId, Context context, FirestoreCallback firestoreCallback) {
+    private void uploadPosterImage(Uri imageUri, String eventId,String organizerId,String eventName,Context context, FirestoreCallback firestoreCallback) {
         StorageReference posterRef = storage.getReference().child("event_posters/" + eventId); // reference to the location where we'll store our photos
         posterRef.putFile(imageUri) // Upload the photo at the Uri to Firebase storage
                 .addOnSuccessListener(taskSnapshot -> posterRef.getDownloadUrl()  // Once the image has been uploaded, we get its download URL
@@ -106,7 +105,7 @@ public class AppDatabase {
                                     .addOnSuccessListener(aVoid -> { //event was added with the poster
                                         Toast.makeText(context, "Event added successfully with poster", Toast.LENGTH_SHORT).show();
                                         firestoreCallback.onCallback(eventId);  // Invoke the callback function passing the eventId
-                                        updateOrganizerWithEvent(organizerId, eventId, context); // Update the organizer document with the new event ID
+                                        updateOrganizerWithEvent(organizerId, eventId, eventName,context); // Update the organizer document with the new event ID
                                     })
                                     .addOnFailureListener(e -> Toast.makeText(context, "Error updating event with poster URL", Toast.LENGTH_SHORT).show()); //updating the event with the poster URL failed
                         })
@@ -141,7 +140,7 @@ public class AppDatabase {
                 });
     }
 
-    private void updateOrganizerWithEvent(String organizerId, String eventId, Context context) {  // Method to update an organizer's document in Firestore by adding an event ID to their list of organized events.
+    private void updateOrganizerWithEvent(String organizerId, String eventId, String eventName,Context context) {  // Method to update an organizer's document in Firestore by adding an event ID to their list of organized events.
         if (organizerId == null || eventId == null) { // Check if both organizer ID and event ID are provided.
             Log.e("FirestoreError", "Organizer ID or Event ID is null, cannot update organizer with event");
             Toast.makeText(context, "null updating organizer with event ID", Toast.LENGTH_SHORT).show();
@@ -150,9 +149,26 @@ public class AppDatabase {
         DocumentReference organizerRef = db.collection("users").document(organizerId);  // Get a reference to the organizer's document in Firestore using the organizer ID.
 
         // Add the event ID to an array of organized eventIds. If the array doesn't exist, it will be created.
-        organizerRef.update("organizedEventIds", FieldValue.arrayUnion(eventId))
-                .addOnSuccessListener(aVoid -> Toast.makeText(context, "Organizer updated with event ID", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(context, "Error updating organizer with event ID"+e.getMessage(), Toast.LENGTH_SHORT).show());
+//        organizerRef.update("organizedEventIds", FieldValue.arrayUnion(eventId))
+//                .addOnSuccessListener(aVoid -> Toast.makeText(context, "Organizer updated with event ID", Toast.LENGTH_SHORT).show())
+//                .addOnFailureListener(e -> Toast.makeText(context, "Error updating organizer with event ID"+e.getMessage(), Toast.LENGTH_SHORT).show());
+//        if (organizerId == null || eventId == null || eventName == null) { // Ensure eventName is also not null.
+//            Log.e("FirestoreError", "Organizer ID, Event ID, or Event Name is null, cannot update organizer with event");
+//            Toast.makeText(context, "Null values provided, cannot update organizer with event", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+        // Prepare the event info as a key-value pair to be added to the map.
+        Map<String, Object> eventInfo = new HashMap<>();
+        eventInfo.put(eventId, eventName); // Using eventId as key, eventName as value.
+
+        // Prepare the update for the map. Note the use of 'organizedEvents' as the map field name.
+        Map<String, Object> update = new HashMap<>();
+        update.put("organizedEventIds." + eventId, eventName); // This specifies the path in the map to update.
+
+        // Update the document with the new event info.
+        organizerRef.update(update)
+                .addOnSuccessListener(aVoid -> Toast.makeText(context, "Organizer updated with event", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(context, "Error updating organizer: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
     // fetch the user details from database
     public void fetchUserDetails(String userId, FirestoreDocumentCallback firestoreDocumentCallback) {
@@ -177,7 +193,7 @@ public class AppDatabase {
     }
 
 
-    public void saveAttendee(Integer NumberOfTimesLogin,String deviceId, String attendeeName, Context context, String uniqueID, FirestoreCallback firestoreCallback) {
+    public void saveAttendee(String deviceId, String attendeeName, Context context, String uniqueID, FirestoreCallback firestoreCallback) {
         DocumentReference documentReference = db.collection("events").document(uniqueID);
 
         documentReference.get().addOnCompleteListener(task -> {
@@ -187,28 +203,15 @@ public class AppDatabase {
                     // Check if the 'attendees' field exists
                     if (documentSnapshot.contains("attendees")) {
                         // Get the existing attendees map
-                        Map<String, AttendeeCount> existingAttendees = (Map<String, AttendeeCount>) documentSnapshot.get("attendees");
+                        Map<String, String> existingAttendees = (Map<String, String>) documentSnapshot.get("attendees");
 
                         // Check if the attendee with the specified deviceId already exists
                         if (existingAttendees.containsKey(deviceId)) {
-                            AttendeeCount values = new AttendeeCount(NumberOfTimesLogin,attendeeName);
-                            existingAttendees.put(deviceId, values);
-                            documentReference.update("attendees", existingAttendees)
-                                    .addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(context, "Attendee added successfully", Toast.LENGTH_SHORT).show();
-                                        firestoreCallback.onCallback(deviceId);
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Toast.makeText(context, "Error adding attendee", Toast.LENGTH_SHORT).show();
-                                        Log.e("FirestoreError", "Error adding attendee", e);
-                                    });
 
 
                         } else {
                             // If the 'attendees' field exists but the deviceId is not present, put new device id into field
-                            AttendeeCount values = new AttendeeCount(NumberOfTimesLogin,attendeeName);
-
-                            existingAttendees.put(deviceId, values);
+                            existingAttendees.put(deviceId, attendeeName);
 
                             documentReference.update("attendees", existingAttendees)
                                     .addOnSuccessListener(aVoid -> {
@@ -222,10 +225,9 @@ public class AppDatabase {
                         }
                     } else {
                         // If the 'attendees' field does not exist, create a new map with a list and add the new string
-                        Map<String, AttendeeCount> newAttendees = new HashMap<>();
-                        AttendeeCount values = new AttendeeCount(NumberOfTimesLogin,attendeeName);
+                        Map<String, String> newAttendees = new HashMap<>();
 
-                        newAttendees.put(deviceId, values);
+                        newAttendees.put(deviceId, attendeeName);
 
                         documentReference.update("attendees", newAttendees)
                                 .addOnSuccessListener(aVoid -> {
@@ -249,10 +251,9 @@ public class AppDatabase {
     public void saveUser(String deviceId, String userName, String userPhone, String emailAddress, String address, String event, Context context, FirestoreCallback firestoreCallback) {
         Map<String, Object> info = new HashMap<>(); // Create a new HashMap to hold the user info
         info.put("Name", userName);
-        info.put("Phone", userPhone);
-        info.put("Email", emailAddress);
-        info.put("Address",address);
-        info.put("currentEventID", event);
+        info.put("Phone Number", userPhone);
+        info.put("Email Address", emailAddress);
+        info.put("Homepage",address);
 
 
         db.collection("users").document(deviceId).set(info, SetOptions.merge())  // Add or merge the organizer data into the 'users' collection in Firestore, using the device ID as the document ID.
@@ -284,13 +285,18 @@ public class AppDatabase {
         docRef.get().addOnCompleteListener(task -> {   // Retrieve the document asynchronously
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
+
                 if (document != null && document.exists()) {  // Check if the document exists and contains data
-                    List<String> organizedEventIds = (List<String>) document.get("organizedEventIds");
+                    Log.d("document ", "document is not null");
+                    Map<String, String> organizedEventIds = (Map<String, String>) document.get("organizedEventIds");
+                    Log.d("check", "check  success");
                     if (organizedEventIds != null) {
                         // If the array exists, pass its length to the callback
+                        Log.d("length", "fetchOrganizedEventIdsLength: "+organizedEventIds.size());
                         callback.onCallback(organizedEventIds.size());
                     } else {
                         // If the array does not exist, pass a length of 0 or indicate absence as needed
+                        Log.d("length ", "organized event ids array does not exist");
                         callback.onCallback(0);
                     }
                 } else {
@@ -304,12 +310,13 @@ public class AppDatabase {
         });
     }
     public interface FirestoreFetchArrayCallback {  //interface definition for a callback to be invoked when fetching an array from Firestore.
-        void onCallback(List<String> array);
+        void onCallback(Map<String, String> array);
         void onError(String message);
     }
 
     public void fetchOrganizedEventIds(String deviceId, FirestoreFetchArrayCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         if(deviceId == null) {
             Log.e("FirestoreError", "Device ID is null");
             return;
@@ -321,17 +328,17 @@ public class AppDatabase {
                 DocumentSnapshot document = task.getResult();
                 if (document != null && document.exists()) {
                     Object organizedEventIdsObject = document.get("organizedEventIds");
-                    if (organizedEventIdsObject instanceof List<?>) {
+                    if (organizedEventIdsObject instanceof Map) {
                         // This is a safe cast because we checked the instance type beforehand
                         @SuppressWarnings("unchecked")
-                        List<String> organizedEventIds = (List<String>) organizedEventIdsObject;
+                        Map<String, String> organizedEventIds = (Map<String, String>) organizedEventIdsObject;
                         // Now you can use organizedEventIds as a List<String>
                         if (organizedEventIds != null) {
                             // If the array exists, pass it to the callback
                             callback.onCallback(organizedEventIds);
                         } else {
                             // If the array does not exist, pass an empty list or null as needed
-                            callback.onCallback(new ArrayList<>()); // or callback.onCallback(null);
+                            callback.onCallback(null); // or callback.onCallback(null);
                         }
                     } else {
                         // Handle the case where it's not a List or is null
