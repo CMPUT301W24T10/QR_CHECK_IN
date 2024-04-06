@@ -9,7 +9,7 @@ import com.example.qr_check_in.ModelClasses.Event;
 import com.example.qr_check_in.ModelClasses.Organizer;
 import com.example.qr_check_in.ModelClasses.User;
 import com.example.qr_check_in.data.AppDatabase;
-import com.example.qr_check_in.geolocation.MapsFragment;
+
 import com.example.qr_check_in.ui.home.HomeViewModel;
 import com.example.qr_check_in.ui.listOfAttendee.ListOfAttendeesViewModel;
 import com.google.android.material.snackbar.Snackbar;
@@ -47,10 +47,6 @@ public class EventActivity extends AppCompatActivity {
             // Obtain HomeViewModel and set eventId here
             HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
             homeViewModel.setEventId(eventId);
-            MapsFragment mapsFragment = new MapsFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("eventId", eventId);
-            mapsFragment.setArguments(bundle);
 
         }
 
