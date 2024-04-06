@@ -27,6 +27,7 @@ import androidx.navigation.Navigation;
 import com.example.qr_check_in.EventActivity;
 import com.example.qr_check_in.R;
 import com.example.qr_check_in.data.AppDatabase;
+import com.example.qr_check_in.geolocation.UserLocationManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -47,6 +48,7 @@ public class QRCheckIn_fragment extends Fragment {
 
     private Button btnScan;
     private AppDatabase appDatabase; // Use AppDatabase for database interactions
+    private UserLocationManager userLocationManager;
 
     private String deviceId, eventTitle, eventDescription;
 
@@ -64,6 +66,9 @@ public class QRCheckIn_fragment extends Fragment {
         thisContext = container.getContext();
         deviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         btnScan = view.findViewById(R.id.scanButton);
+        // Instantiate UserLocationManager with fragment's context
+        userLocationManager = new UserLocationManager(getContext());
+
 
         appDatabase = new AppDatabase();
         db = FirebaseFirestore.getInstance();
@@ -362,7 +367,6 @@ public class QRCheckIn_fragment extends Fragment {
                             // Your callback logic, if needed
                         }
                     });
-                    navigateToEventActivity(uniqueId, deviceId);
                 } else {
                     showCustomDialog(uniqueId, new nameDialogCallback() {
                         @Override
@@ -374,7 +378,6 @@ public class QRCheckIn_fragment extends Fragment {
                                         // Your callback logic, if needed
                                     }
                                 });
-                                navigateToEventActivity(uniqueId, deviceId);
                             } else {
                                 appDatabase.saveAttendee(deviceId, "Guest", getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
                                     @Override
@@ -382,11 +385,12 @@ public class QRCheckIn_fragment extends Fragment {
                                         // Your callback logic, if needed
                                     }
                                 });
-                                navigateToEventActivity(uniqueId, deviceId);
                             }
                         }
                     });
                 }
+                userLocationManager.checkInUser(uniqueId,deviceId);
+                navigateToEventActivity(uniqueId, deviceId);
             }
         });
         updateAttendingEvents(deviceId, uniqueId);
