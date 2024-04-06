@@ -2,6 +2,7 @@ package com.example.qr_check_in;
 
 import static com.example.qr_check_in.constants.SELECTEDEVENTIDREQUIRED;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -38,6 +39,8 @@ public class ReuseQRcodeFragment extends Fragment {
 
     private AppDatabase db;
     private String selectedEventId; // QR code is the eventId
+    private Event selectedEvent;
+    private Uri posterUri;
 
 
     @Override
@@ -71,6 +74,7 @@ public class ReuseQRcodeFragment extends Fragment {
         eventDetails.put("eventName",requireArguments().getString("eventName"));
         eventDetails.put("eventDescription",requireArguments().getString("eventDescription"));
         eventDetails.put("eventLocation",requireArguments().getString("eventLocation"));
+        posterUri = Uri.parse(requireArguments().getString("posterUri"));
         // Call getEvents to fetch eventIds and setup ListView
         getEvents(view);
 
@@ -78,19 +82,17 @@ public class ReuseQRcodeFragment extends Fragment {
         confirmButton.setOnClickListener(v -> {
             if (selectedEventId != null) {
                 // Perform the action with the selected eventId
-                updateEventDetails(selectedEventId);
+                updateEventDetails();
                 // provide navigation to the next activity
                 Bundle bundle = new Bundle();
                 bundle.putString("eventId", selectedEventId);
                 bundle.putString("organizerId", (String)eventDetails.get("organizerId"));
+                bundle.putString("UserType", "Organizer");
                 Navigation.findNavController(view).navigate(R.id.displayQrCodeFragment, bundle);
             } else {
                 Toast.makeText(getContext(), "Please select an event first", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
         return view;
     }
 
@@ -103,14 +105,15 @@ public class ReuseQRcodeFragment extends Fragment {
             public void onCallback(Map<String, String> eventIdss) {
                 events.clear();
                 for (Map.Entry<String, String> entry : eventIdss.entrySet()) {
-                    events.add(new Event(entry.getKey(), null,null,entry.getValue(), null));
+                    events.add(new Event(entry.getValue(), null,null,entry.getKey(), null));
                 }
                 reuseQrAdapter.notifyDataSetChanged();
                 getActivity().runOnUiThread(() -> {
                     listView.setOnItemClickListener((parent, view, position, id) -> {
                         // Navigate to the DisplayQrCodeFragment
-                        selectedEventId = events.get(position).getEventID();
-                        SELECTEDEVENTIDREQUIRED = events.get(position).getEventID();
+                        selectedEvent = events.get(position);
+                        selectedEventId = selectedEvent.getEventID();
+                        SELECTEDEVENTIDREQUIRED = selectedEvent.getEventID();
                         // Optionally, you can give visual feedback here or log the selected item
                         Log.d("SelectedEventId", "Selected event ID: " + selectedEventId);
                     });
@@ -124,7 +127,8 @@ public class ReuseQRcodeFragment extends Fragment {
         });
     }
 
-    public void updateEventDetails(String eventId) {
-        db.updateEvent(eventId, (String)eventDetails.get("eventName"), (String)eventDetails.get("eventDescription"), getContext());
+    public void updateEventDetails() {
+        db.updateEvent(selectedEventId, (String)eventDetails.get("eventName"), (String)eventDetails.get("eventDescription"), (String)eventDetails.get("eventLocation"), posterUri,getContext());
+        db.updateOrganizerWithEvent((String)eventDetails.get("organizerId"), selectedEventId, (String)eventDetails.get("eventName"),getContext());
     }
 }
