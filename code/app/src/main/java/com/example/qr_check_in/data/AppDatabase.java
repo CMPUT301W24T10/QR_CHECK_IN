@@ -57,7 +57,7 @@ public class AppDatabase {
                         uploadPosterImage(posterUri,documentReference.getId(),organizerId, eventName,context, firestoreCallback);
                     } else {
                         Toast.makeText(context, "Event added successfully without poster", Toast.LENGTH_SHORT).show();
-                        updateOrganizerWithEvent(organizerId, eventName,documentReference.getId(), context);
+                        updateOrganizerWithEvent(organizerId, documentReference.getId(),eventName, context);
                         firestoreCallback.onCallback(documentReference.getId());
                     }
                 })
@@ -79,19 +79,38 @@ public class AppDatabase {
      * @param eventDescription  The new description for the event.
      * @param context           Android context, required for displaying Toast messages.
      */
-    public void updateEvent(String eventId, String eventName, String eventDescription, Context context) {
+    public void updateEvent(String eventId, String eventName, String eventDescription, String location, Uri posterUri,Context context) {
         Map<String, Object> event = new HashMap<>(); // Create a new HashMap to hold the updated event details.
         event.put("eventName", eventName);
         event.put("eventDescription", eventDescription);
+        event.put("location", location);
 
         db.collection("events").document(eventId).update(event)  // Locate the document by its ID in the "events" collection and update it with the new values.
                 .addOnSuccessListener(documentReference -> {  // Inform the user that the event has been updated successfully
                     Toast.makeText(context, "Event updated successfully", Toast.LENGTH_SHORT).show();
+                    if( posterUri!=null){
+                        StorageReference posterRef = storage.getReference().child("event_posters/" + eventId); // reference to the location where we'll store our photos
+                        posterRef.putFile(posterUri) // Upload the photo at the Uri to Firebase storage
+                                .addOnSuccessListener(taskSnapshot -> posterRef.getDownloadUrl()  // Once the image has been uploaded, we get its download URL
+                                        .addOnSuccessListener(uri -> {
+                                            String posterUrl = uri.toString();
+                                            db.collection("events").document(eventId) // Updating the event document with the new poster URL
+                                                    .update("posterUrl", posterUrl)
+                                                    .addOnSuccessListener(aVoid -> { //event was added with the poster
+                                                        Toast.makeText(context, "Event added successfully with poster", Toast.LENGTH_SHORT).show();
+                                                    })
+                                                    .addOnFailureListener(e -> Toast.makeText(context, "Error updating event with poster URL", Toast.LENGTH_SHORT).show()); //updating the event with the poster URL failed
+                                        })
+                                        .addOnFailureListener(e -> Toast.makeText(context, "Error getting poster download URL", Toast.LENGTH_SHORT).show())) //getting the download URL failed
+                                .addOnFailureListener(e -> Toast.makeText(context, "Error uploading event poster", Toast.LENGTH_SHORT).show()); //upload failed
+
+                    }
                 })
                 .addOnFailureListener(e -> {  // If there's an error during the update
                     Toast.makeText(context, "Error updating event", Toast.LENGTH_SHORT).show();
                     Log.e("FirestoreError", "Error updating event", e);
                 });
+
     }
 
     private void uploadPosterImage(Uri imageUri, String eventId,String organizerId,String eventName,Context context, FirestoreCallback firestoreCallback) {
@@ -140,7 +159,7 @@ public class AppDatabase {
                 });
     }
 
-    private void updateOrganizerWithEvent(String organizerId, String eventId, String eventName,Context context) {  // Method to update an organizer's document in Firestore by adding an event ID to their list of organized events.
+    public void updateOrganizerWithEvent(String organizerId, String eventId, String eventName,Context context) {  // Method to update an organizer's document in Firestore by adding an event ID to their list of organized events.
         if (organizerId == null || eventId == null) { // Check if both organizer ID and event ID are provided.
             Log.e("FirestoreError", "Organizer ID or Event ID is null, cannot update organizer with event");
             Toast.makeText(context, "null updating organizer with event ID", Toast.LENGTH_SHORT).show();
@@ -148,15 +167,6 @@ public class AppDatabase {
         }
         DocumentReference organizerRef = db.collection("users").document(organizerId);  // Get a reference to the organizer's document in Firestore using the organizer ID.
 
-        // Add the event ID to an array of organized eventIds. If the array doesn't exist, it will be created.
-//        organizerRef.update("organizedEventIds", FieldValue.arrayUnion(eventId))
-//                .addOnSuccessListener(aVoid -> Toast.makeText(context, "Organizer updated with event ID", Toast.LENGTH_SHORT).show())
-//                .addOnFailureListener(e -> Toast.makeText(context, "Error updating organizer with event ID"+e.getMessage(), Toast.LENGTH_SHORT).show());
-//        if (organizerId == null || eventId == null || eventName == null) { // Ensure eventName is also not null.
-//            Log.e("FirestoreError", "Organizer ID, Event ID, or Event Name is null, cannot update organizer with event");
-//            Toast.makeText(context, "Null values provided, cannot update organizer with event", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
         // Prepare the event info as a key-value pair to be added to the map.
         Map<String, Object> eventInfo = new HashMap<>();
         eventInfo.put(eventId, eventName); // Using eventId as key, eventName as value.
