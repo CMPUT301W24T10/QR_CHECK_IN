@@ -1,20 +1,31 @@
 package com.example.qr_check_in.adapters;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.qr_check_in.ModelClasses.Event2;
 import com.example.qr_check_in.ModelClasses.Event3;
 import com.example.qr_check_in.R;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
@@ -39,15 +50,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.description.setText("Description: " + event.getEventDescription());
         holder.location.setText("Location: " + event.getEventLocation());
 
-        if (!event.getEventPoster().isEmpty()) {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("event_posters/" + event.getEventPoster());
-
-            Glide.with(holder.itemView.getContext())
-                    .load(storageReference)
-                    .into(holder.poster);
-        } else {
-            holder.poster.setImageResource(R.drawable.default_poster);
-        }
+        Glide.with(holder.poster.getContext())
+                .load(event.getEventPoster())
+                .override(100, 100)
+                .placeholder(R.drawable.default_poster)
+                .into(holder.poster);
     }
 
     @Override
