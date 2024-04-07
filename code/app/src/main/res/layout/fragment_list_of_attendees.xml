@@ -16,7 +16,7 @@
             style="@style/headerViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Current Attendees" />
+            android:text="Current Attendees Count: 0" />
 
         <ListView
             android:id="@+id/list_of_attendees"
