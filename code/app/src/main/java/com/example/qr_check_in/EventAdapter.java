@@ -30,8 +30,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         FirestoreEvent event = events.get(position);
-        holder.textViewEventDescription.setText("Event Name: " + event.getTitle());
         holder.textViewEventName.setText("Event Name: " + event.getTitle());
+        holder.textViewEventDescription.setText("Event Description: " + event.getDescription());
         holder.textViewEventLocation.setText("Location: " + event.getLocation());
 
         // You can set other fields similarly if they exist in FirestoreEvent
