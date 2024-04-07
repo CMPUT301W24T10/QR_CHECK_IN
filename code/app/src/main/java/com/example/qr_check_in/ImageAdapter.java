@@ -79,6 +79,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         notifyDataSetChanged(); // Notify the adapter to refresh the view
     }
 
+    public void updateItemAt(int position, String imageUrl) {
+        imageUrls.set(position, imageUrl);
+        notifyItemChanged(position);
+    }
+
     public List<String> getImageUrls() {
         return imageUrls;
     }

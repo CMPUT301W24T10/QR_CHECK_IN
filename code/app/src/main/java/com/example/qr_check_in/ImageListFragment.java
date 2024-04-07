@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,52 +37,44 @@ public class ImageListFragment extends Fragment {
     // Method to fetch images from Firestore
     private void fetchImagesFromFirestore() {
         // Fetch profile images
-        db.collection("users").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                List<String> fetchedUrls = new ArrayList<>(imageAdapter.getImageUrls());
-                task.getResult().forEach(document -> {
-                    String imageUrl = document.getString("profileImageUrl");
-                    if (imageUrl != null) {
-                        fetchedUrls.add(imageUrl);
-                    }
-                });
-                imageAdapter.setImageUrls(fetchedUrls); // Update adapter with fetched URLs
-            } else {
-                // Handle errors
-            }
-        });
+        fetchImages("users", "profileImageUrl");
 
         // Fetch event posters
-        db.collection("events").get().addOnCompleteListener(task -> {
+        fetchImages("events", "posterUrl");
+    }
+
+    private void fetchImages(String collectionPath, String imageUrlField) {
+        db.collection(collectionPath).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                List<String> fetchedUrls = new ArrayList<>(imageAdapter.getImageUrls());
+                List<String> fetchedUrls = new ArrayList<>();
                 task.getResult().forEach(document -> {
-                    String imageUrl = document.getString("posterUrl");
-                    if (imageUrl != null) {
+                    String imageUrl = document.getString(imageUrlField);
+                    if (imageUrl != null && !imageUrl.isEmpty()) { // Check for non-empty URLs
                         fetchedUrls.add(imageUrl);
                     }
                 });
-                imageAdapter.setImageUrls(fetchedUrls); // Update adapter with fetched URLs
+                imageAdapter.setImageUrls(fetchedUrls);
+                imageAdapter.notifyDataSetChanged();
             } else {
                 // Handle errors
             }
         });
     }
+
     // Method called when the delete button is clicked
     private void onDeleteClick(String imageUrl, int position) {
-        String imageName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
         FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl).delete().addOnSuccessListener(aVoid -> {
             // Determine the collection to update based on the image path
             String collectionPath = imageUrl.contains("profile_images") ? "users" : "events";
             String documentField = imageUrl.contains("profile_images") ? "profileImageUrl" : "posterUrl";
 
-            // Find the document with the matching image URL
+            // Find the document with the matching image URL and update it with an empty string
             db.collection(collectionPath).whereEqualTo(documentField, imageUrl).get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             String docId = queryDocumentSnapshots.getDocuments().get(0).getId();
                             db.collection(collectionPath).document(docId)
-                                    .update(documentField, null)
+                                    .update(documentField, "") // Set field to empty string
                                     .addOnSuccessListener(aVoid2 -> imageAdapter.removeAt(position))
                                     .addOnFailureListener(e -> {
                                         // Handle the error on updating Firestore
