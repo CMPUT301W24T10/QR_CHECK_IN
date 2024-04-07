@@ -50,18 +50,6 @@
         app:layout_constraintTop_toBottomOf="@+id/eventPoster"
         tools:text="Event Name" />
 
-    <TextView
-        android:id="@+id/endTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/startTime"
-        tools:text="End Time" />
 
 
     <TextView
@@ -74,21 +62,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endTime"
+        app:layout_constraintTop_toBottomOf="@+id/eventDescription"
         tools:text="Location" />
 
-    <TextView
-        android:id="@+id/startTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventDescription"
-        tools:text="Start Time" />
 
     <TextView
         android:id="@+id/eventDescription"
@@ -96,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
