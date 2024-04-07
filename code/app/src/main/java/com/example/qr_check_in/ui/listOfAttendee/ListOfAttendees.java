@@ -24,6 +24,7 @@ import com.example.qr_check_in.data.AttendeeInfo;
 import com.example.qr_check_in.databinding.FragmentGalleryBinding;
 import com.example.qr_check_in.databinding.FragmentListOfAttendeesBinding;
 import com.example.qr_check_in.ui.gallery.GalleryViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -75,22 +76,49 @@ public class ListOfAttendees extends Fragment {
                             attendees.clear();
 
                             // Add all the values from attendeesMap directly to attendees
-                            attendees.addAll(attendeesMap.values());
-                            Log.e("attendees", attendees.toString());
+                            for (Map.Entry<String, String> entry : attendeesMap.entrySet()) {
 
-                            // Notify the adapter about the data change
-                            attendeeAdapter.notifyDataSetChanged();
+                                String userId = entry.getKey();
+
+                                String userName = entry.getValue();
+
+                                attendeeInfo.getAttendeeCheckInCount(eventId, userId, new OnCompleteListener<Integer>() {
+
+
+                                    public void onComplete(Integer checkInCount) {
+
+                                        // Combine the attendee's name with their check-in count
+
+                                        String attendeeInfo = userName + " - Check-ins: " + checkInCount;
+
+                                        attendees.add(attendeeInfo);
+
+                                        // Sort or update the list as needed here
+
+                                        attendeeAdapter.notifyDataSetChanged();
+
+                                    }
+
+                                });
+
+                            }
+
                         }
+
                     });
+
                 }
 
+
+
             }
+
         });
-
-
-
         return root;
     }
+
+
+
 
 
 }
