@@ -82,5 +82,6 @@
     <string name="singup">Sign UP</string>
     <string name="event_location">Event Location</string>
     <string name="delete">Delete</string>
+    <string name="Sign_up_limit">SignUp Limit</string>
 
 </resources>

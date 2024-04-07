@@ -5,20 +5,14 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.qr_check_in.ModelClasses.Event;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 public class AppDatabase {
@@ -40,16 +34,22 @@ public class AppDatabase {
      * @param organizerId       Unique ID of the organizer creating the event.
      * @param eventName         Name of the event to be saved.
      * @param eventDescription  Description of the event.
+     * @param signUpLimit
      * @param posterUri         Uri of the event's poster image. Can be null if there is no poster.
      * @param context           Android context, required for making Toasts.
      * @param firestoreCallback Callback to be called after operation is complete or if there's an error.
      */
-    public void saveEvent(String organizerId, String eventName, String eventDescription, String location,Uri posterUri, Context context, FirestoreCallback firestoreCallback) {
+    public void saveEvent(String organizerId, String eventName, String eventDescription, String location, String signUpLimit, Uri posterUri, Context context, FirestoreCallback firestoreCallback) {
         Map<String, Object> event = new HashMap<>(); // Create a new HashMap to hold the event details.
         event.put("organizerId", organizerId);
         event.put("eventName", eventName);
         event.put("eventDescription", eventDescription);
         event.put("location", location);
+        if (signUpLimit.isEmpty()) {
+            signUpLimit = "-1";
+        }
+        event.put("signUpLimit", Integer.parseInt(signUpLimit));
+        event.put("signUps", 0); // Initialize the number of sign-ups to 0.
 
         db.collection("events").add(event) // Add the event details to the "events" collection in Firestore.
                 .addOnSuccessListener(documentReference ->{
@@ -79,13 +79,18 @@ public class AppDatabase {
      * @param eventDescription  The new description for the event.
      * @param context           Android context, required for displaying Toast messages.
      */
-    public void updateEvent(String eventId, String eventName, String eventDescription, String location, Uri posterUri,Context context) {
+    public void updateEvent(String eventId, String eventName, String eventDescription, String location,String signUpLimit, Uri posterUri,Context context) {
         Map<String, Object> event = new HashMap<>(); // Create a new HashMap to hold the updated event details.
         event.put("eventName", eventName);
         event.put("eventDescription", eventDescription);
         event.put("location", location);
+        if (signUpLimit.isEmpty()) {
+            signUpLimit = "-1";
+        }
+        event.put("signUpLimit", Integer.parseInt(signUpLimit));
+        event.put("signUps", 0); // Initialize the number of sign-ups to 0.
 
-        db.collection("events").document(eventId).update(event)  // Locate the document by its ID in the "events" collection and update it with the new values.
+        db.collection("events").document(eventId).set(event)  // Locate the document by its ID in the "events" collection and update it with the new values.
                 .addOnSuccessListener(documentReference -> {  // Inform the user that the event has been updated successfully
                     Toast.makeText(context, "Event updated successfully", Toast.LENGTH_SHORT).show();
                     if( posterUri!=null){
