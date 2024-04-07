@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.qr_check_in.EventActivity;
 import com.example.qr_check_in.R;
+import com.example.qr_check_in.data.PromotionalQRCodeGenerator;
 import com.example.qr_check_in.data.QRCodeGenerator;
 
 import java.io.File;
@@ -32,6 +33,7 @@ public class DisplayQrCodeFragment extends Fragment {
     private String eventId;
     private String organizerId;
     private Bitmap qrCode;
+    private Bitmap promotionalQrCode; // Variable to hold the promotional QR code
     private static final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 
     /**
@@ -75,6 +77,16 @@ public class DisplayQrCodeFragment extends Fragment {
             Toast.makeText(getContext(), "Failed to generate QR code. Please try again.", Toast.LENGTH_LONG).show();
         }
 
+        promotionalQrCode = PromotionalQRCodeGenerator.generatePromotionalQRCodeImage(eventId, 512, 512);
+        ImageView promoQrCodeImage = view.findViewById(R.id.ShowPromotionalQRCode);
+
+        if (promotionalQrCode != null) {
+            promoQrCodeImage.setImageBitmap(promotionalQrCode);
+            view.findViewById(R.id.sharePromotionalViaEmailButton).setOnClickListener(v -> sharePromotionalQrCodeViaEmail());
+        } else {
+            Toast.makeText(getContext(), "Failed to generate promotional QR code. Please try again.", Toast.LENGTH_LONG).show();
+        }
+
         view.findViewById(R.id.openEventActivityButton).setOnClickListener(v -> {
             navigateToEventActivity();
             requireActivity().finish(); // remove the current activity from the back stack
@@ -103,6 +115,25 @@ public class DisplayQrCodeFragment extends Fragment {
             Toast.makeText(getContext(), "Error sharing QR Code", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void sharePromotionalQrCodeViaEmail() {
+        // Code to save and share the promotional QR code
+        File promoQrCodeFile = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Promotional_QR_Code.png");
+
+        try (FileOutputStream out = new FileOutputStream(promoQrCodeFile)) {
+            promotionalQrCode.compress(Bitmap.CompressFormat.PNG, 100, out);
+            Uri contentUri = FileProvider.getUriForFile(getContext(), "com.example.qr_check_in.provider", promoQrCodeFile);
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("image/png");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(Intent.createChooser(shareIntent, "Share Promotional QR Code via"));
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "Error sharing Promotional QR Code", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /**
      * Navigates to the EventActivity to display details of the event associated with the QR code.
      * Passes the event ID and organizer ID as extras in the intent to the EventActivity.

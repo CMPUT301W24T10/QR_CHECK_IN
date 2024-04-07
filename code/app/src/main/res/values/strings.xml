@@ -12,6 +12,7 @@
     <string name="generate_qr_code">Generate QR Code</string>
     <string name="view_list_of_attendees">View List of Attendees</string>
     <string name="share_qr_code">Share QR Code</string>
+    <string name="map">Map</string>
     <string name="send_notification">Send Notification</string>
     <string name="share_promotional_qr_code">Share Promotional QR Code</string>
     <string name="geo_location_tracking">Geo-location Tracking</string>
@@ -80,6 +81,6 @@
     <string name="current_events">Current Events</string>
     <string name="singup">Sign UP</string>
     <string name="event_location">Event Location</string>
-    <string name="map">Map</string>
+    <string name="delete">Delete</string>
 
 </resources>

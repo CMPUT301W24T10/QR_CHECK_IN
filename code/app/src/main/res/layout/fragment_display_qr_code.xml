@@ -25,22 +25,49 @@
             android:textColor="@color/white"
             android:textSize="24sp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event QR Code"
+            android:layout_marginTop="20dp"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
         <ImageView
             android:id="@+id/ShowQRCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/ic_launcher_foreground" />
 
-        <!-- Button to save QR code to the device -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Promotional QR Code"
+            android:layout_marginTop="20dp"
+            android:textAlignment="center"
+            android:textSize="18sp" />
 
-        <!-- Button to share QR code via email -->
+        <ImageView
+            android:id="@+id/ShowPromotionalQRCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_launcher_foreground" />
+
         <Button
             android:id="@+id/shareViaEmailButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="Share QR Code" />
+
+        <Button
+            android:id="@+id/sharePromotionalViaEmailButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Share Promotional QR Code" />
 
         <Button
             android:id="@+id/openEventActivityButton"

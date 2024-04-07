@@ -71,6 +71,9 @@
         <action
             android:id="@+id/displayQrCodeFragment"
             app:destination="@id/displayQrCodeFragment" />
+        <action
+            android:id="@+id/action_QRCheckIn_fragment_to_promotionalFragment"
+            app:destination="@id/promotionalFragment" />
     </fragment>
     <fragment
         android:id="@+id/attendeeSelection_fragment"
@@ -124,5 +127,10 @@
         android:name="com.example.qr_check_in.Fragment_Sign_up"
         android:label="fragment__sign_up"
         tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/promotionalFragment"
+        android:name="com.example.qr_check_in.PromotionalFragment"
+        android:label="fragment_promotional2"
+        tools:layout="@layout/fragment_promotional2" />
 
 </navigation>

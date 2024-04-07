@@ -48,9 +48,9 @@
         tools:layout="@layout/fragment_announcements" />
     <fragment
         android:id="@+id/nav_events"
-        android:name="com.example.qr_check_in.ui.EventList.EventListFragment"
+        android:name="com.example.qr_check_in.StartupFragments.EventsFragment"
         android:label="@string/events"
-        tools:layout="@layout/event_list" />
+        tools:layout="@layout/fragment_events" />
     <fragment
         android:id="@+id/nav_my_event"
         android:name="com.example.qr_check_in.StartupFragments.EventDetailsFragment"
