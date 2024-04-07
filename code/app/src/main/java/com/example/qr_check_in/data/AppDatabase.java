@@ -262,7 +262,7 @@ public class AppDatabase {
             }
         });
     }
-    //asldfosjogfijsdipgjsdlkfjsldfhoiwehoilkcvnlkjnvcoihfgoihroiptwjpefojqwpofj;dskjlksdnvlknxlvhjoishfogijwepifjopiwejoiwhetuohriuoghowrhgierjgojsifjoiwejfpiwejfp
+
     public void saveUser(String deviceId, String userName, String userPhone, String emailAddress, String address, String event, Context context, FirestoreCallback firestoreCallback) {
         Map<String, Object> info = new HashMap<>(); // Create a new HashMap to hold the user info
         info.put("Name", userName);

@@ -83,5 +83,10 @@
     <string name="event_location">Event Location</string>
     <string name="delete">Delete</string>
     <string name="Sign_up_limit">SignUp Limit</string>
+    <string name="my_events">My Events</string>
+    <string name="title_activity_my_event">MyEventActivity</string>
+    <string name="organized_events">Organized Events</string>
+    <string name="my_signups">My Signups</string>
+    <string name="attending_events">Attending Events</string>
 
 </resources>

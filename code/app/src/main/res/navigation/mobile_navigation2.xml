@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation2"
+    app:startDestination="@id/nav_signups">
+
+    <fragment
+        android:id="@+id/nav_signups"
+        android:name="com.example.qr_check_in.myui.signups"
+        android:label="Sign Ups"
+        tools:layout="@layout/fragment_signups" />
+    <fragment
+        android:id="@+id/nav_attending"
+        android:name="com.example.qr_check_in.myui.AttendingMyevents"
+        android:label="Attending Events"
+        tools:layout="@layout/fragment_attending_myevents" />
+    <fragment
+        android:id="@+id/nav_organizer"
+        android:name="com.example.qr_check_in.myui.Organized_myevents"
+        android:label="Organized Events"
+        tools:layout="@layout/fragment_organized_myevents" />
+</navigation>
