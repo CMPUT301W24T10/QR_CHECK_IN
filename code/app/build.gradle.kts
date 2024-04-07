@@ -71,6 +71,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     testImplementation ("org.mockito:mockito-core:3.11.2")
     androidTestImplementation ("androidx.navigation:navigation-testing:2.7.7")
+    androidTestImplementation ("org.mockito:mockito-android:4.0.0")
 
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
@@ -85,10 +86,9 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
     //geolocation
-    implementation ("com.google.android.gms:play-services-location:17.1.0")
-
-    //dependency for view of maps
-    implementation ("com.google.android.gms:play-services-maps:17.0.1")
+    implementation ("org.osmdroid:osmdroid-android:6.1.10")
+    implementation ("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation ("com.google.android.gms:play-services-location:17.0.0")
 
 
 

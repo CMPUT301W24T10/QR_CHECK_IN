@@ -53,8 +53,6 @@ public class EventDetailsFragment extends Fragment {
     private void bindViews(View view) {
         eventNameTextView = view.findViewById(R.id.eventName);
         eventDescriptionTextView = view.findViewById(R.id.eventDescription);
-        startTimeTextView = view.findViewById(R.id.startTime);
-        endTimeTextView = view.findViewById(R.id.endTime);
         locationTextView = view.findViewById(R.id.location);
         eventPosterImageView = view.findViewById(R.id.eventPoster);
     }
@@ -78,22 +76,20 @@ public class EventDetailsFragment extends Fragment {
 
     private void updateUIWithEventDetails(DocumentSnapshot document) {
         getActivity().runOnUiThread(() -> {
-            String eventName = document.getString("eventName");
-            String eventDescription = document.getString("eventDescription");
-            Timestamp startTimeStamp = document.getTimestamp("startTime");
-            Timestamp endTimeStamp = document.getTimestamp("endTime");
+            String eventName = "Event Name: " + document.getString("eventName");
+            String eventDescription = "Event Description: " + document.getString("eventDescription");
+
+            // Check if location is null or empty and set as "TBD" if it is
             String location = document.getString("location");
+            if (location == null || location.isEmpty()) {
+                location = "TBD"; // Set to "TBD" if the location is null or empty
+            }
+            location = "Location: " + location;
+
             String posterUrl = document.getString("posterUrl");
-
-            DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault());
-
-            String startTime = startTimeStamp != null ? dateFormat.format(startTimeStamp.toDate()) : "TBD";
-            String endTime = endTimeStamp != null ? dateFormat.format(endTimeStamp.toDate()) : "TBD";
 
             eventNameTextView.setText(eventName);
             eventDescriptionTextView.setText(eventDescription);
-            startTimeTextView.setText(startTime);
-            endTimeTextView.setText(endTime);
             locationTextView.setText(location);
 
             // Only load the image if the posterUrl is not null and not empty
@@ -105,4 +101,6 @@ public class EventDetailsFragment extends Fragment {
             }
         });
     }
+
+
 }
