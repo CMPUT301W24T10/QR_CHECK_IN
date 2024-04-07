@@ -1,8 +1,5 @@
 package com.example.qr_check_in.ui.listOfAttendee;
 
-import static androidx.fragment.app.FragmentManager.TAG;
-
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -10,28 +7,25 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import com.example.qr_check_in.AttendeesAdapter;
+import com.example.qr_check_in.NotificationAdapter;
 import com.example.qr_check_in.R;
+import com.example.qr_check_in.SharedPreference;
 import com.example.qr_check_in.data.AttendeeInfo;
-import com.example.qr_check_in.databinding.FragmentGalleryBinding;
 import com.example.qr_check_in.databinding.FragmentListOfAttendeesBinding;
-import com.example.qr_check_in.ui.gallery.GalleryViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 
 public class ListOfAttendees extends Fragment {
@@ -40,8 +34,10 @@ public class ListOfAttendees extends Fragment {
     private FragmentListOfAttendeesBinding binding;
     private ListView attendeeList;
     private ArrayList<String> attendees;
-    private ArrayAdapter<String> attendeeAdapter;
+    private ArrayList<String> deviceId;
     private String eventId;
+    private AttendeesAdapter adapter;
+    private SharedPreference sharedPreference;
 
     public static ListOfAttendees newInstance() {
         return new ListOfAttendees();
@@ -51,74 +47,55 @@ public class ListOfAttendees extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_list_of_attendees, container, false);
+       binding = FragmentListOfAttendeesBinding.inflate(inflater, container, false);
         attendeeInfo = new AttendeeInfo();
         attendees = new ArrayList<>();
+        deviceId = new ArrayList<>();
         ListOfAttendeesViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(ListOfAttendeesViewModel.class);
         eventId = (sharedViewModel.getEventId());
+        sharedPreference = new SharedPreference(requireContext());
+        sharedPreference.loadList();
+        Log.d("listData", "onCreateView: "+sharedPreference.list.size());
 
-        attendeeList = root.findViewById(R.id.list_of_attendees);
-        attendees.add("Attendee 1");
         // Create an ArrayAdapter from List of String
-        attendeeAdapter = new ArrayAdapter<String>
-                (getContext(),R.layout.attendee_list_element, attendees);
+
         // DataBind ListView with items from ArrayAdapter
-        attendeeList.setAdapter(attendeeAdapter);
 
         attendeeInfo.getAttendeesMap(eventId, new AttendeeInfo.getAttendeesMapCallback() {
             @Override
-            public void onCallback(Map<String, String> attendeesMap) {
-                if(getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+            public void onCallback(Map<String, String> data) {
+
                             // Initialize attendeesList as a new ArrayList
-                            attendees.clear();
 
-                            // Add all the values from attendeesMap directly to attendees
-                            for (Map.Entry<String, String> entry : attendeesMap.entrySet()) {
+                if (data.values()!=null)
+                {
 
-                                String userId = entry.getKey();
-
-                                String userName = entry.getValue();
-
-                                attendeeInfo.getAttendeeCheckInCount(eventId, userId, new OnCompleteListener<Integer>() {
-
-
-                                    public void onComplete(Integer checkInCount) {
-
-                                        // Combine the attendee's name with their check-in count
-
-                                        String attendeeInfo = userName + " - Check-ins: " + checkInCount;
-
-                                        attendees.add(attendeeInfo);
-
-                                        // Sort or update the list as needed here
-
-                                        attendeeAdapter.notifyDataSetChanged();
-
-                                    }
-
-                                });
-
-                            }
-
-                        }
-
-                    });
+                    attendees.addAll(data.values());
+                    deviceId.addAll(data.keySet());
+                    binding.listRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+                    adapter = new AttendeesAdapter(attendees,deviceId, requireContext(),sharedPreference.getCountAttendeeLogin(),sharedPreference.getDeviceID(),sharedPreference.list);
+                    binding.listRecycler.setAdapter(adapter);
 
                 }
 
 
+                            // Add all the values from attendeesMap directly to attendees
 
-            }
+
+
+
+                            // Notify the adapter about the data change
+                        }
+
+
+
 
         });
-        return root;
+
+
+
+        return binding.getRoot();
     }
-
-
-
 
 
 }

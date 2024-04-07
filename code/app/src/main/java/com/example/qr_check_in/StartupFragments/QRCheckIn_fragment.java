@@ -1,11 +1,12 @@
 package com.example.qr_check_in.StartupFragments;
 
 
+
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -15,19 +16,18 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.example.qr_check_in.EventActivity;
+import com.example.qr_check_in.ModelClasses.AttendeeCount;
 import com.example.qr_check_in.R;
+import com.example.qr_check_in.SharedPreference;
 import com.example.qr_check_in.data.AppDatabase;
-import com.example.qr_check_in.geolocation.UserLocationManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -39,25 +39,26 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class QRCheckIn_fragment extends Fragment {
 
     private Button btnScan;
     private AppDatabase appDatabase; // Use AppDatabase for database interactions
-    private UserLocationManager userLocationManager;
 
     private String deviceId, eventTitle, eventDescription;
 
     private FirebaseFirestore db;
 
     boolean found;
+    Integer Count = 0;
 
 
     Context thisContext;
+
+    private SharedPreference sharedPreference;
 
 
     @Override
@@ -66,17 +67,23 @@ public class QRCheckIn_fragment extends Fragment {
         thisContext = container.getContext();
         deviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         btnScan = view.findViewById(R.id.scanButton);
-        // Instantiate UserLocationManager with fragment's context
-        userLocationManager = new UserLocationManager(getContext());
-
 
         appDatabase = new AppDatabase();
         db = FirebaseFirestore.getInstance();
+
+        sharedPreference = new SharedPreference(requireContext());
+        sharedPreference.saveDeviceId(Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         btnScan.setOnClickListener(v -> {
             scanCode();
         });
-
-        return view;
     }
 
     private void scanCode() {
@@ -87,39 +94,6 @@ public class QRCheckIn_fragment extends Fragment {
         options.setCaptureActivity(CaptureAct.class);
         barLaucher.launch(options);
     }
-
-    private void navigateToEventActivity(String eventId,String userId) {
-        Intent intent = new Intent(getContext(), EventActivity.class);
-        intent.putExtra("eventId", eventId);
-        intent.putExtra("userId", userId);
-        startActivity(intent);
-    }
-    private void getNameFromFirestore(String deviceId, ExistingAttendeesCallback callback) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users").document(deviceId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String name = documentSnapshot.getString("Name");
-                        if (name != null && !name.isEmpty()) {
-                            callback.onNameReceived(name);
-                        } else {
-                            callback.onNameReceived("Guest"); // Set default name if Name field is empty
-                        }
-                    } else {
-                        callback.onNameReceived("Guest"); // Set default name if document doesn't exist
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Handle failure
-                    callback.onNameReceived("Guest"); // Set default name on failure
-                });
-    }
-
-    // Define an interface for callback
-    interface ExistingAttendeesCallback {
-        void onNameReceived(String name);
-    }
-
 
 
     ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result -> {
@@ -136,46 +110,137 @@ public class QRCheckIn_fragment extends Fragment {
                     if (task.isSuccessful()) {
                         QuerySnapshot querySnapshot = task.getResult();
                         for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                            Integer count = 0;
+                            count = sharedPreference.getCountAttendeeLogin();
+
+                            Log.d("count", "onComplete: "+count);
+
                             //this will check if the qr code that is being scanned is actually a qr code for a valid event
                             if (documentSnapshot.getId().equals(uniqueId)) {
-                                nameStuff(uniqueId);
 
                                 //checking if attendess field exists in event
                                 if (documentSnapshot.contains("attendees")) {
                                     Map<String, String> existingAttendees = (Map<String, String>) documentSnapshot.get("attendees");
+
                                     //checking if device is already registered into the event
-                                    assert existingAttendees != null;
+                                    if (existingAttendees.containsKey(deviceId)) {
+                                        count++;
+                                        sharedPreference.saveCountAttendeeLogin(count);
+                                        if (sharedPreference.list.contains(deviceId))
+                                        {
+                                            for (int i=0;i<sharedPreference.list.size();i++)
+                                            {
+                                                if (sharedPreference.list.get(i).getdeviceId()==deviceId)
+                                                {
+                                                    sharedPreference.list.get(i).setNumberOfTimesLogin(count);
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            sharedPreference.list.add(new AttendeeCount(deviceId,count));
 
-                                    getNameFromFirestore(deviceId, name -> {
-                                        // Use the retrieved name to update existingAttendees map
-                                        existingAttendees.put(deviceId, name);
 
-                                        // Update Firestore document with the new attendees map
-                                        documentSnapshot.getReference().update("attendees", existingAttendees)
-                                                .addOnSuccessListener(aVoid -> {
-                                                    Log.d("CheckIn", "Attendee updated successfully");
-                                                    subscribeToNewTopic(uniqueId);
-                                                })
-                                                .addOnFailureListener(e -> Log.d("CheckIn", "Error updating attendee", e));
-                                    });
-                                    subscribeToNewTopic(uniqueId);
+                                        }
+                                        sharedPreference.saveList(sharedPreference.list);
+                                        subscribeToNewTopic(uniqueId);
+                                        nameStuff(uniqueId);
+                                        //Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
+                                    } else {
 
+                                        //if device is not registered will make the alert dialog
+
+                                        eventTitle = documentSnapshot.getString("eventName");
+                                        eventDescription = documentSnapshot.getString("eventDescription");
+                                        found = true;
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(thisContext);
+                                        builder.setTitle(eventTitle);
+                                        builder.setMessage(eventDescription);
+                                        count++;
+                                        sharedPreference.saveCountAttendeeLogin(count);
+                                        if (sharedPreference.list.contains(deviceId))
+                                        {
+                                            for (int i=0;i<sharedPreference.list.size();i++)
+                                            {
+                                                if (sharedPreference.list.get(i).getdeviceId()==deviceId)
+                                                {
+                                                    sharedPreference.list.get(i).setNumberOfTimesLogin(count);
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            sharedPreference.list.add(new AttendeeCount(deviceId,count));
+
+
+                                        }
+                                        sharedPreference.saveList(sharedPreference.list);
+
+
+                                        builder.setPositiveButton("Check In", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                            //this method is called to determine whether we need to ask for name or not
+
+                                            sharedPreference.saveList(sharedPreference.list);
+
+                                            subscribeToNewTopic(uniqueId);
+
+                                        });
+
+                                        builder.setNegativeButton("Back", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                            // If user click no then dialog box is canceled.
+                                            dialog.cancel();
+                                        });
+                                        AlertDialog alertDialog = builder.create();
+                                        alertDialog.show();
+
+
+
+                                        nameStuff(uniqueId);
+
+                                    }
+                                    //if attendees field doesnt exist will make the alert dialog box
                                 } else {
-                                    // If the "attendees" field doesn't exist, create it and add the current device as the first attendee
-                                    Map<String, Object> newAttendee = new HashMap<>();
-                                    getNameFromFirestore(deviceId, name -> {
-                                        // Use the retrieved name to update existingAttendees map
-                                        newAttendee.put(deviceId, name);
 
-                                        // Update Firestore document with the new attendees map
-                                        documentSnapshot.getReference().update("attendees", newAttendee)
-                                                .addOnSuccessListener(aVoid -> {
-                                                    Log.d("CheckIn", "Attendee updated successfully");
-                                                    subscribeToNewTopic(uniqueId);
-                                                })
-                                                .addOnFailureListener(e -> Log.d("CheckIn", "Error updating attendee", e));
+                                    eventTitle = documentSnapshot.getString("eventName");
+
+                                    eventDescription = documentSnapshot.getString("eventDescription");
+                                    found = true;
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(thisContext);
+                                    builder.setTitle(eventTitle);
+                                    builder.setMessage(eventDescription);
+                                    count++;
+                                    sharedPreference.saveCountAttendeeLogin(count);
+                                    if (sharedPreference.list.contains(deviceId))
+                                    {
+                                        for (int i=0;i<sharedPreference.list.size();i++)
+                                        {
+                                            if (sharedPreference.list.get(i).getdeviceId()==deviceId)
+                                            {
+                                                sharedPreference.list.get(i).setNumberOfTimesLogin(count);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sharedPreference.list.add(new AttendeeCount(deviceId,count));
+
+
+                                    }
+                                    sharedPreference.saveList(sharedPreference.list);
+
+                                    builder.setPositiveButton("Check In", (DialogInterface.OnClickListener) (dialog, which) -> {
+
+                                        nameStuff(uniqueId);
+                                        subscribeToNewTopic(uniqueId);
+
                                     });
-                                    subscribeToNewTopic(uniqueId);
+
+                                    builder.setNegativeButton("Back", (DialogInterface.OnClickListener) (dialog, which) -> {
+                                        // If user click no then dialog box is canceled.
+                                        dialog.cancel();
+                                    });
+                                    AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
 
 
                                 }
@@ -204,39 +269,6 @@ public class QRCheckIn_fragment extends Fragment {
                     }
                 })
                 .addOnFailureListener(e -> System.out.println("failed to subscribe to the topic : " + e.getMessage()));
-    }
-
-    void updateAttendingEvents(String userId, String eventId) {
-        DocumentReference eventRef = db.collection("events").document(eventId);
-        DocumentReference userRef = db.collection("users").document(userId);
-
-        eventRef.get().addOnSuccessListener(eventSnapshot -> {
-            if (eventSnapshot.exists()) {
-                // Assume "eventName" is a field in your event documents
-                String eventName = eventSnapshot.getString("eventName");
-
-                userRef.get().addOnSuccessListener(userSnapshot -> {
-                    Map<String, Object> attendingEvents;
-                    if (userSnapshot.contains("AttendingEvents")) {
-                        // If AttendingEvents map exists, retrieve and update it
-                        attendingEvents = (Map<String, Object>) userSnapshot.get("AttendingEvents");
-                    } else {
-                        // Otherwise, create a new map
-                        attendingEvents = new HashMap<>();
-                    }
-
-                    // Update or add the event ID and name to the map
-                    attendingEvents.put(eventId, eventName);
-
-                    // Update the user's document
-                    userRef.update("AttendingEvents", attendingEvents)
-                            .addOnSuccessListener(aVoid -> Log.d("UpdateUser", "User AttendingEvents updated successfully"))
-                            .addOnFailureListener(e -> Log.d("UpdateUser", "Error updating User AttendingEvents", e));
-                });
-            } else {
-                Log.d("UpdateUser", "Event not found with ID: " + eventId);
-            }
-        }).addOnFailureListener(e -> Log.d("UpdateUser", "Error fetching event details", e));
     }
 
 
@@ -324,7 +356,6 @@ public class QRCheckIn_fragment extends Fragment {
         });
 
 
-
     }
 
     interface nameCallback {
@@ -336,7 +367,7 @@ public class QRCheckIn_fragment extends Fragment {
         void nameExist(String name);
     }
 
-    /**void currentEventIdUpdater(String deviceId, String eventId) {
+    void currentEventIdUpdater(String deviceId, String eventId) {
         DocumentReference docReference = db.collection("users").document(deviceId);
 
         docReference.get().addOnCompleteListener(task -> {
@@ -352,7 +383,7 @@ public class QRCheckIn_fragment extends Fragment {
             }
 
         });
-    }**/
+    }
 
     void nameStuff(String uniqueId) {
         //this method will call on nameCheck and if the user exists will not prompt user for info. if the user doesnt exist will prompt user for info.
@@ -367,6 +398,8 @@ public class QRCheckIn_fragment extends Fragment {
                             // Your callback logic, if needed
                         }
                     });
+                    currentEventIdUpdater(deviceId, uniqueId);
+                    Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
                 } else {
                     showCustomDialog(uniqueId, new nameDialogCallback() {
                         @Override
@@ -378,6 +411,7 @@ public class QRCheckIn_fragment extends Fragment {
                                         // Your callback logic, if needed
                                     }
                                 });
+                                Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
                             } else {
                                 appDatabase.saveAttendee(deviceId, "Guest", getContext(), uniqueId, new AppDatabase.FirestoreCallback() {
                                     @Override
@@ -385,15 +419,13 @@ public class QRCheckIn_fragment extends Fragment {
                                         // Your callback logic, if needed
                                     }
                                 });
+                                Navigation.findNavController(requireView()).navigate(R.id.action_QRCheckIn_fragment_to_attendeeSelection_fragment);
                             }
                         }
                     });
                 }
-                userLocationManager.checkInUser(uniqueId,deviceId);
-                navigateToEventActivity(uniqueId, deviceId);
             }
         });
-        updateAttendingEvents(deviceId, uniqueId);
     }
 }
 

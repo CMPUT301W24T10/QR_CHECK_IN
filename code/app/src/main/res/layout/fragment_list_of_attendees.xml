@@ -18,8 +18,8 @@
             android:layout_height="wrap_content"
             android:text="Current Attendees" />
 
-        <ListView
-            android:id="@+id/list_of_attendees"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>

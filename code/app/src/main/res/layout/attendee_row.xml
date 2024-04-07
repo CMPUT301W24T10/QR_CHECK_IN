@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="20dp"
+    app:cardUseCompatPadding="true"
+    android:padding="20dp"
+    app:cardCornerRadius="10dp"
+    android:backgroundTint="@color/white"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:layout_marginStart="5dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:src="@drawable/baseline_co_present_24" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="top"
+            android:gravity="top"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/attendeeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:text="AttendeeName"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number of times Login"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:gravity="end"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
+
+
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

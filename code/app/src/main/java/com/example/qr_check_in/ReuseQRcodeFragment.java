@@ -16,11 +16,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.qr_check_in.ModelClasses.Event;
-import com.example.qr_check_in.adapters.ReuseQrAdapter;
 import com.example.qr_check_in.data.AppDatabase;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +28,7 @@ import java.util.Map;
  */
 public class ReuseQRcodeFragment extends Fragment {
     private Map<String, Object> eventDetails;
-    private ListView listView;
-
-    private ArrayAdapter<Event> reuseQrAdapter;
-    private ArrayList<Event> events;
+    private List<String> eventIds;
 
     private AppDatabase db;
     private String selectedEventId; // QR code is the eventId
@@ -54,25 +48,19 @@ public class ReuseQRcodeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_reuse_q_rcode, container, false);
 
-        // setting up the list view with adapter and list of events
-        events= new ArrayList<Event>();
-        reuseQrAdapter = new ReuseQrAdapter(getContext(),events);
-        listView = view.findViewById(R.id.ListOfQRCodes);
-        listView.setAdapter(reuseQrAdapter);
-
-
         if (requireArguments().getString("organizerId") == null) {
             Log.e("OrganizerIdError", "Organizer ID is null");
         }
         if (requireArguments().getString("eventName") == null) {
             Log.e("EventNameError", "Event name is null");
         }
+        Log.e("EventDescription", "onCreateView: " + requireArguments().getString("eventDescription"));
         eventDetails.put("organizerId",requireArguments().getString("organizerId"));
         eventDetails.put("eventName",requireArguments().getString("eventName"));
         eventDetails.put("eventDescription",requireArguments().getString("eventDescription"));
-        eventDetails.put("eventLocation",requireArguments().getString("eventLocation"));
+
         // Call getEvents to fetch eventIds and setup ListView
-        getEvents(view);
+        getEvents(view);   // this is making the app crash
 
         Button confirmButton = view.findViewById(R.id.buttonConfirmSelectedQRcode); // Assuming the button's ID is confirmButton
         confirmButton.setOnClickListener(v -> {
@@ -97,20 +85,21 @@ public class ReuseQRcodeFragment extends Fragment {
     public void getEvents(View view) {
         ListView listView = view.findViewById(R.id.ListOfQRCodes); // Find ListView by ID
 
-
         db.fetchOrganizedEventIds((String) eventDetails.get("organizerId"), new AppDatabase.FirestoreFetchArrayCallback() {
             @Override
-            public void onCallback(Map<String, String> eventIdss) {
-                events.clear();
-                for (Map.Entry<String, String> entry : eventIdss.entrySet()) {
-                    events.add(new Event(entry.getKey(), null,null,entry.getValue(), null));
-                }
-                reuseQrAdapter.notifyDataSetChanged();
+            public void onCallback(List<String> eventIdss) {
+                // Update the UI (ListView) with the fetched eventIds
+                // Must be run on UI thread
+                eventIds = eventIdss;
                 getActivity().runOnUiThread(() -> {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, eventIds);
+                    listView.setAdapter(adapter);
+
                     listView.setOnItemClickListener((parent, view, position, id) -> {
+                        String eventId = eventIds.get(position);
                         // Navigate to the DisplayQrCodeFragment
-                        selectedEventId = events.get(position).getEventID();
-                        SELECTEDEVENTIDREQUIRED = events.get(position).getEventID();
+                        selectedEventId = eventIds.get(position); // Save the selected eventId
+                        SELECTEDEVENTIDREQUIRED = eventIds.get(position);
                         // Optionally, you can give visual feedback here or log the selected item
                         Log.d("SelectedEventId", "Selected event ID: " + selectedEventId);
                     });

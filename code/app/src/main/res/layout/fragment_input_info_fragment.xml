@@ -86,25 +86,6 @@
                     app:counterEnabled="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="100"
-                app:helperText="required"
-                app:helperTextTextColor="#F40707">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/EnterEventLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/event_location"
-                    android:maxLength="100"
-                    app:counterEnabled="true" />
-            </com.google.android.material.textfield.TextInputLayout>
-
             <ImageView
                 android:id="@+id/PosterPreview"
                 android:layout_width="match_parent"

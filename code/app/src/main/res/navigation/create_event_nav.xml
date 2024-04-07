@@ -22,9 +22,6 @@
         <action
             android:id="@+id/action_checkin_createEvent_fragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
-        <action
-            android:id="@+id/action_checkin_createEvent_fragment_to_fragment_Sign_up"
-            app:destination="@id/fragment_Sign_up" />
 
     </fragment>
     <fragment
@@ -91,38 +88,57 @@
         android:label="fragment_admin_dashboard"
         tools:layout="@layout/fragment_admin_dashboard" >
         <action
+            android:id="@+id/action_adminDashboardFragment_to_imageListFragment"
+            app:destination="@id/imageListFragment" />
+        <action
             android:id="@+id/action_adminDashboardFragment_to_eventListFragment"
             app:destination="@id/eventListFragment" />
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_profileListFragment"
+            app:destination="@id/profileListFragment" />
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_removeImageFragment"
+            app:destination="@id/removeImageFragment" />
         <action
             android:id="@+id/action_adminDashboardFragment_to_removeProfileFragment"
             app:destination="@id/removeProfileFragment" />
         <action
-            android:id="@+id/action_adminDashboardFragment_to_imageListFragment"
-            app:destination="@id/imageListFragment" />
+            android:id="@+id/action_adminDashboardFragment_to_removeEventFragment"
+            app:destination="@id/removeEventFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/eventListFragment"
-        android:name="com.example.qr_check_in.EventListFragment"
-        android:label="fragment_event_list"
-        tools:layout="@layout/fragment_event_list" />
-    <fragment
-        android:id="@+id/removeProfileFragment"
-        android:name="com.example.qr_check_in.admin.RemoveProfileFragment"
-        android:label="fragment_remove_profile"
-        tools:layout="@layout/fragment_remove_profile" />
-    <fragment
-        android:id="@+id/notificationFragment"
-        android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
-        android:label="NotificationFragment" />
     <fragment
         android:id="@+id/imageListFragment"
         android:name="com.example.qr_check_in.ImageListFragment"
         android:label="fragment_image_list"
         tools:layout="@layout/fragment_image_list" />
     <fragment
-        android:id="@+id/fragment_Sign_up"
-        android:name="com.example.qr_check_in.Fragment_Sign_up"
-        android:label="fragment__sign_up"
-        tools:layout="@layout/fragment_sign_up" />
+        android:id="@+id/eventListFragment"
+        android:name="com.example.qr_check_in.EventListFragment"
+        android:label="fragment_event_list"
+        tools:layout="@layout/fragment_event_list" />
+    <fragment
+        android:id="@+id/profileListFragment"
+        android:name="com.example.qr_check_in.ProfileListFragment"
+        android:label="fragment_profile_list"
+        tools:layout="@layout/fragment_profile_list" />
+    <fragment
+        android:id="@+id/removeImageFragment"
+        android:name="com.example.qr_check_in.RemoveImageFragment"
+        android:label="fragment_remove_image"
+        tools:layout="@layout/fragment_remove_image" />
+    <fragment
+        android:id="@+id/removeProfileFragment"
+        android:name="com.example.qr_check_in.RemoveProfileFragment"
+        android:label="fragment_remove_profile"
+        tools:layout="@layout/fragment_remove_profile" />
+    <fragment
+        android:id="@+id/removeEventFragment"
+        android:name="com.example.qr_check_in.RemoveEventFragment"
+        android:label="fragment_remove_event"
+        tools:layout="@layout/fragment_remove_event" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
+        android:label="NotificationFragment" />
 
 </navigation>

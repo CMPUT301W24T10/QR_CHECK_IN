@@ -9,8 +9,6 @@ import com.example.qr_check_in.ModelClasses.Event;
 import com.example.qr_check_in.ModelClasses.Organizer;
 import com.example.qr_check_in.ModelClasses.User;
 import com.example.qr_check_in.data.AppDatabase;
-
-import com.example.qr_check_in.ui.home.HomeViewModel;
 import com.example.qr_check_in.ui.listOfAttendee.ListOfAttendeesViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -44,10 +42,6 @@ public class EventActivity extends AppCompatActivity {
         String eventId = getIntent().getStringExtra("eventId");
         if (eventId != null) {
             listOfAttendeesViewModel.setEventId(eventId);
-            // Obtain HomeViewModel and set eventId here
-            HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-            homeViewModel.setEventId(eventId);
-
         }
 
 
@@ -89,7 +83,7 @@ public class EventActivity extends AppCompatActivity {
                 String description = (String)data.get("eventDescription");
                 String organizerId = (String)data.get("organizerId");
                 // putting arbitrary string for organizer name as current user doesnot need to know about organizer name
-                event = new Event(eventName, new Organizer("organizer", organizerId), description, eventId, null);
+                event = new Event(eventName, new Organizer("organizer", organizerId), description, eventId);
 
 
 
