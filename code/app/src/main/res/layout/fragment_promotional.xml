@@ -11,11 +11,25 @@
         android:background="@color/background">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Event Name:"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
             android:id="@+id/tvEventName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Event Description:"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="4dp"/>
 
         <TextView
             android:id="@+id/tvEventDescription"
@@ -24,10 +38,18 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_marginBottom="16dp"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Event Poster:"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="4dp"/>
+
         <ImageView
             android:id="@+id/ivEventPoster"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
             android:contentDescription="@string/event_poster"
             android:src="@drawable/ic_launcher_background" /> <!-- Replace with a default image if needed -->
 
@@ -37,7 +59,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Back"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"/>
 
     </LinearLayout>
 </ScrollView>
