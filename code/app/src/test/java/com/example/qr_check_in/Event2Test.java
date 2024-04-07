@@ -2,6 +2,7 @@ package com.example.qr_check_in;
 
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import com.example.qr_check_in.ModelClasses.Event2;
 

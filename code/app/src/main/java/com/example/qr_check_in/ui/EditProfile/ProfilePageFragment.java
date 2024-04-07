@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -60,6 +59,7 @@ public class ProfilePageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setActionBarTitle("Edit Profile");
     }
 
     private void findDeviceID() {
@@ -122,6 +122,13 @@ public class ProfilePageFragment extends Fragment {
         }
 
         disableButton(saveButton);
+    }
+
+    private void setActionBarTitle(String title) {
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null && activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setTitle(title);
+        }
     }
 
     private void saveProfileChanges() {
@@ -210,14 +217,12 @@ public class ProfilePageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile_page, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_profile_page, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         findDeviceID();
         fetchUserDetails();
 
