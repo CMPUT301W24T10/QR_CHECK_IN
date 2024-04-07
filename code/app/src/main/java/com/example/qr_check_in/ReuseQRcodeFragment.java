@@ -74,8 +74,12 @@ public class ReuseQRcodeFragment extends Fragment {
         eventDetails.put("eventName",requireArguments().getString("eventName"));
         eventDetails.put("eventDescription",requireArguments().getString("eventDescription"));
         eventDetails.put("eventLocation",requireArguments().getString("eventLocation"));
-        posterUri = Uri.parse(requireArguments().getString("posterUri"));
-        // Call getEvents to fetch eventIds and setup ListView
+        String posterUriString = requireArguments().getString("posterUri");
+        if (posterUriString != null && !posterUriString.isEmpty()) {
+            posterUri = Uri.parse(posterUriString);
+        } else {
+            posterUri = null; // Explicitly set to null if not provided or empty
+        }
         getEvents(view);
 
         Button confirmButton = view.findViewById(R.id.buttonConfirmSelectedQRcode); // Assuming the button's ID is confirmButton
@@ -128,7 +132,16 @@ public class ReuseQRcodeFragment extends Fragment {
     }
 
     public void updateEventDetails() {
-        db.updateEvent(selectedEventId, (String)eventDetails.get("eventName"), (String)eventDetails.get("eventDescription"), (String)eventDetails.get("eventLocation"), posterUri,getContext());
-        db.updateOrganizerWithEvent((String)eventDetails.get("organizerId"), selectedEventId, (String)eventDetails.get("eventName"),getContext());
+        // Only parse the Uri if the string is not null, otherwise, pass null to updateEvent
+        Uri posterUriToPass = (posterUri != null) ? Uri.parse(posterUri.toString()) : null;
+
+        db.updateEvent(selectedEventId, (String) eventDetails.get("eventName"),
+                (String) eventDetails.get("eventDescription"),
+                (String) eventDetails.get("eventLocation"),
+                posterUriToPass, getContext());
+
+        db.updateOrganizerWithEvent((String) eventDetails.get("organizerId"),
+                selectedEventId, (String) eventDetails.get("eventName"), getContext());
     }
+
 }
