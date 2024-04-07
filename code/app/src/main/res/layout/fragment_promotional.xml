@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/background">
+
+        <TextView
+            android:id="@+id/tvEventName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvEventDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="16dp"/>
+
+        <ImageView
+            android:id="@+id/ivEventPoster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/event_poster"
+            android:src="@drawable/ic_launcher_background" /> <!-- Replace with a default image if needed -->
+
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+</ScrollView>

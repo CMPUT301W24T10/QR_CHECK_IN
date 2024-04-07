@@ -70,14 +70,20 @@ public class QRCheckIn_fragment extends Fragment {
         userLocationManager = new UserLocationManager(getContext());
 
 
+
         appDatabase = new AppDatabase();
         db = FirebaseFirestore.getInstance();
         btnScan.setOnClickListener(v -> {
-            scanCode();
+            // Launch the promoBarLauncher for initial scan
+            promoBarLauncher.launch(new ScanOptions().setPrompt("Scan a QR Code")
+                    .setBeepEnabled(true)
+                    .setOrientationLocked(false)
+                    .setCaptureActivity(CaptureAct.class)); // Use your custom capture activity if you have one
         });
 
         return view;
     }
+
 
     private void scanCode() {
         ScanOptions options = new ScanOptions();
@@ -87,6 +93,7 @@ public class QRCheckIn_fragment extends Fragment {
         options.setCaptureActivity(CaptureAct.class);
         barLaucher.launch(options);
     }
+
 
     private void navigateToEventActivity(String eventId,String userId) {
         Intent intent = new Intent(getContext(), EventActivity.class);
@@ -119,6 +126,21 @@ public class QRCheckIn_fragment extends Fragment {
     interface ExistingAttendeesCallback {
         void onNameReceived(String name);
     }
+
+    private ActivityResultLauncher<ScanOptions> promoBarLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if (result != null && result.getContents() != null) {
+            String scannedData = result.getContents();
+            if (scannedData.startsWith("PROMO_")) {
+                // Promotional QR code, navigate with the scanned data
+                Bundle bundle = new Bundle();
+                bundle.putString("eventId", scannedData.substring("PROMO_".length()));
+                Navigation.findNavController(getView()).navigate(R.id.promotionalFragment, bundle);
+            } else {
+                // Not a promotional QR code, invoke the existing QR code processing (barLauncher)
+                scanCode(); // Trigger the existing scanning process again
+            }
+        }
+    });
 
 
 
