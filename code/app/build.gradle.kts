@@ -86,12 +86,9 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
     //geolocation
-    implementation ("com.google.android.gms:play-services-location:17.1.0")
-    implementation ("org.osmdroid:osmdroid-android:6.1.8")
+    implementation ("org.osmdroid:osmdroid-android:6.1.10")
     implementation ("androidx.legacy:legacy-support-v4:1.0.0")
-
-    //dependency for view of maps
-    implementation ("com.google.android.gms:play-services-maps:17.0.1")
+    implementation ("com.google.android.gms:play-services-location:17.0.0")
 
 
 
