@@ -82,4 +82,6 @@
     <string name="singup">Sign UP</string>
     <string name="event_location">Event Location</string>
 
+    <string name="Organized_Events">Organized Events</string>
+
 </resources>

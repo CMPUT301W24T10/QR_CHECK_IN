@@ -62,4 +62,8 @@
         android:id="@+id/notificationFragment2"
         android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
         android:label="NotificationFragment" />
+    <fragment
+        android:id="@+id/organizedEvents"
+        android:name="com.example.qr_check_in.StartupFragments.EventsFragment"
+        android:label="EventsFragment" />
 </navigation>
