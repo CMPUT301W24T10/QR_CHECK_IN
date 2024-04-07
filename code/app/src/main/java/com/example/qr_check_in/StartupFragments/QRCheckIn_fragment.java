@@ -92,6 +92,7 @@ public class QRCheckIn_fragment extends Fragment {
         Intent intent = new Intent(getContext(), EventActivity.class);
         intent.putExtra("eventId", eventId);
         intent.putExtra("userId", userId);
+        intent.putExtra("userType", "Attendee");
         startActivity(intent);
     }
     private void getNameFromFirestore(String deviceId, ExistingAttendeesCallback callback) {
