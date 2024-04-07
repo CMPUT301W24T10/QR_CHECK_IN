@@ -3,6 +3,7 @@ package com.example.qr_check_in.StartupFragments;
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,11 +17,14 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.qr_check_in.EventActivity;
+import com.example.qr_check_in.MyEventActivity;
 import com.example.qr_check_in.Notification.RetrofitInstance;
 import com.example.qr_check_in.R;
 import com.example.qr_check_in.data.NotificationData;
@@ -39,6 +43,8 @@ import retrofit2.Callback;
  * create an instance of this fragment.
  */
 public class checkin_createEvent_fragment extends Fragment {
+
+    private String userId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,11 @@ public class checkin_createEvent_fragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.fragment_Sign_up);
         });
 
+        view.findViewById(R.id.Myevents).setOnClickListener(v -> {
+            navigateToEventActivity();
+            requireActivity().finish();
+        });
+
         return view;
     }
 
@@ -102,6 +113,16 @@ public class checkin_createEvent_fragment extends Fragment {
                 // repeat the permission or open app details
             }
         }
+
+
+    }
+
+    public void navigateToEventActivity() {
+        Intent intent = new Intent(getActivity(), MyEventActivity.class);
+        userId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        intent.putExtra("userId",userId);
+        startActivity(intent);
     }
 
 

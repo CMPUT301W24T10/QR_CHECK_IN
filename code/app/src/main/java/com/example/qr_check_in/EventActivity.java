@@ -1,7 +1,6 @@
 package com.example.qr_check_in;
 
 import android.os.Bundle;
-import android.view.View;
 import android.view.Menu;
 
 import com.example.qr_check_in.ModelClasses.Attendee;
@@ -12,7 +11,6 @@ import com.example.qr_check_in.data.AppDatabase;
 
 import com.example.qr_check_in.ui.home.HomeViewModel;
 import com.example.qr_check_in.ui.listOfAttendee.ListOfAttendeesViewModel;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -72,7 +70,7 @@ public class EventActivity extends AppCompatActivity {
          * created icon for notification in the dashboard to send notification
          */
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_list_of_attendees,R.id.notificationFragment2)
+                R.id.nav_home, R.id.nav_attending, R.id.nav_organizer, R.id.nav_list_of_attendees,R.id.notificationFragment2)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_event);
