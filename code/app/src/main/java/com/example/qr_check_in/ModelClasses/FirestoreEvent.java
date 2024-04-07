@@ -6,7 +6,10 @@ public class FirestoreEvent {
     private String location;
 
     // No-argument constructor required for Firestore deserialization
-    public FirestoreEvent() {
+    public FirestoreEvent(String eventName, String eventDescription, String eventLocation) {
+        this.title = eventName;
+        this.description = eventDescription;
+        this.location = eventLocation;
     }
 
     // Getters (Setters are not strictly necessary for Firestore if we're only reading data)

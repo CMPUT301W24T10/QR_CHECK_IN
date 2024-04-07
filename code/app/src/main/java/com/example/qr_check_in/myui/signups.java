@@ -7,6 +7,8 @@ import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,15 +26,23 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class signups extends Fragment {
     private RecyclerView eventsRecyclerView;
     private EventAdapter eventAdapter;
 
+    private String deviceID;
+
     private List<FirestoreEvent> eventList = new ArrayList<>();
 
     public signups() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     public static signups newInstance() {
@@ -51,44 +61,48 @@ public class signups extends Fragment {
         return view;
     }
 
-    private void fetchSignedUpEvents() {
-        String deviceId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        List<FirestoreEvent> tempEventList = new ArrayList<>(); // Temporary list to hold fetched events
-
-        db.collection("users").document(deviceId).get().addOnSuccessListener(documentSnapshot -> {
-            Map<String, Boolean> signedUpEventIdsMap = (Map<String, Boolean>) documentSnapshot.get("eventsSignedUpFor");
-            if (signedUpEventIdsMap != null) {
-                int totalEvents = signedUpEventIdsMap.size();
-                int[] eventsFetched = {0}; // Array used to count fetched events, as we need a final or effectively final variable in the lambda expression
-
-                for (String eventId : signedUpEventIdsMap.keySet()) {
-                    db.collection("events").document(eventId).get().addOnSuccessListener(eventSnapshot -> {
-                        FirestoreEvent firestoreEvent = eventSnapshot.toObject(FirestoreEvent.class);
-                        if (firestoreEvent != null) {
-                            tempEventList.add(firestoreEvent);
-                        }
-                        eventsFetched[0]++;
-                        if (eventsFetched[0] == totalEvents) { // All events fetched
-                            new Handler(Looper.getMainLooper()).post(() -> {
-                                eventList.addAll(tempEventList); // Add all at once
-                                eventAdapter.notifyDataSetChanged(); // Notify dataset changed
-                            });
-                        }
-                    }).addOnFailureListener(e -> {
-                        eventsFetched[0]++;
-                        if (eventsFetched[0] == totalEvents && eventsFetched[0] == 1) { // Check if this was the only event and it failed
-                            new Handler(Looper.getMainLooper()).post(eventAdapter::notifyDataSetChanged); // Still need to update in case of UI placeholders, etc.
-                        }
-                        // Log or handle the error in fetching event details
-                    });
-                }
-            }
-        }).addOnFailureListener(e -> {
-            // Log or handle the error in fetching user's signed-up events
-        });
+    private void findDeviceID() {
+        deviceID = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
+    private void fetchSignedUpEvents() {
+        findDeviceID();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        db.collection("users").document(deviceID).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Map<String, Object> data = documentSnapshot.getData();
+                if (data != null && data.containsKey("eventsSignedUpFor")) {
+                    Object eventsSignedUpForObj = data.get("eventsSignedUpFor");
+                    if (eventsSignedUpForObj instanceof Map) {
+                        Map<String, String> eventsSignedUpFor = (Map<String, String>) eventsSignedUpForObj;
+                        List<String> eventIDList = new ArrayList<>(eventsSignedUpFor.keySet());
+                        AtomicInteger eventsProcessed = new AtomicInteger(0);
+                        List<FirestoreEvent> tempEventList = new ArrayList<>(); // Temporary list to store events
 
+                        for (String eventId : eventIDList) {
+                            db.collection("events").document(eventId).get().addOnSuccessListener(eventDocumentSnapshot -> {
+                                if (eventDocumentSnapshot.exists()) {
+                                    Map<String, Object> eventData = eventDocumentSnapshot.getData();
+                                    String eventName = eventData.getOrDefault("eventName", "").toString();
+                                    String eventDescription = eventData.getOrDefault("eventDescription", "").toString();
+                                    String location = eventData.getOrDefault("location", "").toString();
+                                    tempEventList.add(new FirestoreEvent(eventName, eventDescription, location));
+                                }
+
+                                if (eventsProcessed.incrementAndGet() == eventIDList.size()) {
+                                    // Ensure UI updates are performed on the main thread
+                                    getActivity().runOnUiThread(() -> {
+                                        eventList.clear();
+                                        eventList.addAll(tempEventList);
+                                        eventAdapter.notifyDataSetChanged();
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
 }
