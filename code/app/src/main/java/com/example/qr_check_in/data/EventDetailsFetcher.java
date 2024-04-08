@@ -8,6 +8,7 @@ import com.example.qr_check_in.ModelClasses.EventDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Class responsible for fetching event details from Firebase Firestore.
@@ -82,4 +84,37 @@ public class EventDetailsFetcher {
          */
         void onError(String message);
     }
+
+    // add a method to fetch event signups Map
+    public void fetchEventSignups(String eventId, OnEventSignupsReceivedListener listener) {
+        db.collection("events").document(eventId).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null && document.exists()) {
+                                if (document.contains("signups")) {
+                                    Map<String, String> attendeesList = (Map<String,String>) document.get("signups");
+                                    ArrayList<String> attendees = new ArrayList<>();
+                                    for (Map.Entry<String, String> entry : attendeesList.entrySet()) {
+                                        attendees.add(entry.getValue());
+                                    }
+                                    listener.onEventSignupsReceived(attendees);
+                                } else {
+                                    listener.onEventSignupsReceived(new ArrayList<>());
+                                }
+                            } else {
+                            }
+                        } else {
+                        }
+                    }
+                });
+    }
+
+    public interface OnEventSignupsReceivedListener {
+        void onEventSignupsReceived(ArrayList<String> attendeesList);
+
+    }
+
 }
