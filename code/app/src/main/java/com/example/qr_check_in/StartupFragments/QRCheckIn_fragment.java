@@ -1,9 +1,13 @@
 package com.example.qr_check_in.StartupFragments;
+import static androidx.core.content.ContextCompat.getSystemService;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -18,9 +22,11 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import com.example.qr_check_in.EventActivity;
+
 import com.example.qr_check_in.R;
 import com.example.qr_check_in.data.AppDatabase;
 import com.example.qr_check_in.geolocation.UserLocationManager;
@@ -46,6 +52,9 @@ public class QRCheckIn_fragment extends Fragment {
     private FirebaseFirestore db;
     boolean found;
     Context thisContext;
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_qr_check_in, container, false);
@@ -60,12 +69,7 @@ public class QRCheckIn_fragment extends Fragment {
         appDatabase = new AppDatabase();
         db = FirebaseFirestore.getInstance();
         btnScan.setOnClickListener(v -> {
-
-            // Launch the promoBarLauncher for initial scan
-            promoBarLauncher.launch(new ScanOptions().setPrompt("Scan a QR Code")
-                    .setBeepEnabled(true)
-                    .setOrientationLocked(false)
-                    .setCaptureActivity(CaptureAct.class)); // Use your custom capture activity if you have one
+            checkAndRequestLocationPermission();
         });
 
         btnBack = view.findViewById(R.id.backButton);
@@ -79,6 +83,18 @@ public class QRCheckIn_fragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                checkLocationServicesAndProceed();
+            } else {
+                Toast.makeText(getContext(), "Location permission is required.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 
     private void scanCode() {
         ScanOptions options = new ScanOptions();
@@ -87,6 +103,35 @@ public class QRCheckIn_fragment extends Fragment {
         options.setOrientationLocked(true);
         options.setCaptureActivity(CaptureAct.class);
         barLaucher.launch(options);
+    }
+
+    private void launchQRScanner() {
+        promoBarLauncher.launch(new ScanOptions()
+                .setPrompt("Scan a QR Code")
+                .setBeepEnabled(true)
+                .setOrientationLocked(false)
+                .setCaptureActivity(CaptureAct.class)); // Customize as needed
+    }
+
+    private void checkAndRequestLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(thisContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            checkLocationServicesAndProceed();
+        }
+    }
+
+    private void checkLocationServicesAndProceed() {
+        LocationManager locationManager = (LocationManager) thisContext.getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            new AlertDialog.Builder(thisContext)
+                    .setMessage("Your location is turned off. Please turn it on to use this feature.")
+                    .setPositiveButton("Location Settings", (dialogInterface, i) -> thisContext.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        } else {
+            launchQRScanner();
+        }
     }
 
 

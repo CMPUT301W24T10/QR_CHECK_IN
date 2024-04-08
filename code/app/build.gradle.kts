@@ -88,7 +88,9 @@ dependencies {
     //geolocation
     implementation ("org.osmdroid:osmdroid-android:6.1.10")
     implementation ("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation ("com.google.android.gms:play-services-location:17.0.0")
+    implementation ("com.google.android.gms:play-services-location:21.2.0")
+    implementation ("com.google.android.gms:play-services-maps:18.2.0")
+    implementation ("com.karumi:dexter:6.2.1")
 
 
 
