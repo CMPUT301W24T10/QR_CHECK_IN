@@ -46,7 +46,7 @@ public class EventDetailsFetcher {
                         if (task.isSuccessful()) {
                             List<EventDetails> eventDetailsList = new ArrayList<>();
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {  // Extract event details from Firestore document
                                 String name = document.getString("eventName") != null ? document.getString("eventName") : "----";
                                 String description = document.getString("eventDescription") != null ? document.getString("eventDescription") : "----";
                                 Timestamp startTimeStamp = document.getTimestamp("startTime");
@@ -57,8 +57,8 @@ public class EventDetailsFetcher {
                                 String posterUrl = document.getString("posterUrl") != null ? document.getString("posterUrl") : "default_poster_url"; // default poster URL or handle null case
                                 eventDetailsList.add(new EventDetails(name, description, startTime, endTime, location, posterUrl));
                             }
-                            listener.onEventDetailsReceived(eventDetailsList);
-                        } else {
+                            listener.onEventDetailsReceived(eventDetailsList); // Pass event details list to the listener
+                        } else { //null case
                             Log.d("EventDetailsFetcher", "Error getting documents: ", task.getException());
                             listener.onError(task.getException().toString());
                         }

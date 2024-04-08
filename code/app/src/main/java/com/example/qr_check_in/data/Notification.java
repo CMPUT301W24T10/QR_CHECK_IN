@@ -9,12 +9,14 @@ public class Notification {
     private String notification;
     private String eventId;
     private String DateandTime;
-
+    /**
+     * Class representing a notification.
+     */
     public Notification(String notificationTitle, String notification, String selectedeventidrequired, String DateandTime) {
-        this.notificationTitle = notificationTitle;
-        this.notification = notification;
-        this.eventId = selectedeventidrequired;
-        this.DateandTime = DateandTime;
+        this.notificationTitle = notificationTitle; // Title of the notification
+        this.notification = notification;// Notification message
+        this.eventId = selectedeventidrequired;  // ID of the associated event
+        this.DateandTime = DateandTime; // Date and time of the notification
     }
 
     public String getNotificationTitle() {
@@ -24,7 +26,11 @@ public class Notification {
     public void setNotificationTitle(String notificationTitle) {
         this.notificationTitle = notificationTitle;
     }
-
+    /**
+     * Get the title of the notification.
+     *
+     * @return Notification title.
+     */
     public String getNotification() {
         return notification;
     }

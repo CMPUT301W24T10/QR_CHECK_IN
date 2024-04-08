@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class EventListAdapter extends ArrayAdapter<Event> {
     private ArrayList<Event> events;
     private Context context;
-    public EventListAdapter(Context context, ArrayList<Event> events){
+    public EventListAdapter(Context context, ArrayList<Event> events){  // Constructor for the EventListAdapter
         super(context,0,events);
         this.events = events;
         this.context = context;
@@ -33,7 +33,7 @@ public class EventListAdapter extends ArrayAdapter<Event> {
         if(view==null){
             view = LayoutInflater.from(context).inflate(R.layout.event_list_item,parent,false);
         }
-        Event event = events.get(position);
+        Event event = events.get(position);  // Get the Event object at the current position
         // getting the text views
         TextView eventName = view.findViewById(R.id.eventNameTextView);
         TextView eventDescription = view.findViewById(R.id.descriptionTextView);

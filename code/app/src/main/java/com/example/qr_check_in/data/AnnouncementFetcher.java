@@ -24,7 +24,7 @@ public class AnnouncementFetcher {
         db = FirebaseFirestore.getInstance();
     }
 
-    public interface OnAnnouncementListReceivedListener {
+    public interface OnAnnouncementListReceivedListener { // Interface for receiving announcement list or error message
         void onAnnouncementListReceived(List<Announcement> announcementList);
         void onError(String message);
     }
@@ -36,9 +36,9 @@ public class AnnouncementFetcher {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
+                    if (document.exists()) {  // Get AttendingEvents map from user document
                         Map<String, String> attendingEvents = (Map<String, String>) document.get("AttendingEvents");
-                        if (attendingEvents != null) {
+                        if (attendingEvents != null) {   // Fetch notifications for events
                             fetchNotificationsForEvents(new ArrayList<>(attendingEvents.keySet()), listener);
                         } else {
                             listener.onError("No attending events found for user.");
@@ -54,20 +54,20 @@ public class AnnouncementFetcher {
         });
     }
 
-    private void fetchNotificationsForEvents(List<String> eventIds, final OnAnnouncementListReceivedListener listener) {
+    private void fetchNotificationsForEvents(List<String> eventIds, final OnAnnouncementListReceivedListener listener) {  // Function to fetch notifications for events
         List<Announcement> announcements = new ArrayList<>();
         for (String eventId : eventIds) {
             db.collection("notifications").whereEqualTo("eventId", eventId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {   // Get notification details from Firestore document
                             String dateandTime = document.getString("dateandTime");
                             String notificationTitle = document.getString("notificationTitle");
                             String notification = document.getString("notification");
-                            announcements.add(new Announcement(notificationTitle, dateandTime, notification));
+                            announcements.add(new Announcement(notificationTitle, dateandTime, notification));  // Create Announcement object and add to the list
                         }
-                        listener.onAnnouncementListReceived(announcements);
+                        listener.onAnnouncementListReceived(announcements);   // Pass the list of announcements to the listener
                     } else {
                         Log.e("AnnouncementFetcher", "Error getting notifications: ", task.getException());
                         listener.onError(task.getException().toString());

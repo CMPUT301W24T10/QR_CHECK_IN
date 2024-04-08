@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.qr_check_in.R;
+import com.example.qr_check_in.ui.listOfAttendee.ListOfAttendeesViewModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -27,6 +29,10 @@ public class MapsFragment extends Fragment {
 
     private MapView map = null;
 
+    private String eventId;
+
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Before creating the view, set the user agent to prevent getting banned from the OSM servers
@@ -34,10 +40,12 @@ public class MapsFragment extends Fragment {
 
 
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
+        ListOfAttendeesViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(ListOfAttendeesViewModel.class);
+        eventId = sharedViewModel.getEventId();
 
         // Initialize and configure the map
         initializeMap(view);
-        fetchLocationsAndAddMarkers();
+        fetchLocationsAndAddMarkers(eventId);
 
         return view;
     }
@@ -57,8 +65,9 @@ public class MapsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (map != null) {
-            map.onResume(); // Existing code
-
+            map.getOverlayManager().clear();
+            map.invalidate(); // Force the map to refresh and redraw overlays
+            fetchLocationsAndAddMarkers(eventId); // Fetch and display markers again
         }
     }
 
@@ -70,58 +79,61 @@ public class MapsFragment extends Fragment {
         }
     }
 
-    private void fetchLocationsAndAddMarkers() {
+    private void fetchLocationsAndAddMarkers(String currentEventId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("events") // Replace with your actual collection path
+        db.collection("events").document(currentEventId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        for (DocumentSnapshot eventDoc : task.getResult()) {
-                            if (eventDoc.contains("checkIns")) {
-                                Map<String, Object> checkInsMap = (Map<String, Object>) eventDoc.get("checkIns");
-                                for (Map.Entry<String, Object> checkInEntry : checkInsMap.entrySet()) {
-                                    Object checkInObj = checkInEntry.getValue();
-                                    if (checkInObj instanceof ArrayList) {
-                                        ArrayList<Map<String, Object>> checkInList = (ArrayList<Map<String, Object>>) checkInObj;
-                                        for (Map<String, Object> locationMap : checkInList) {
-                                            Double latitude = null;
-                                            Double longitude = null;
-                                            if (locationMap.containsKey("latitude") && locationMap.containsKey("longitude")) {
-                                                latitude = (Double) locationMap.get("latitude");
-                                                longitude = (Double) locationMap.get("longitude");
-                                            }
-                                            if (latitude != null && longitude != null) {
-                                                // Add a marker for each checked-in location
-                                                addMarkerToMap(latitude, longitude);
-                                            }
+                        DocumentSnapshot eventDoc = task.getResult();
+                        if (eventDoc != null && eventDoc.exists() && eventDoc.contains("checkIns")) {
+                            // Clear any existing markers
+                            map.getOverlays().clear();
+
+                            Object checkInsObj = eventDoc.get("checkIns");
+                            if (checkInsObj instanceof Map) {
+                                Map<String, Object> checkInsMap = (Map<String, Object>) checkInsObj;
+                                for (Map.Entry<String, Object> entry : checkInsMap.entrySet()) {
+                                    ArrayList<Map<String, Double>> checkInsList = (ArrayList<Map<String, Double>>) entry.getValue();
+                                    for (Map<String, Double> checkIn : checkInsList) {
+                                        Double latitude = checkIn.get("latitude");
+                                        Double longitude = checkIn.get("longitude");
+                                        if (latitude != null && longitude != null) {
+                                            // Add marker to map
+                                            addMarkerToMap(latitude, longitude);
                                         }
                                     }
                                 }
                             }
-                        }
-                        if (map != null) {
-                            map.invalidate(); // Refresh the map to display the new markers
+
+                            map.invalidate(); // Refresh the map to display new markers
+                        } else {
+                            Log.d("MapsFragment", "No check-ins for the current event or event not found.");
                         }
                     } else {
-                        Log.w("MapsFragment", "Error getting documents: ", task.getException());
+                        Log.w("MapsFragment", "Error getting event document:", task.getException());
                     }
                 });
     }
-
-
     private void addMarkerToMap(double latitude, double longitude) {
         if (map == null) return;
+
+        if (latitude < -85.05112877980658 || latitude > 85.05112877980658) {
+            Log.e("MapsFragment", "Invalid latitude value: " + latitude);
+            return;
+        }
+        if (longitude < -180 || longitude > 180) {
+            Log.e("MapsFragment", "Invalid longitude value: " + longitude);
+            return;
+        }
+
+
 
         GeoPoint location = new GeoPoint(latitude, longitude);
         Marker marker = new Marker(map);
         marker.setPosition(location);
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
-        // Customize the marker icon if you wish
-        // Drawable icon = ContextCompat.getDrawable(getContext(), R.drawable.custom_marker_icon);
-        // marker.setIcon(icon);
-
         map.getOverlays().add(marker);
     }
-
 }

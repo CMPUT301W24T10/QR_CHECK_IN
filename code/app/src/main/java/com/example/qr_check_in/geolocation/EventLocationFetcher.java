@@ -16,7 +16,9 @@ import java.util.Map;
 public class EventLocationFetcher extends ViewModel {
 
     private final MutableLiveData<List<GeoPoint>> locationsLiveData = new MutableLiveData<>();
-
+    // Fetches the event locations based on the event ID.
+    // @param eventID Event ID for which locations need to be fetched.
+    // @return LiveData containing the list of GeoPoints representing event locations.
     public LiveData<List<GeoPoint>> getEventLocations(String eventID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("events").document(eventID)

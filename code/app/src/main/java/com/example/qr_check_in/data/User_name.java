@@ -14,11 +14,15 @@ import androidx.annotation.NonNull;
 public class User_name {
 
     private FirebaseFirestore db;
-
+    /**
+     * Class responsible for fetching user name from Firestore or creating a guest user if not exists.
+     */
     public User_name() {
         db = FirebaseFirestore.getInstance();
     }
-
+    /**
+     * Constructor initializing the Firestore database instance.
+     */
     public void getUserNameOrCreateGuest(String deviceId, final UserNameFetchListener listener) {
         final DocumentReference userDocRef = db.collection("users").document(deviceId);
 
