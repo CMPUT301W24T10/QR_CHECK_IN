@@ -35,6 +35,17 @@ public class MainActivityTest {
 
 
     @Test
+    public void signups(){
+        onView(withId(R.id.signUpButton)).perform(click());
+        onView(withId(R.id.list_of_events)).check(matches(isDisplayed()));
+        onView(withId(R.id.backButton)).perform(click());
+
+
+    }
+
+
+
+    @Test
     public void testAddEvent() {
         // perform a click on the create event button
         onView(withId(R.id.organizeEventButton)).perform(click());

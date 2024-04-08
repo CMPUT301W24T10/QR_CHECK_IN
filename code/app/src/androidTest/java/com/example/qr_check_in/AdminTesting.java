@@ -22,7 +22,7 @@ public class AdminTesting {
     public ActivityScenarioRule<MainActivity> scenario = new ActivityScenarioRule<>(MainActivity.class);
 
     @Test
-    public void testBrowseEvents() {
+    public void test() {
         // perform a click on the browse event button
         onView(withId(R.id.button_settings)).perform(click());
         // fill admin in the username field
@@ -33,5 +33,20 @@ public class AdminTesting {
         onView(withId(R.id.btnBrowseEvents)).perform(click());
         // check if the browse event fragment is displayed
         onView(withId(R.id.list_of_events)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.backButton)).perform(click());
+
+        onView(withId(R.id.btnRemoveProfiles)).perform(click());
+
+        onView(withId(R.id.list_of_profiles)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.backButton)).perform(click());
+
+        onView(withId(R.id.btnBrowseImages)).perform(click());
+
+        onView(withId(R.id.rv_images)).check(matches(isDisplayed()));
+
     }
+
+
 }
