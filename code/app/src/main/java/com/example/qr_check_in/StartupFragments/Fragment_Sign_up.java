@@ -121,7 +121,7 @@ public class Fragment_Sign_up extends Fragment {
 
                         @Override
                         public void onSpaceUnavailable() {
-                            Toast.makeText(getContext(), "Sign up failed: ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Sign Up fail, Event full", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

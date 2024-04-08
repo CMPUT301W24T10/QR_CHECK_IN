@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.example.qr_check_in.data.Notification;
 import com.example.qr_check_in.data.NotificationData;
 import com.example.qr_check_in.data.PushNotification;
 import com.example.qr_check_in.databinding.FragmentNotificationBinding;
+import com.example.qr_check_in.ui.listOfAttendee.ListOfAttendeesViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -68,6 +70,7 @@ public class NotificationFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     NotificationAdapter adapter;
+    private String eventId;
 
 
     @Override
@@ -92,6 +95,8 @@ public class NotificationFragment extends Fragment {
         storage = FirebaseStorage.getInstance();
 
         retrieveData(SELECTEDEVENTIDREQUIRED);
+        ListOfAttendeesViewModel sharedViewModel = new ViewModelProvider(requireActivity()).get(ListOfAttendeesViewModel.class);
+        eventId = sharedViewModel.getEventId();
 
 
         mBinding.sendButton.setOnClickListener((new View.OnClickListener() {
@@ -127,13 +132,13 @@ public class NotificationFragment extends Fragment {
     }
 
     private void sendNewMessage(String title, String notification) {
-        String eventName = "/topics/" + SELECTEDEVENTIDREQUIRED;
+        String eventName = "/topics/" + eventId;
         //TODO explain we don't actually send a notification, we send a message, that is displayed as a notification
         PushNotification push = new PushNotification(
                 new NotificationData(title, notification),
                 eventName
         );
-        submitData(title, notification, SELECTEDEVENTIDREQUIRED);
+        submitData(title, notification, eventId);
 
         retrofit2.Call<ResponseBody> responseBodyCall = RetrofitInstance.getApi().postNotification(push);
         responseBodyCall.enqueue(new Callback<ResponseBody>() {
