@@ -87,7 +87,7 @@ public class signups extends Fragment {
                                     String eventName = eventData.getOrDefault("eventName", "").toString();
                                     String eventDescription = eventData.getOrDefault("eventDescription", "").toString();
                                     String location = eventData.getOrDefault("location", "").toString();
-                                    tempEventList.add(new FirestoreEvent(eventName, eventDescription, location));
+                                    tempEventList.add(new FirestoreEvent(eventId, eventName, eventDescription, location));
                                 }
 
                                 if (eventsProcessed.incrementAndGet() == eventIDList.size()) {
