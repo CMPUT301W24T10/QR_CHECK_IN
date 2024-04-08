@@ -1,4 +1,4 @@
-package com.example.qr_check_in;
+package com.example.qr_check_in.StartupFragments;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.qr_check_in.ModelClasses.Event;
 import com.example.qr_check_in.ModelClasses.User;
+import com.example.qr_check_in.R;
 import com.example.qr_check_in.admin.EventListAdapter;
 import com.example.qr_check_in.data.AdminData;
 import com.example.qr_check_in.data.EventNameIdPair;
