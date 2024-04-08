@@ -11,39 +11,69 @@ public class Announcement {
     private String dateandTime;
     private String notification;
 
-    // Constructor
+    /**
+     * Constructs an Announcement object with the specified title, date and time, and content.
+     *
+     * @param notificationTitle the title of the announcement
+     * @param dateandTime the date and time of the announcement
+     * @param notification the content of the announcement
+     */
     public Announcement(String notificationTitle, String dateandTime, String notification) {
         this.notificationTitle = notificationTitle;
         this.dateandTime = dateandTime;
         this.notification = notification;
     }
 
-    // Getter for notificationTitle
+    /**
+     * Returns the title of the announcement.
+     *
+     * @return the title of the announcement
+     */
     public String getNotificationTitle() {
         return notificationTitle;
     }
 
-    // Getter for dateandTime
+    /**
+     * Returns the date and time of the announcement.
+     *
+     * @return the date and time of the announcement
+     */
     public String getDateandTime() {
         return dateandTime;
     }
 
-    // Getter for notification
+    /**
+     * Returns the content of the announcement.
+     *
+     * @return the content of the announcement
+     */
     public String getNotification() {
         return notification;
     }
 
-    // Setter for notificationTitle
+    /**
+     * Sets the title of the announcement.
+     *
+     * @param notificationTitle the title of the announcement
+     */
     public void setNotificationTitle(String notificationTitle) {
         this.notificationTitle = notificationTitle;
     }
 
-    // Setter for dateandTime
+    /**
+     * Sets the date and time of the announcement.
+     *
+     * @param dateandTime the date and time of the announcement
+     */
     public void setDateandTime(String dateandTime) {
         this.dateandTime = dateandTime;
     }
 
-    // Setter for notification
+    /**
+     * Sets the content of the announcement.
+     *
+     * @param notification the content of the announcement
+     */
     public void setNotification(String notification) {
         this.notification = notification;
     }
