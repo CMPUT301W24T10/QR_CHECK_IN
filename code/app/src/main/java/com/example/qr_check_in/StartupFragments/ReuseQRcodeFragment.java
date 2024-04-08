@@ -1,4 +1,4 @@
-package com.example.qr_check_in;
+package com.example.qr_check_in.StartupFragments;
 
 import static com.example.qr_check_in.constants.SELECTEDEVENTIDREQUIRED;
 
@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.qr_check_in.ModelClasses.Event;
+import com.example.qr_check_in.R;
 import com.example.qr_check_in.adapters.ReuseQrAdapter;
 import com.example.qr_check_in.data.AppDatabase;
 

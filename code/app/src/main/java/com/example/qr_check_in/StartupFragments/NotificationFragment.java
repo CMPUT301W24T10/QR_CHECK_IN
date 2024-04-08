@@ -1,6 +1,5 @@
 package com.example.qr_check_in.StartupFragments;
 
-import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static com.example.qr_check_in.constants.SELECTEDEVENTIDREQUIRED;
 
 import android.os.Bundle;
@@ -15,51 +14,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.qr_check_in.Notification.RetrofitInstance;
-import com.example.qr_check_in.NotificationAdapter;
-import com.example.qr_check_in.data.AppDatabase;
+import com.example.qr_check_in.adapters.NotificationAdapter;
 import com.example.qr_check_in.data.Notification;
 import com.example.qr_check_in.data.NotificationData;
 import com.example.qr_check_in.data.PushNotification;
 import com.example.qr_check_in.databinding.FragmentNotificationBinding;
 import com.example.qr_check_in.ui.listOfAttendee.ListOfAttendeesViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import org.checkerframework.checker.units.qual.N;
-import org.w3c.dom.Document;
-
-import java.lang.ref.Reference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Callback;
-import retrofit2.Response;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
