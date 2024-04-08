@@ -36,6 +36,10 @@
             android:icon="@drawable/map"
             android:title="@string/map" />
         <item
+            android:id="@+id/shareQrCodeItem"
+            android:icon="@drawable/baseline_attach_email_24"
+            android:title="@string/share_qr_code" />
+        <item
             android:id="@+id/checkOutButton"
             android:icon="@drawable/baseline_arrow_back_24"
             android:title="@string/checkOut" />

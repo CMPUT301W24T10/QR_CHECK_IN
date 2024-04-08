@@ -69,4 +69,8 @@
         android:id="@+id/notificationFragment2"
         android:name="com.example.qr_check_in.StartupFragments.NotificationFragment"
         android:label="NotificationFragment" />
+    <fragment
+        android:id="@+id/shareQrCodeItem"
+        android:name="com.example.qr_check_in.ui.shareQRcode.ShareQRcode"
+        android:label="fragment_display_qr_code" />
 </navigation>

@@ -44,10 +44,10 @@ public class EventActivity extends AppCompatActivity {
         String userType = getIntent().getStringExtra("userType");
         if (eventId != null) {
             listOfAttendeesViewModel.setEventId(eventId);
+            listOfAttendeesViewModel.setUserId(getIntent().getStringExtra("userId"));
             // Obtain HomeViewModel and set eventId here
             HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
             homeViewModel.setEventId(eventId);
-
         }
 
 
