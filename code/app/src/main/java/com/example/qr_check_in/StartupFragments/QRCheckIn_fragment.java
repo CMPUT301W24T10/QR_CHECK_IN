@@ -137,6 +137,7 @@ public class QRCheckIn_fragment extends Fragment {
 
     private void navigateToEventActivity(String eventId,String userId) {
         appDatabase.increaseCount(eventId, userId);
+        subscribeToNewTopic(eventId);
         Intent intent = new Intent(getContext(), EventActivity.class);
         intent.putExtra("eventId", eventId);
         intent.putExtra("userId", userId);
