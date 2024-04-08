@@ -1,8 +1,11 @@
 package com.example.qr_check_in.ui.EditProfile;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,6 +56,7 @@ public class ProfilePageFragment extends Fragment {
     private String fetchedPhoneNumber = "";
     private String fetchedHomepage = "";
     private String fetchedImageURL = "";
+    private Switch switchEnableGeolocation;
     Uri selectedImageUri;
     private Button saveButton;
     private Button removeProfilePicButton;
@@ -255,8 +260,55 @@ public class ProfilePageFragment extends Fragment {
         emailAddressEditView.addTextChangedListener(textWatcher);
         phoneNumberEditView.addTextChangedListener(textWatcher);
         homepageEditView.addTextChangedListener(textWatcher);
+        switchEnableGeolocation = view.findViewById(R.id.switchEnableGeolocation);
 
+        // Restore switch state and check permission
+        SharedPreferences prefs = getActivity().getSharedPreferences("UserProfile", Context.MODE_PRIVATE);
+        switchEnableGeolocation.setChecked(prefs.getBoolean("GeolocationEnabled", false));
+        updateGeolocationState();
+
+        switchEnableGeolocation.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                requestLocationPermission();
+            } else {
+                saveGeolocationState(isChecked);
+            }
+        });
     }
+
+    private void requestLocationPermission() {
+        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Show an explanation asynchronously
+        } else {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 101 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            saveGeolocationState(true);
+        } else {
+            switchEnableGeolocation.setChecked(false);
+            saveGeolocationState(false);
+        }
+    }
+
+    private void saveGeolocationState(boolean isEnabled) {
+        SharedPreferences prefs = getActivity().getSharedPreferences("UserProfile", Context.MODE_PRIVATE);
+        prefs.edit().putBoolean("GeolocationEnabled", isEnabled).apply();
+    }
+
+    private void updateGeolocationState() {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Geolocation is enabled and permission granted
+        } else {
+            // Permission not granted
+            switchEnableGeolocation.setChecked(false);
+        }
+    }
+
 
     private void removeProfilePic() {
         ProfileImageGenerator profileImageGenerator = new ProfileImageGenerator(getContext());
