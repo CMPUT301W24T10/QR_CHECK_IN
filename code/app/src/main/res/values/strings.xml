@@ -92,6 +92,10 @@
     <string name="checkOut">Check Out</string>
     <string name="Back">Back</string>
     <string name="back_button">Back</string>
+<<<<<<< HEAD
     <string name="count">CheckInCount</string>
+=======
+    <string name="enable_geolocation">Enable Geolocation</string>
+>>>>>>> 1323dce94c66a1931c3e9bff7a9b59b2f92d7e1c
 
 </resources>
