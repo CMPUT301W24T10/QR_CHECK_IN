@@ -44,10 +44,10 @@ public class EventActivity extends AppCompatActivity {
         String userType = getIntent().getStringExtra("userType");
         if (eventId != null) {
             listOfAttendeesViewModel.setEventId(eventId);
+            listOfAttendeesViewModel.setUserId(getIntent().getStringExtra("userId"));
             // Obtain HomeViewModel and set eventId here
             HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
             homeViewModel.setEventId(eventId);
-
         }
 
 
@@ -103,7 +103,7 @@ public class EventActivity extends AppCompatActivity {
     public void hideItem() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
-        nav_Menu.findItem(R.id.nav_list_of_attendees).setVisible(false);
+//        nav_Menu.findItem(R.id.nav_list_of_attendees).setVisible(false);
         nav_Menu.findItem(R.id.nav_events).setVisible(false);
         nav_Menu.findItem(R.id.notificationFragment2).setVisible(false);
         nav_Menu.findItem(R.id.map).setVisible(false);
