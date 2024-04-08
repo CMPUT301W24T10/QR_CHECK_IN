@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -28,6 +31,15 @@ public class ImageListFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         imageAdapter = new ImageAdapter(new ArrayList<>(), this::onDeleteClick);
         recyclerView.setAdapter(imageAdapter);
+
+        Button backButton = view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> {
+            // Implement the back navigation
+            if (getActivity() != null) {
+                getActivity().onBackPressed();
+            }
+        });
+
 
         fetchImagesFromFirestore();
 

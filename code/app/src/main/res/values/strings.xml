@@ -91,5 +91,6 @@
     <string name="notification_list">Event Notifications</string>
     <string name="checkOut">Check Out</string>
     <string name="Back">Back</string>
+    <string name="back_button">Back</string>
 
 </resources>

@@ -74,6 +74,7 @@
         <action
             android:id="@+id/action_QRCheckIn_fragment_to_promotionalFragment"
             app:destination="@id/promotionalFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/attendeeSelection_fragment"

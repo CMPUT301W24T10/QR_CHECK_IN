@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -49,6 +50,19 @@ public class RemoveProfileFragment extends Fragment {
         profileListView = root.findViewById(R.id.list_of_profiles);
         profileAdapter = new UserListAdapter(getContext(), profiles);
         profileListView.setAdapter(profileAdapter);
+
+        ImageButton backButton = root.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Check if the fragment is attached to an activity
+                if (isAdded() && getActivity() != null) {
+                    // Use FragmentManager to pop back stack
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            }
+        });
+
 
         profileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

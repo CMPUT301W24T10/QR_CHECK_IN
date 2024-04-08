@@ -72,6 +72,9 @@ public class AdminDashboardFragment extends Fragment {
         view.findViewById(R.id.btnBrowseImages).setOnClickListener(v->{
             Navigation.findNavController(view).navigate(R.id.imageListFragment);
         });
+        view.findViewById(R.id.backButton).setOnClickListener(v -> {
+            Navigation.findNavController(view).navigateUp();
+        });
         return view;
     }
 }

@@ -51,6 +51,8 @@ public class MyEventActivity extends AppCompatActivity {
             this.finish();
             return true;
         });
+
+
     }
 
     @Override
