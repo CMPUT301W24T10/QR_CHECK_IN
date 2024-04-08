@@ -60,37 +60,10 @@ public class EventSignUpHandler {
                     eventInfo.put("id", selectedEvent.getEventID());
                     eventInfo.put("name", selectedEvent.getTitle());
 
-                    // Add the event to the user's 'eventsSignedUpFor'
-//                    List<Map<String, String>> eventsSignedUpFor = new ArrayList<>();
+
 
                     if (userSnapshot.contains("eventsSignedUpFor")) {
-//                        eventsSignedUpFor = (List<Map<String, String>>) userSnapshot.get("eventsSignedUpFor");
-                    }
-                    // no need to check as there are unique id:pairs in a hashmap no duplicates
-                    // Check if the event is already in the list
-//                    boolean alreadySignedUp = false;
-//                    for (Map<String, String> signedUpEvent : eventsSignedUpFor) {
-//                        if (signedUpEvent.get("id").equals(selectedEvent.getEventID())) {
-//                            alreadySignedUp = true;
-//                            break;
-//                        }
-//                    }
-//
-//                    if (alreadySignedUp) {
-//                        // User has already signed up for this event, handle this case appropriately
-//                        try {
-//                            throw new Exception("User has already signed up for this event.");
-//                        } catch (Exception e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    } else
-                    {
-                        // User has not signed up for this event, add it to the list
-//                        eventsSignedUpFor.add(eventInfo);
-//                        List<Map<String, String>> finalEventsSignedUpFor = eventsSignedUpFor;
-//                        transaction.set(userDocRef, new HashMap<String, Object>() {{
-//                            put("eventsSignedUpFor", finalEventsSignedUpFor);
-//                        }}, SetOptions.merge());
+
                         transaction.update(userDocRef, "eventsSignedUpFor."+ selectedEvent.getEventID(),selectedEvent.getTitle());
 
                         // Reference to the event's document in the 'events' collection
@@ -173,7 +146,7 @@ public class EventSignUpHandler {
                 new NotificationData(title, notification),
                 eventName
         );
-//        submitData(title, notification, SELECTEDEVENTIDREQUIRED);
+
 
         retrofit2.Call<ResponseBody> responseBodyCall = RetrofitInstance.getApi().postNotification(push);
         responseBodyCall.enqueue(new Callback<ResponseBody>() {

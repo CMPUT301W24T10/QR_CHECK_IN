@@ -10,21 +10,30 @@ import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Class responsible for loading images from Firebase Storage.
+ */
 public class FirebaseImageLoader {
     private final FirebaseFirestore db; // FirebaseFirestore instance for database operations
     private final FirebaseStorage storage; // FirebaseStorage instance
-
+    /**
+     * Constructor initializing the Firestore database and Firebase Storage instances.
+     */
     public FirebaseImageLoader() {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
     }
-
+    /**
+     * Loads images from multiple folders in Firebase Storage.
+     *
+     * @param paths    List of folder paths.
+     * @param listener Listener to handle the fetched image URLs or errors.
+     */
     public void loadImagesFromMultipleFolders(List<String> paths, final ImageUrlsFetchedListener listener) {
         final List<String> allImageUrls = new ArrayList<>();
         final int[] pathsProcessed = {0};
 
-        for (String path : paths) {
+        for (String path : paths) { // List all items (images) in the folder
             StorageReference folderRef = storage.getReference().child(path);
 
             folderRef.listAll()

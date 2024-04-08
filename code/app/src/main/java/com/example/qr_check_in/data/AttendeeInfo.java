@@ -45,11 +45,11 @@ public class AttendeeInfo {
                                 // Now you can work with the attendeesMap
                             } else {
                                 // The 'attendees' field does not exist in the document
-                                // Handle this case accordingly
+
                             }
                         } else {
                             // The document does not exist
-                            // Handle this case accordingly
+
                         }
                     }
                 })

@@ -32,9 +32,9 @@ public class ReuseQrAdapter extends ArrayAdapter<Event> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
         if(view==null){
-            view = LayoutInflater.from(context).inflate(R.layout.reuse_qr_list_item,parent,false);
+            view = LayoutInflater.from(context).inflate(R.layout.reuse_qr_list_item,parent,false); //inflate the layout for the list item
         }
-        Event event = events.get(position);
+        Event event = events.get(position);  // Get the Event object at the current position
         Bitmap qrCode = QRCodeGenerator.generateQRCodeImage(event.getEventID(),512,512);
         // getting the text views
         TextView eventName = view.findViewById(R.id.reuseEventNameItem);
