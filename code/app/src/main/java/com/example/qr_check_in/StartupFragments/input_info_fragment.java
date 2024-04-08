@@ -140,9 +140,7 @@ public class input_info_fragment extends Fragment {
                                 Bundle bundle = new Bundle();  // Create a bundle with event ID and organizer ID
                                 bundle.putString("eventId", eventId);
                                 bundle.putString("organizerId", organizerId);
-                                bundle.putString("UserType", "Organizer");
-                                Log.d(TAG, "Navigation working fine.");
-//                                idlingResource.decrement();
+                                bundle.putString("userType", "Organizer");
 
                                 Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment, bundle); // Navigate to the display QR code fragment with the bundle
                             }
