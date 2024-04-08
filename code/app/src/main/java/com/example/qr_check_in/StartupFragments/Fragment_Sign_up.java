@@ -102,15 +102,26 @@ public class Fragment_Sign_up extends Fragment {
                 @Override
                 public void onUserNameFetched(String userName) {
                     // Use the eventSignUpHandler here
-                    eventSignUpHandler.signUpUserForEvent(deviceId, userName, selectedEvent, new EventSignUpHandler.SignUpCallback() {
+//                    eventSignUpHandler.signUpUserForEvent(deviceId, userName, selectedEvent, new EventSignUpHandler.SignUpCallback() {
+//                        @Override
+//                        public void onSuccess() {
+//                            Toast.makeText(getContext(), "Signed up successfully!", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Exception e) {
+//                            Toast.makeText(getContext(), "Sign up failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+                    eventSignUpHandler.checkSpace(deviceId, userName, selectedEvent, new EventSignUpHandler.CheckSpace() {
                         @Override
-                        public void onSuccess() {
+                        public void onSpaceAvailable() {
                             Toast.makeText(getContext(), "Signed up successfully!", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
-                        public void onFailure(Exception e) {
-                            Toast.makeText(getContext(), "Sign up failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        public void onSpaceUnavailable() {
+                            Toast.makeText(getContext(), "Sign up failed: ", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

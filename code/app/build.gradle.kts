@@ -75,11 +75,11 @@ dependencies {
     androidTestImplementation ("org.mockito:mockito-android:4.0.0")
 
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
 
     // Add the dependencies for the Firebase Cloud Messaging and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation("com.google.firebase:firebase-messaging:23.4.1")
+    implementation("com.google.firebase:firebase-messaging")
     implementation("com.google.firebase:firebase-analytics")
 
     // Retrofit
@@ -94,7 +94,6 @@ dependencies {
     implementation ("com.karumi:dexter:6.2.1")
 
 
-
     // Test Runner and Rules for JUnit
     androidTestImplementation ("androidx.test:runner:1.4.0")
     androidTestImplementation ("androidx.test:rules:1.4.0")
@@ -107,6 +106,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-database")
+
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 

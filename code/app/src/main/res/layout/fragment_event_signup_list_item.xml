@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/content_view"
+    android:background="#BFB166"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#66534C4C"
     android:fontFamily="@font/roboto_bold"
     android:gravity="center"
     android:outlineAmbientShadowColor="#C57272"
@@ -11,5 +11,4 @@
     android:padding="20dp"
     android:shadowColor="#DD7474"
     android:text="attendee"
-    android:textColor="#0B5BAF"
     android:textSize="43sp"></TextView>
