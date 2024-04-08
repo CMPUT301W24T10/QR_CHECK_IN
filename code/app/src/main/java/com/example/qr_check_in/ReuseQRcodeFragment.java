@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -62,6 +63,17 @@ public class ReuseQRcodeFragment extends Fragment {
         reuseQrAdapter = new ReuseQrAdapter(getContext(),events);
         listView = view.findViewById(R.id.ListOfQRCodes);
         listView.setAdapter(reuseQrAdapter);
+
+        ImageButton backButton = view.findViewById(R.id.backButton);
+        // Set an OnClickListener to the ImageButton
+        backButton.setOnClickListener(v -> {
+            // Navigate back using NavController or simply pop the back stack
+            if (getActivity() != null) {
+                getActivity().onBackPressed();
+                // If using NavController, you would navigate back like this:
+                // Navigation.findNavController(view).navigateUp();
+            }
+        });
 
 
         if (requireArguments().getString("organizerId") == null) {

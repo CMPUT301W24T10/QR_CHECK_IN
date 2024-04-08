@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 public class QRCheckIn_fragment extends Fragment {
     private Button btnScan;
+    private Button btnBack;
     private AppDatabase appDatabase; // Use AppDatabase for database interactions
     private UserLocationManager userLocationManager;
     private String deviceId, eventTitle, eventDescription;
@@ -65,6 +66,14 @@ public class QRCheckIn_fragment extends Fragment {
                     .setBeepEnabled(true)
                     .setOrientationLocked(false)
                     .setCaptureActivity(CaptureAct.class)); // Use your custom capture activity if you have one
+        });
+
+        btnBack = view.findViewById(R.id.backButton);
+        btnBack.setOnClickListener(v -> {
+            // Navigate back or close the fragment/activity
+            if (getActivity() != null) {
+                getActivity().onBackPressed();
+            }
         });
 
         return view;

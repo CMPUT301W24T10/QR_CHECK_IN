@@ -87,5 +87,6 @@
     <string name="organized_events">Organized Events</string>
     <string name="my_signups">My Signups</string>
     <string name="attending_events">Attending Events</string>
+    <string name="back_button">Back</string>
 
 </resources>

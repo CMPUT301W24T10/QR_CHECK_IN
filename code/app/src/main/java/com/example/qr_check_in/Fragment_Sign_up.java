@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -74,6 +75,16 @@ public class Fragment_Sign_up extends Fragment {
                 events.clear();
                 events.addAll(eventList);
                 eventAdapter.notifyDataSetChanged();
+            }
+        });
+
+        ImageButton backButton = root.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() != null) {
+                    getActivity().onBackPressed();
+                }
             }
         });
 
