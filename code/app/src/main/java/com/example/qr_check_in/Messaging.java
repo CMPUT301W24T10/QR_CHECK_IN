@@ -28,7 +28,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-public class Messagitng extends FirebaseMessagingService {
+public class Messaging extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
 
