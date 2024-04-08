@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 public class ListOfAttendeesViewModel extends ViewModel {
     private String eventId;
+    private String userId;
 
     public String getEventId() {
         return eventId;
@@ -13,5 +14,11 @@ public class ListOfAttendeesViewModel extends ViewModel {
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
