@@ -15,10 +15,21 @@ import java.util.List;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private final List<FirestoreEvent> events; // Now using FirestoreEvent objects
+    private OnItemClickListener listener;
 
     public EventAdapter(List<FirestoreEvent> events) {
         this.events = events;
     }
+
+    public interface OnItemClickListener {
+        void onItemClick(FirestoreEvent event);
+    }
+
+    // Method to set the listener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
 
     @NonNull
     @Override
@@ -35,6 +46,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.textViewEventLocation.setText("Location: " + event.getLocation());
 
         // You can set other fields similarly if they exist in FirestoreEvent
+
+        // Set click listener for the item view
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null && position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(events.get(position));
+            }
+        });
     }
 
     @Override
