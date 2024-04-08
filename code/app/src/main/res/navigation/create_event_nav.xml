@@ -125,7 +125,7 @@
         tools:layout="@layout/fragment_image_list" />
     <fragment
         android:id="@+id/fragment_Sign_up"
-        android:name="com.example.qr_check_in.Fragment_Sign_up"
+        android:name="com.example.qr_check_in.StartupFragments.Fragment_Sign_up"
         android:label="fragment__sign_up"
         tools:layout="@layout/fragment_sign_up" />
     <fragment

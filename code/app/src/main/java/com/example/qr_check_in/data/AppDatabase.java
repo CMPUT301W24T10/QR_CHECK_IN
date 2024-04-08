@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -367,6 +368,27 @@ public class AppDatabase {
                 callback.onError("Failed to fetch document: " + task.getException().getMessage());
             }
         });
+    }
+
+    public void increaseCount(String eventId, String userId){
+        DocumentReference eventRef = db.collection("events").document(eventId);
+        // create a field of type map named checkInCount to store the number of times userId checks in
+        // if the field already exists do not create new one
+        // If the key value pair already exists, increment the value by 1
+        // I want to increment the value of the key userId by 1
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("checkInCount." + userId, FieldValue.increment(1));
+
+        eventRef.update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firestore", "DocumentSnapshot successfully updated with incremented count!");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error updating document", e);
+                });
+
+
     }
 
 

@@ -23,7 +23,7 @@ public class AttendeeInfo {
         storage = FirebaseStorage.getInstance();
     }
     public interface getAttendeesMapCallback {
-        void onCallback(Map<String, String> attendeesMap);
+        void onCallback(Map<String, String> attendeesMap, Map<String, Long> checkInCountMap);
     }
 
     public void getAttendeesMap(String eventId, getAttendeesMapCallback callback){
@@ -39,21 +39,9 @@ public class AttendeeInfo {
                             // Check if the 'attendees' field exists in the document
                             if (documentSnapshot.contains("attendees")) {
                                 // Retrieve the 'attendees' field as a map
-                                Log.e("contains", "attendees");
-                                Map<String, Object> rawMap = (Map<String, Object>) documentSnapshot.get("attendees");
-                                if (rawMap != null) {
-                                    Map<String, String> attendeesMap = new HashMap<>();
-                                    for (Map.Entry<String, Object> entry : rawMap.entrySet()) {
-                                        if (entry.getValue() instanceof String) {
-                                            attendeesMap.put(entry.getKey(), (String) entry.getValue());
-                                        }
-                                        // Optionally handle or log cases where values are not Strings
-                                    }
-//                                    Log.e("AttendeesMap", attendeesMap.toString());
-                                    callback.onCallback(attendeesMap);
-                                } else {
-                                    // Handle case where attendees is null or not a map
-                                }
+                                Map<String, String> attendeesMap = (Map<String, String>) documentSnapshot.get("attendees");
+                                Map<String, Long> checkInCountMap = (Map<String, Long>) documentSnapshot.get("checkInCount");
+                                    callback.onCallback(attendeesMap, checkInCountMap);
                                 // Now you can work with the attendeesMap
                             } else {
                                 // The 'attendees' field does not exist in the document
