@@ -1,5 +1,6 @@
 package com.example.qr_check_in.myui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.qr_check_in.EventActivity;
 import com.example.qr_check_in.EventAdapter;
 import com.example.qr_check_in.ModelClasses.Event;
 import com.example.qr_check_in.ModelClasses.FirestoreEvent;
@@ -50,6 +52,22 @@ public class Organized_myevents extends Fragment {
         eventAdapter = new EventAdapter(organizedEventList);
         organizedEventsRecyclerView.setAdapter(eventAdapter);
 
+        eventAdapter.setOnItemClickListener(event -> {
+            // Create the intent to start EventActivity
+            Intent intent = new Intent(getContext(), EventActivity.class);
+
+            // Assume FirestoreEvent has a method to get the eventId
+            intent.putExtra("eventId", event.getEventId());
+            // deviceId is used as userId in your current setup
+            String userId = Settings.Secure.getString(requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+            intent.putExtra("userId", userId);
+            // Assuming userType is known and can be hardcoded or dynamically set. Adjust as necessary.
+            intent.putExtra("userType", "Organizer");
+
+            startActivity(intent);
+        });
+
+
         fetchOrganizedEvents();
         return view;
     }
@@ -76,7 +94,7 @@ public class Organized_myevents extends Fragment {
                                     String eventName = eventData.getOrDefault("eventName", "").toString();
                                     String eventDescription = eventData.getOrDefault("eventDescription", "").toString();
                                     String location = eventData.getOrDefault("location", "").toString();
-                                    tempEventList.add(new FirestoreEvent(eventName, eventDescription, location));
+                                    tempEventList.add(new FirestoreEvent(eventId, eventName, eventDescription, location));
                                 }
                                 if (eventsProcessed.incrementAndGet() == eventIDList.size()) {
                                     // Ensure UI updates are performed on the main thread

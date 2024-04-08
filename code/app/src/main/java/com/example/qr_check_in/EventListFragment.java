@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -55,6 +56,14 @@ public class EventListFragment extends Fragment {
                 // Save the clicked position in the member variable
                 selectedPosition = position;
 
+            }
+        });
+        ImageButton backButton = root.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call the hosting Activity's onBackPressed method
+                getActivity().onBackPressed();
             }
         });
 

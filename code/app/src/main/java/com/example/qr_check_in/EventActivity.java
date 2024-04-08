@@ -1,5 +1,6 @@
 package com.example.qr_check_in;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -40,6 +41,7 @@ public class EventActivity extends AppCompatActivity {
         db = new AppDatabase();
         listOfAttendeesViewModel = new ViewModelProvider(this).get(ListOfAttendeesViewModel.class);
         String eventId = getIntent().getStringExtra("eventId");
+        String userType = getIntent().getStringExtra("userType");
         if (eventId != null) {
             listOfAttendeesViewModel.setEventId(eventId);
             // Obtain HomeViewModel and set eventId here
@@ -53,14 +55,7 @@ public class EventActivity extends AppCompatActivity {
          setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarEvent.toolbar);
-//        binding.appBarEvent.fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null)
-//                        .setAnchorView(R.id.fab).show();
-//            }
-//        });
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
@@ -79,21 +74,40 @@ public class EventActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         // fetch event details from the database
-        db.fetchEventDetails( eventId, new AppDatabase.FirestoreDocumentCallback() {
-            @Override
-            public void onCallback(Map<String, Object> data) {
-                // set the event details
-                String eventName = (String)data.get("eventName");
-                String description = (String)data.get("eventDescription");
-                String organizerId = (String)data.get("organizerId");
-                // putting arbitrary string for organizer name as current user doesnot need to know about organizer name
-                event = new Event(eventName, new Organizer("organizer", organizerId), description, eventId, null);
+//        db.fetchEventDetails( eventId, new AppDatabase.FirestoreDocumentCallback() {
+//            @Override
+//            public void onCallback(Map<String, Object> data) {
+//                // set the event details
+//                String eventName = (String)data.get("eventName");
+//                String description = (String)data.get("eventDescription");
+//                String organizerId = (String)data.get("organizerId");
+//                // putting arbitrary string for organizer name as current user doesnot need to know about organizer name
+//                event = new Event(eventName, new Organizer("organizer", organizerId), description, eventId, null);
+//            }
+//        });
 
+        // hide items from the navigation drawer if the user is an attendee
+        if(Objects.equals(userType, "Attendee")) {
+            hideItem();
+        }
 
-
-
-            }
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.checkOutButton).setOnMenuItemClickListener(item -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+            return true;
         });
+    }
+
+    public void hideItem() {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_list_of_attendees).setVisible(false);
+        nav_Menu.findItem(R.id.nav_events).setVisible(false);
+        nav_Menu.findItem(R.id.notificationFragment2).setVisible(false);
+        nav_Menu.findItem(R.id.map).setVisible(false);
+
     }
 
     public User setUser(String userId, String name,String role) {

@@ -32,4 +32,14 @@
         android:layout_gravity="bottom|center"
         android:text="@string/confirm_delete" />
 
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="56dp"
+        android:layout_height="50dp"
+        android:layout_gravity="top|start"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="@string/back_button"
+        android:padding="8dp"
+        android:src="@drawable/ic_back" />
+
 </FrameLayout>

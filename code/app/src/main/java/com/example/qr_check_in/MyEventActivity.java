@@ -1,5 +1,6 @@
 package com.example.qr_check_in;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -42,6 +43,16 @@ public class MyEventActivity extends AppCompatActivity {
 
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.MyEventsBackButton).setOnMenuItemClickListener(item -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+            return true;
+        });
+
+
     }
 
     @Override
