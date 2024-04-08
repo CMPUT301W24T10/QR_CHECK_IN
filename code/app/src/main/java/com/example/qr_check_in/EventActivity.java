@@ -65,26 +65,13 @@ public class EventActivity extends AppCompatActivity {
          * created icon for notification in the dashboard to send notification
          */
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_attending, R.id.nav_organizer, R.id.nav_list_of_attendees,R.id.notificationFragment2)
+                R.id.nav_home, R.id.nav_edit_profile,R.id.nav_announcements,R.id.nav_list_of_attendees,R.id.notificationFragment2, R.id.nav_signups, R.id.nav_events, R.id.map, R.id.shareQrCodeItem, R.id.checkOutButton)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_event);
         navController.setGraph(navController.getGraph()); // Pass data to the navController
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        // fetch event details from the database
-//        db.fetchEventDetails( eventId, new AppDatabase.FirestoreDocumentCallback() {
-//            @Override
-//            public void onCallback(Map<String, Object> data) {
-//                // set the event details
-//                String eventName = (String)data.get("eventName");
-//                String description = (String)data.get("eventDescription");
-//                String organizerId = (String)data.get("organizerId");
-//                // putting arbitrary string for organizer name as current user doesnot need to know about organizer name
-//                event = new Event(eventName, new Organizer("organizer", organizerId), description, eventId, null);
-//            }
-//        });
 
         // hide items from the navigation drawer if the user is an attendee
         if(Objects.equals(userType, "Attendee")) {
