@@ -18,6 +18,10 @@
             android:icon="@drawable/view_list_of_attendees"
             android:title="@string/menu_list_of_attendees" />
         <item
+            android:id="@+id/nav_signups"
+            android:icon="@drawable/view_list_of_attendees"
+            android:title="@string/list_of_SignUps" />
+        <item
             android:id="@+id/nav_announcements"
             android:icon="@drawable/ic_menu_announcements"
             android:title="@string/announcements" />

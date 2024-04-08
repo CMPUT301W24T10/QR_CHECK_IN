@@ -95,5 +95,6 @@
     <string name="count">CheckInCount</string>
 
     <string name="enable_geolocation">Enable Geolocation</string>
+    <string name="list_of_SignUps">Event SignUps</string>
 
 </resources>
