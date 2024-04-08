@@ -15,7 +15,7 @@ public class AdminData {
     private final FirebaseFirestore db; // FirebaseFirestore instance for database operations
     private final FirebaseStorage storage; // Initialize Firebase Storage
 
-    public AdminData() {
+    public AdminData() { // Constructor to initialize FirebaseFirestore and FirebaseStorage instances
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
     }
@@ -23,11 +23,11 @@ public class AdminData {
         void onEventListFetched(ArrayList<Event> eventList);
     }
 
-    public void fetchEventNames(EventFetchListener listener) {
+    public void fetchEventNames(EventFetchListener listener) {  // Method to fetch event names from Firestore
         ArrayList<Event> eventList = new ArrayList<>();
 
         db.collection("events").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful()) {  // Iterate through the documents
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String docId = document.getId();
                     String eventName = document.getString("eventName");
@@ -36,9 +36,6 @@ public class AdminData {
                     if (eventName != null) { // Making sure eventName is not null
                         eventList.add(new Event(eventName,null,eventDescription,docId, eventLocation));
                     }
-//                    if (eventList.size()>10){
-//                        break;
-//                    }
 
                 }
                 listener.onEventListFetched(eventList);
@@ -55,7 +52,7 @@ public class AdminData {
     }
 
 
-    public void deleteEvent(String documentId, EventDeletionListener listener) {
+    public void deleteEvent(String documentId, EventDeletionListener listener) {  // Method to delete an event from Firestore
         db.collection("events").document(documentId).delete()
                 .addOnSuccessListener(aVoid -> {
                     listener.onEventDeletionSuccess(documentId);
@@ -67,11 +64,11 @@ public class AdminData {
     public interface ProfileFetchListener {
         void onProfileListFetched(ArrayList<User> profileList);
     }
-    public void fetchProfileNames(ProfileFetchListener listener) {
+    public void fetchProfileNames(ProfileFetchListener listener) {   // Method to fetch user profiles from Firestore
         ArrayList<User> profileList = new ArrayList<>();
 
         db.collection("users").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful()) { // Iterate through the documents
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String docId = document.getId();
                     String profileName = document.getString("Name");
@@ -105,7 +102,7 @@ public class AdminData {
         void onProfileDeletionSuccess(String documentId);
     }
 
-    public void deleteProfile(String documentId, ProfileDeletionListener listener) {
+    public void deleteProfile(String documentId, ProfileDeletionListener listener) {   // Method to delete a user profile from Firestore
         db.collection("users").document(documentId).delete()
                 .addOnSuccessListener(aVoid -> {
                     listener.onProfileDeletionSuccess(documentId);

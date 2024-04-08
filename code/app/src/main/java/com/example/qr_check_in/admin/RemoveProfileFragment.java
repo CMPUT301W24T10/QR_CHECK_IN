@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RemoveProfileFragment extends Fragment {
-    private AdminData adminData;
-    private ListView profileListView;
-    private ArrayList<User> profiles;
-    private ArrayAdapter<User> profileAdapter;
-    private int selectedPosition;
+    private AdminData adminData; // Reference to the AdminData class for interacting with user profiles
+    private ListView profileListView; // ListView to display user profiles
+    private ArrayList<User> profiles; // List of user profiles
+    private ArrayAdapter<User> profileAdapter; // Adapter for the profileListView
+    private int selectedPosition; // Position of the selected profile in the list
 
 
     @Override
@@ -43,8 +43,8 @@ public class RemoveProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_remove_profile, container, false);
-        adminData = new AdminData();
-        profiles = new ArrayList<User>();
+        adminData = new AdminData(); // Initialize AdminData instance
+        profiles = new ArrayList<User>();// Initialize list of profiles and set selected position to -1
 
         selectedPosition = -1;
         profileListView = root.findViewById(R.id.list_of_profiles);
@@ -99,7 +99,7 @@ public class RemoveProfileFragment extends Fragment {
         });
 
 
-        adminData.fetchProfileNames(new AdminData.ProfileFetchListener() {
+        adminData.fetchProfileNames(new AdminData.ProfileFetchListener() { // Fetch user profiles from the database and update the list
             @Override
             public void onProfileListFetched(ArrayList<User> profileList) {
                 profiles.clear();

@@ -14,23 +14,23 @@ public class EventFetcher {
         this.context = context;
     }
 
-    public void fetchCurrentEventId(OnCurrentEventIdFetchedListener listener) {
+    public void fetchCurrentEventId(OnCurrentEventIdFetchedListener listener) {  // Get the unique device ID (Android ID)
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("users").document(deviceId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("users").document(deviceId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() { // Fetch the user document based on the device ID
             @Override
             public void onComplete(Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document != null && document.exists()) {
-                        String currentEventId = document.getString("currentEventID");
+                        String currentEventId = document.getString("currentEventID"); // Retrieve the current event ID from the document
                         listener.onCurrentEventIdFetched(currentEventId);
                     } else {
-                        listener.onError("Document does not exist!");
+                        listener.onError("Document does not exist!"); // Handle the case where the document does not exist
                     }
                 } else {
-                    listener.onError(task.getException().getMessage());
+                    listener.onError(task.getException().getMessage()); // Handle task failure
                 }
             }
         });
