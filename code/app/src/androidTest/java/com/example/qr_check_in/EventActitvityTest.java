@@ -11,16 +11,20 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
 
+import android.Manifest;
 import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -49,6 +53,11 @@ public class EventActitvityTest {
         // Launch the activity with the intent
         ActivityScenario<EventActivity> scenario = ActivityScenario.launch(intent);
     }
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.POST_NOTIFICATIONS);
 
     @Test
     public void testHomeFragment() {
@@ -125,14 +134,28 @@ public class EventActitvityTest {
         // Use Espresso to test the EventActivity
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(withId(R.id.map)).check(matches(isDisplayed()));
-//        onView(withId(R.id.nav_map)).perform(click());// press hamburger button
-//        try {
-//            Thread.sleep(5000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
+    @Test
+    public void editProfile() {
+        // Use Espresso to test the EventActivity
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.nav_edit_profile)).check(matches(isDisplayed()));
+        onView(withId(R.id.nav_edit_profile)).perform(click());// press hamburger button
+        onView(withId(R.id.editTextName)).check(matches(isDisplayed()));
+        onView(withId(R.id.editTextName)).perform(typeText("Test Name"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.editTextPhone)).perform(typeText("Test Phone"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.editTextEmailAddress)).perform(typeText("Test Email"),ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.buttonSave)).perform(click());
+    }
+    @Test
+    public void testCheckOutButton() {
+        // Use Espresso to test the EventActivity
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.checkOutButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.checkOutButton)).perform(click());// press hamburger button
+        onView(withId(R.id.checkInButton)).check(matches(isDisplayed()));
+    }
+
 
 
 }

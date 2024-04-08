@@ -8,6 +8,8 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import android.Manifest;
+
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -16,6 +18,7 @@ import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.UiDevice;
 
 
@@ -32,7 +35,11 @@ public class MainActivityTest {
 
     @Rule
     public ActivityScenarioRule<MainActivity> scenario = new ActivityScenarioRule<>(MainActivity.class);
-
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.POST_NOTIFICATIONS);
 
     @Test
     public void signups(){
@@ -75,6 +82,7 @@ public class MainActivityTest {
         onView(withId(R.id.EnterOrganizerName)).perform(typeText("Test Name"));
         onView(withId(R.id.EnterEventName)).perform(typeText("Test Event"));
         onView(withId(R.id.EnterEventDescription)).perform(typeText("Test Description"), closeSoftKeyboard());
+        onView(withId(R.id.EnterEventLocation)).perform(typeText("Test Location"), closeSoftKeyboard());
         onView(withId(R.id.button_existing_qrcode)).perform(click());
         // click the confirm button
         onView(withId(R.id.button_confirm)).perform(click());
