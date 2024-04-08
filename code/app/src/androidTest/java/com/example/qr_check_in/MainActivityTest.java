@@ -42,7 +42,8 @@ public class MainActivityTest {
         // fill in the user name, event name, event description and toggle the radio button newQRcode
         onView(withId(R.id.EnterOrganizerName)).perform(typeText("Test Name"));
         onView(withId(R.id.EnterEventName)).perform(typeText("Test Event"));
-        onView(withId(R.id.EnterEventDescription)).perform(typeText("Test Description"), closeSoftKeyboard());
+        onView(withId(R.id.EnterEventDescription)).perform(typeText("Test Description"));
+        onView(withId(R.id.EnterEventLocation)).perform(typeText("Test Location"), closeSoftKeyboard());
         onView(withId(R.id.button_new_QRcode)).perform(click());
         // click the confirm button
         onView(withId(R.id.button_confirm)).perform(click());

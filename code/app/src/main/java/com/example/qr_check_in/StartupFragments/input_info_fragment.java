@@ -28,7 +28,7 @@ import com.example.qr_check_in.R;
 import com.example.qr_check_in.data.AppDatabase;
 
 public class input_info_fragment extends Fragment {
-    private EditText editTextOrganizerName, editTextEventName, editTextEventDescription, editTextEventLocation;
+    private EditText editTextOrganizerName, editTextEventName, editTextEventDescription, editTextEventLocation, editTextEventSignUpLimit;
     private RadioGroup radioGroupQRCode;
     private AppDatabase appDatabase;
     private String organizerId;
@@ -85,6 +85,7 @@ public class input_info_fragment extends Fragment {
         editTextEventDescription = view.findViewById(R.id.EnterEventDescription);
         editTextEventLocation = view.findViewById(R.id.EnterEventLocation);
         radioGroupQRCode = view.findViewById(R.id.read_status);
+        editTextEventSignUpLimit = view.findViewById(R.id.EnterSignUpLimit);
 
         posterPreview = view.findViewById(R.id.PosterPreview);
 
@@ -121,6 +122,7 @@ public class input_info_fragment extends Fragment {
         String eventName = editTextEventName.getText().toString().trim();
         String eventDescription = editTextEventDescription.getText().toString().trim();
         String eventlocation = editTextEventLocation.getText().toString().trim();
+        String signUpLimit = editTextEventSignUpLimit.getText().toString().trim();
 
         // organizer name, event name, and event description are not empty
         if (!organizerName.isEmpty() && !eventName.isEmpty() && !eventDescription.isEmpty() && !eventlocation.isEmpty()) {
@@ -128,7 +130,7 @@ public class input_info_fragment extends Fragment {
                 @Override
                 public void onCallback(String documentId) {
                     organizerId = deviceId;
-                    appDatabase.saveEvent(organizerId, eventName, eventDescription, eventlocation,posterUri, getContext(), new AppDatabase.FirestoreCallback() {  // Save the event information to Firestore database
+                    appDatabase.saveEvent(organizerId, eventName, eventDescription, eventlocation, signUpLimit,posterUri, getContext(), new AppDatabase.FirestoreCallback() {  // Save the event information to Firestore database
                         @SuppressLint("RestrictedApi")
                         @Override
                         public void onCallback(String documentId) {
@@ -138,9 +140,7 @@ public class input_info_fragment extends Fragment {
                                 Bundle bundle = new Bundle();  // Create a bundle with event ID and organizer ID
                                 bundle.putString("eventId", eventId);
                                 bundle.putString("organizerId", organizerId);
-                                bundle.putString("UserType", "Organizer");
-                                Log.d(TAG, "Navigation working fine.");
-//                                idlingResource.decrement();
+                                bundle.putString("userType", "Organizer");
 
                                 Navigation.findNavController(view).navigate(R.id.action_input_info_fragment_to_displayQrCodeFragment, bundle); // Navigate to the display QR code fragment with the bundle
                             }
@@ -180,6 +180,7 @@ public class input_info_fragment extends Fragment {
                     bundle.putString("eventName", editTextEventName.getText().toString().trim());
                     bundle.putString("eventDescription", editTextEventDescription.getText().toString().trim());
                     bundle.putString("eventLocation", editTextEventLocation.getText().toString().trim());
+                    bundle.putString("signUpLimit", editTextEventSignUpLimit.getText().toString().trim());
                     if (posterUri != null) {
                         bundle.putString("posterUri", posterUri.toString());
                     } else {

@@ -86,6 +86,7 @@ public class ReuseQRcodeFragment extends Fragment {
         eventDetails.put("eventName",requireArguments().getString("eventName"));
         eventDetails.put("eventDescription",requireArguments().getString("eventDescription"));
         eventDetails.put("eventLocation",requireArguments().getString("eventLocation"));
+        eventDetails.put("signUpLimit",requireArguments().getString("signUpLimit"));
         String posterUriString = requireArguments().getString("posterUri");
         if (posterUriString != null && !posterUriString.isEmpty()) {
             posterUri = Uri.parse(posterUriString);
@@ -147,9 +148,8 @@ public class ReuseQRcodeFragment extends Fragment {
         // Only parse the Uri if the string is not null, otherwise, pass null to updateEvent
         Uri posterUriToPass = (posterUri != null) ? Uri.parse(posterUri.toString()) : null;
 
-        db.updateEvent(selectedEventId, (String) eventDetails.get("eventName"),
-                (String) eventDetails.get("eventDescription"),
-                (String) eventDetails.get("eventLocation"),
+        db.updateEvent(selectedEventId, (String) eventDetails.get("eventName"),(String) eventDetails.get("eventDescription"), (String) eventDetails.get("eventLocation"),
+                (String) eventDetails.get("signUpLimit"),
                 posterUriToPass, getContext());
 
         db.updateOrganizerWithEvent((String) eventDetails.get("organizerId"),

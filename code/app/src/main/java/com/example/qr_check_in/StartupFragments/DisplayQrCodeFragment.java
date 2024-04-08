@@ -63,10 +63,10 @@ public class DisplayQrCodeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_display_qr_code, container, false);
-// Retrieve eventId and organizerId from fragment arguments
+        // Retrieve eventId and organizerId from fragment arguments
         eventId = requireArguments().getString("eventId");
         organizerId = requireArguments().getString("organizerId");
-// Generate QR code image using the eventId
+        // Generate QR code image using the eventId
         qrCode = QRCodeGenerator.generateQRCodeImage(eventId, 512, 512);
         ImageView qrCodeImage = view.findViewById(R.id.ShowQRCode);
 
@@ -143,6 +143,7 @@ public class DisplayQrCodeFragment extends Fragment {
 
         intent.putExtra("eventId", eventId);
         intent.putExtra("userId", organizerId);
+        intent.putExtra("userType", "organizer");
 
         startActivity(intent);
     }
