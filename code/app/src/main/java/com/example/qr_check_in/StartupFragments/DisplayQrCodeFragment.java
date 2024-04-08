@@ -21,9 +21,11 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.qr_check_in.EventActivity;
+import com.example.qr_check_in.Messaging;
 import com.example.qr_check_in.R;
 import com.example.qr_check_in.data.PromotionalQRCodeGenerator;
 import com.example.qr_check_in.data.QRCodeGenerator;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -88,6 +90,12 @@ public class DisplayQrCodeFragment extends Fragment {
         }
 
         view.findViewById(R.id.openEventActivityButton).setOnClickListener(v -> {
+            FirebaseMessaging.getInstance().subscribeToTopic("event"+eventId)
+                            .addOnCompleteListener(task -> {
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(getContext(), "Failed to subscribe to event notifications", Toast.LENGTH_SHORT).show();
+                                }
+                            });
             navigateToEventActivity();
             requireActivity().finish(); // remove the current activity from the back stack
         });

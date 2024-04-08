@@ -103,8 +103,10 @@ public class EventActivity extends AppCompatActivity {
     public void hideItem() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
-//        nav_Menu.findItem(R.id.nav_list_of_attendees).setVisible(false);
+        nav_Menu.findItem(R.id.nav_list_of_attendees).setVisible(false);
         nav_Menu.findItem(R.id.nav_events).setVisible(false);
+        nav_Menu.findItem(R.id.shareQrCodeItem).setVisible(false);
+        nav_Menu.findItem(R.id.nav_signups).setVisible(false);
         nav_Menu.findItem(R.id.notificationFragment2).setVisible(false);
         nav_Menu.findItem(R.id.map).setVisible(false);
 
