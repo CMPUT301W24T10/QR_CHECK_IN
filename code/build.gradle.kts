@@ -4,9 +4,3 @@ plugins {
     id("androidx.navigation.safeargs") version "2.5.3" apply false
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
