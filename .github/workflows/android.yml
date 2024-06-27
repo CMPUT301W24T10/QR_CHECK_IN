@@ -50,16 +50,14 @@ jobs:
 
     - name: Start emulator
       run: |
-        sudo apt-get update
-        sudo apt-get install -y libvirt-dev
-        sudo usermod -aG kvm $USER
-        sudo chown $USER /dev/kvm
-        avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" --force
-        $ANDROID_HOME/emulator/emulator -avd test -no-snapshot-save -no-audio -no-window &
-        adb wait-for-device
-        adb shell settings put global window_animation_scale 0
-        adb shell settings put global transition_animation_scale 0
-        adb shell settings put global animator_duration_scale 0
+          sudo apt-get update
+          sudo apt-get install -y libx11-6
+          sdkmanager --install "system-images;android-30;google_apis;x86_64"
+          echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" --device "pixel"
+          $ANDROID_HOME/emulator/emulator -avd test -no-window -no-audio -no-boot-anim -gpu off &
+          adb wait-for-device
+          adb shell input keyevent 82
+          timeout-minutes: 5
       continue-on-error: true
 
     - name: Run Instrumentation Tests
