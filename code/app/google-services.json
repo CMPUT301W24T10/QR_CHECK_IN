@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "627968213538",
+    "project_id": "qr-check-in-1234",
+    "storage_bucket": "qr-check-in-1234.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627968213538:android:0f544b497843bbb473407b",
+        "android_client_info": {
+          "package_name": "com.example.qr_check_in"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzvCpkZm_xYaIa6fmvwYMhTkg2zbpIC8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
