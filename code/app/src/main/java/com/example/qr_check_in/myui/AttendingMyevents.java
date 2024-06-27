@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.qr_check_in.EventActivity;
-import com.example.qr_check_in.EventAdapter;
+import com.example.qr_check_in.adapters.EventAdapter;
 import com.example.qr_check_in.ModelClasses.FirestoreEvent;
 import com.example.qr_check_in.R;
 import com.google.firebase.firestore.FirebaseFirestore;

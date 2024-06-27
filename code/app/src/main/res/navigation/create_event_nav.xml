@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/reuseQRcodeFragment"
-        android:name="com.example.qr_check_in.ReuseQRcodeFragment"
+        android:name="com.example.qr_check_in.StartupFragments.ReuseQRcodeFragment"
         android:label="fragment_reuse_q_rcode"
 
         tools:layout="@layout/fragment_reuse_q_rcode" >

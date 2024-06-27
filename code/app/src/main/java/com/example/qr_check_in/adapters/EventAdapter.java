@@ -1,4 +1,4 @@
-package com.example.qr_check_in;
+package com.example.qr_check_in.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qr_check_in.ModelClasses.FirestoreEvent; // Ensure this import is correct
+import com.example.qr_check_in.R;
 
 import java.util.List;
 

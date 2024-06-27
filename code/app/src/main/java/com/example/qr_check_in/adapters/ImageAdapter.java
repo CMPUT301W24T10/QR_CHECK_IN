@@ -1,4 +1,4 @@
-package com.example.qr_check_in;
+package com.example.qr_check_in.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;

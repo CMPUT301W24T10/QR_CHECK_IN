@@ -1,4 +1,4 @@
-package com.example.qr_check_in;
+package com.example.qr_check_in.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.qr_check_in.ModelClasses.User;
+import com.example.qr_check_in.R;
 
 import java.util.ArrayList;
 

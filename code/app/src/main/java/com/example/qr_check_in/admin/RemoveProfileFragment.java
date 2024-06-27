@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,10 @@ import android.widget.Toast;
 
 import com.example.qr_check_in.ModelClasses.User;
 import com.example.qr_check_in.R;
-import com.example.qr_check_in.UserListAdapter;
+import com.example.qr_check_in.adapters.UserListAdapter;
 import com.example.qr_check_in.data.AdminData;
-import com.example.qr_check_in.data.EventNameIdPair;
-import com.example.qr_check_in.data.ProfileIdPair;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RemoveProfileFragment extends Fragment {
     private AdminData adminData; // Reference to the AdminData class for interacting with user profiles

@@ -2,14 +2,10 @@ package com.example.qr_check_in.myui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qr_check_in.EventActivity;
-import com.example.qr_check_in.EventAdapter;
-import com.example.qr_check_in.ModelClasses.Event;
+import com.example.qr_check_in.adapters.EventAdapter;
 import com.example.qr_check_in.ModelClasses.FirestoreEvent;
 import com.example.qr_check_in.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
