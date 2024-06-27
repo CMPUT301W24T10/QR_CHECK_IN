@@ -10,7 +10,9 @@
         style="@style/headerViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/attendee_selection" />
+        android:text="@string/attendee_selection"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/editProfile"
